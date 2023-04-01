@@ -1,4 +1,4 @@
-# klipper-backup
+# klipper-backup 💾
 Klipper backup script for manual or automated backups
 
 This is a backup script to create manual or automated klipper backups in a github repository. You can [see an example](https://github.com/Staubgeborener/3dprint) of what it looks like in the end.
@@ -43,3 +43,6 @@ command: bash /home/pi/klipper-backup/script.sh
 timeout: 90.0
 verbose: True
 ```
+
+## Updates
+You can run `./install.sh` now and then. The script is not only used for installation, but also checks whether there are current updates.
