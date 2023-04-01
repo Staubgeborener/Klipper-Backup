@@ -4,13 +4,13 @@ Klipper backup script for manual or automated backups
 This is a backup script to create manual or automated klipper backups in a github repository. You can [see an example](https://github.com/Staubgeborener/3dprint) of what it looks like in the end.
 
 ## Installation
-
+Run this command in a folder of your choice (i would suggest to create a new folder (`mkdir [...]`):
+`curl -Lsk 'https://github.com/Staubgeborener/klipper-backup/raw/main/install.sh' | bash`
 
 ## Configuration
-Initialize the .env file and make the script executable:
+Initialize the .env file:
 ```shell
 mv .env.example .env
-chmod +x script.sh
 ```
 
 Modify the `.env` file:
