@@ -8,7 +8,7 @@ if [[ $LatestVersion > $LocalVersion ]] ; then
     wget https://github.com/Staubgeborener/klipper-backup/releases/download/$LatestVersion/klipper-backup-main.zip
     unzip -o klipper-backup-main.zip
     cp -R ./klipper-backup-main/* $(pwd)
-    rm -rf klipper-backup-main klipper-backup-main.zip
+    rm -rf klipper-backup-main klipper-backup-main.zip README.md
     chmod +x *.sh
 else
     echo "You are up-to-date"
