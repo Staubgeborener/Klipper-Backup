@@ -5,6 +5,7 @@ This is a backup script to create manual or automated klipper backups in a githu
 
 ## Installation
 Run this command in a folder of your choice (i would suggest to create a new folder (`mkdir [...]`):
+
 `curl -Lsk 'https://github.com/Staubgeborener/klipper-backup/raw/main/install.sh' | bash`
 
 ## Configuration
