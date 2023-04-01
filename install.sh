@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LatestVersion=$(curl -Lsk 'https://github.com/Staubgeborener/klipper-backup-staging/raw/main/version')
+LatestVersion=$(curl -Lsk 'https://github.com/Staubgeborener/klipper-backup/raw/main/version')
 color=$'\e[1;36m'
 end=$'\e[0m'
 
@@ -15,7 +15,7 @@ Klipper-Backup-Logo() {
 }
 
 installation() {
-    wget https://github.com/Staubgeborener/klipper-backup-staging/releases/download/$LatestVersion/klipper-backup-main.zip
+    wget https://github.com/Staubgeborener/klipper-backup/releases/download/$LatestVersion/klipper-backup-main.zip
     unzip -o klipper-backup-main.zip
     cp -R ./klipper-backup-main/* $(pwd)
     rm -rf klipper-backup-main klipper-backup-main.zip README.md
