@@ -4,16 +4,11 @@ Klipper backup script for manual or automated backups
 This is a backup script to create manual or automated klipper backups in a github repository. You can [see an example](https://github.com/Staubgeborener/3dprint) of what it looks like in the end.
 
 ## Installation
-Run this command in a folder of your choice (i would suggest to create a new folder (`mkdir [...]`):
+Simply run this command:
 
 `curl -Lsk 'https://github.com/Staubgeborener/klipper-backup/raw/main/install.sh' | bash`
 
 ## Configuration
-Initialize the .env file:
-```shell
-mv .env.example .env
-```
-
 Modify the `.env` file:
 1. In GitHub click on the profile in the upper right corner
 2. click "Settings"
@@ -28,7 +23,6 @@ Adjust the remaining paths in the `.env` file where your files are located or ad
 Since i like to sort the files in appropriate folders i have adjusted the parameter `backup_folder` with `./klipper`. You could also use `backup_folder=.` for example.
 
 ## Execute
-
 Thats pretty much it. There are two ways to run the script:
 1. Run the script when starting mainsailos respectively the 3d printer. Type `crontab -e` and add this line: `@reboot /home/pi/klipper-backup/script.sh`
 2. I created a klipper macro `[gcode_macro update_git]` to run the backup manually in the mainsailos gui (see `printer.cfg`)
