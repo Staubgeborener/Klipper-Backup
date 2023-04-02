@@ -45,4 +45,18 @@ verbose: True
 ```
 
 ## Updates
+### Moonraker
+Simply add this section to your `moonraker.conf` to get latest updates:
+
+```ini
+[update_manager client klipper-backup]
+type: git_repo
+path: ~/klipper-backup
+origin: https://github.com/Staubgeborener/klipper-backup.git
+install_script: install.sh
+is_system_service: False
+primary_branch: main
+```
+
+### Manual
 You can run `./install.sh` now and then. The script is not only used for installation, but also checks whether there are current updates.
