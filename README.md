@@ -40,7 +40,14 @@ verbose: True
 
 ## Updates
 ### Moonraker
-Simply add this section to your `moonraker.conf` to get latest updates:
+Updates via moonraker require an alternative installation:
+```shell
+cd ~
+git clone https://github.com/Staubgeborener/klipper-backup
+cp ./klipper-backup/.env.example ./klipper-backup/.env
+```
+
+After that add this section to your `moonraker.conf` to get latest updates:
 
 ```ini
 [update_manager client klipper-backup]
