@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s extglob  # enable extglob
+
 LatestVersion=$(curl -Lsk 'https://github.com/Staubgeborener/klipper-backup/raw/main/version')
 if [[ ! -e "version" ]]; then
     version="Latest release: v"${LatestVersion}
@@ -25,12 +27,14 @@ installation() {
     cd ~
     wget https://github.com/Staubgeborener/klipper-backup/releases/download/$LatestVersion/klipper-backup-main.zip
     unzip -o klipper-backup-main.zip
-    mv klipper-backup-main klipper-backup && cd klipper-backup
-    rm -rf ./klipper-backup-main ../klipper-backup-main.zip README.md
-    if [[ ! -e ".env" ]]; then
-        cp .env.example .env
+    if [ -d ~/klipper-backup ]; then
+        cp ./klipper-backup-main/!(.env) ./klipper-backup
+    else
+        mv klipper-backup-main klipper-backup
+        cp ./klipper-backup/.env.example ./klipper-backup/.env
     fi
-    chmod +x *.sh
+    cd ./klipper-backup && chmod +x *.sh
+    rm -rf ../klipper-backup-main ../klipper-backup-main.zip README.md
 }
 
 updates() {
