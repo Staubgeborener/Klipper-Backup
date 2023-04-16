@@ -38,6 +38,8 @@ timeout: 90.0
 verbose: True
 ```
 
+![klipper-backup-macro-image](https://i.imgur.com/UglWf6t.png)
+
 ## Updates
 ### Moonraker
 Updates via moonraker require an alternative installation:
