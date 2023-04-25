@@ -4,7 +4,7 @@ shopt -s extglob  # enable extglob
 
 LatestVersion=$(curl -Lsk 'https://github.com/Staubgeborener/klipper-backup/raw/main/version')
 if [[ ! -e "version" ]]; then
-    version="Latest release: v"${LatestVersion}
+    version="New version released: v"${LatestVersion}
 else
     LocalVersion=$(sed -n 1p version)
     version="v"${LocalVersion}
