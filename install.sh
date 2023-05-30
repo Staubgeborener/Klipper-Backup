@@ -51,7 +51,7 @@ Klipper-Backup-Logo
 if [[ ! -e "version" ]]; then
     echo -e "\n${color}Start installation...${end}\n"
     installation
-    echo -e "\n${color}Finished! Now edit the .env file. You can find more details in the README.md file on Github: https://github.com/Staubgeborener/klipper-backup#configuration${end}"
+    echo -e "\n${color}Finished! Now edit the .env file. You can find more details in the wiki on Github: https://github.com/Staubgeborener/klipper-backup/wiki/Configuration${end}"
 else
     echo "Check for updates..."
     updates
