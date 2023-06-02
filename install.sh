@@ -34,8 +34,8 @@ installation() {
         cp ./klipper-backup/.env.example ./klipper-backup/.env
     fi
     cd ./klipper-backup && chmod +x *.sh
-    rm -rf ../klipper-backup-main ../klipper-backup-main.zip README.md
-    echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." >> README.md
+    rm -rf ../klipper-backup-main ../klipper-backup-main.zip ./.github
+    echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." > README.md
 }
 
 updates() {
