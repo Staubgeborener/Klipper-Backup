@@ -10,7 +10,7 @@ github_repository=$(grep 'github_repository=' "$parent_path"/.env | sed 's/^.*=/
 backup_folder=$(grep 'backup_folder=' "$parent_path"/.env | sed 's/^.*=//')
 
 # Set the default commit message
-commit_message="New backup from $(date +"%d-%m-%y")"
+commit_message="$(date +"%Y-%m-%d") backup"
 
 # Add the first parameter to this function as an individual commit-message
 if [ -n "$1" ]; then
