@@ -9,6 +9,14 @@ github_username=$(grep 'github_username=' "$parent_path"/.env | sed 's/^.*=//')
 github_repository=$(grep 'github_repository=' "$parent_path"/.env | sed 's/^.*=//')
 backup_folder=$(grep 'backup_folder=' "$parent_path"/.env | sed 's/^.*=//')
 
+# Set the default commit message
+commit_message="New backup from $(date +"%d-%m-%y")"
+
+# Add the first parameter to this function as an individual commit-message
+if [ -n "$1" ]; then
+    commit_message+=": $1"
+fi
+
 # Change directory to parent path
 cd "$parent_path" || exit
 
@@ -30,5 +38,5 @@ git filter-branch --force --index-filter \
   --prune-empty --tag-name-filter cat -- --all
 #git rm -rf --cached "$parent_path"/.env
 git add "$parent_path"
-git commit -m "New backup from $(date +"%d-%m-%y")"
+git commit -m "$commit_message"
 git push https://"$github_token"@github.com/"$github_username"/"$github_repository".git
