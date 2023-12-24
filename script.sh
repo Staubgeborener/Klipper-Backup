@@ -23,6 +23,13 @@ while read -r path; do
   cp -r "$path" "$parent_path/$backup_folder"
 done < <(grep 'path_' "$parent_path"/.env | sed 's/^.*=//')
 
+# Individual commit message, if no parameter is set, use the current timestamp as commit message
+if [ -n "$1" ]; then
+    commit_message="$1"
+else
+    commit_message="New backup from $(date +"%d-%m-%y")"
+fi
+
 # Git commands
 git init
 git filter-branch --force --index-filter \
@@ -30,5 +37,5 @@ git filter-branch --force --index-filter \
   --prune-empty --tag-name-filter cat -- --all
 #git rm -rf --cached "$parent_path"/.env
 git add "$parent_path"
-git commit -m "New backup from $(date +"%d-%m-%y")"
+git commit -m "$commit_message"
 git push https://"$github_token"@github.com/"$github_username"/"$github_repository".git
