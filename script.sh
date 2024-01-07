@@ -32,7 +32,7 @@ echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated G
 if [ -n "$1" ]; then
     commit_message="$1"
 else
-    commit_message="New backup from $(date +"%d-%m-%y")"
+    commit_message="New backup from $(date +"%m-%d-%y")"
 fi
 
 # Git commands
