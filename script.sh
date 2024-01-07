@@ -21,10 +21,11 @@ fi
 while IFS= read -r path; do
   # Iterate over every file in the path
   for file in "$HOME/$path"/*; do
-      echo $path
     # Check if it's a symbolic link
     if [ -h "$file" ]; then
       echo "Skipping symbolic link: $file"
+    elif [[ $(basename "$file") =~ ^printer-[0-9]+-[0-9]+\.cfg$ ]]; then
+      echo "Skipping file: $file"
     else
       # Use eval to expand wildcards and copy the file
       eval "cp '$file' '$HOME/$backup_folder/'"
@@ -48,10 +49,10 @@ fi
 
 # Git commands
 cd "$HOME/$backup_parent_directory"
+git config --global init.defaultBranch main #supress git warning about branch name changes coming soon
 git init
 git add .
 git commit -m "$commit_message"
-git branch -M main
 git push -u --set-upstream https://"$github_token"@github.com/"$github_username"/"$github_repository".git main
 # Remove klipper folder after backup so that any file deletions can be logged on next backup
 rm -rf $HOME/$backup_folder/
