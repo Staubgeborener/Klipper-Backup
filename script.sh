@@ -18,13 +18,21 @@ if [ ! -d "$HOME/$backup_folder" ]; then
   mkdir -p "$HOME/$backup_folder"
 fi
 
-# Copy important files into backup folder
 while IFS= read -r path; do
-  # Use eval to expand wildcards
-  eval "cp $HOME/$path/* $HOME/$backup_folder/"
+  # Iterate over every file in the path
+  for file in "$HOME/$path"/*; do
+      echo $path
+    # Check if it's a symbolic link
+    if [ -h "$file" ]; then
+      echo "Skipping symbolic link: $file"
+    else
+      # Use eval to expand wildcards and copy the file
+      eval "cp '$file' '$HOME/$backup_folder/'"
+    fi
+  done
 done < <(grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//')
 
-# Copy Readme.md from backup repo
+# Add basic readme to backup repo
 backup_parent_directory=$(dirname "$backup_folder")
 echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." > "$HOME/$backup_parent_directory/README.md"
 
@@ -44,4 +52,6 @@ git init
 git add .
 git commit -m "$commit_message"
 git branch -M main
-git push --set-upstream https://"$github_token"@github.com/"$github_username"/"$github_repository".git main
+git push -u --set-upstream https://"$github_token"@github.com/"$github_username"/"$github_repository".git main
+# Remove klipper folder after backup so that any file deletions can be logged on next backup
+rm -rf $HOME/$backup_folder/
