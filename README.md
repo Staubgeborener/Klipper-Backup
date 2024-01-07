@@ -29,6 +29,16 @@ This is a backup script to create manual or automated klipper backups in a githu
      run `./script.sh` from within klipper-backup and check that you recieve no errors and when checking the repository you should see a new commit.
   6. (Optional but obviously recommended) Automate the process! The most straightforward way will be using `crontab -e` (if it's your first time running the command you will be asked which editor you would like to use, nano is the easiest) once the editor is open for crontab at the very bottom add the line `0 */6 * * * $HOME/klipper-backup/script.sh` which will tell cronitor to run the backup script every 6 hours. You can find other options and examples here: https://crontab.guru/examples.html
 
+## Moonraker update manager
+To add the repo to moonraker's update manager you need to add the following into ```moonraker.conf```
+```
+[update_manager client klipper-backup]
+type: git_repo
+path: ~/klipper-backup
+origin: https://github.com/Tylerjet/klipper-backup.git
+is_system_service: False
+primary_branch: main
+```
 
 ## YouTube
 The user [Minimal 3DP](https://github.com/minimal3dp) has created a video about the initial setup and use of klipper-backup and made it available on YouTube. This and the wiki should explain many questions in advance.
