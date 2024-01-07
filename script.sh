@@ -24,10 +24,9 @@ while IFS= read -r path; do
     # Check if it's a symbolic link
     if [ -h "$file" ]; then
       echo "Skipping symbolic link: $file"
-    elif [[ $(basename "$file") =~ ^printer-[0-9]+-[0-9]+\.cfg$ ]]; then
-      echo "Skipping file: $file"
+    elif [[ $(basename "$file") =~ ^printer-[0-9]+_[0-9]+\.cfg$ ]]; then
+        echo "Skipping file: $file"
     else
-      # Use eval to expand wildcards and copy the file
       eval "cp '$file' '$HOME/$backup_folder/'"
     fi
   done
