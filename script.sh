@@ -36,9 +36,9 @@ else
 fi
 
 # Git commands
-#cd "$HOME/$backup_parent_directory"
-#git init
-#git add .
-#git commit -m "$commit_message"
-#git branch -M main
-#git push --set-upstream https://"$github_token"@github.com/"$github_username"/"$github_repository".git main
+cd "$HOME/$backup_parent_directory"
+git init
+git add .
+git commit -m "$commit_message"
+git branch -M main
+git push --set-upstream https://"$github_token"@github.com/"$github_username"/"$github_repository".git main
