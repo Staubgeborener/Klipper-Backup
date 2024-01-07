@@ -29,10 +29,13 @@ backup_parent_directory=$(dirname "$backup_folder")
 echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." > "$HOME/$backup_parent_directory/README.md"
 
 # Individual commit message, if no parameter is set, use the current timestamp as commit message
+timezone=$(timedatectl | grep "Time zone" | awk '{print $3}')
 if [ -n "$1" ]; then
     commit_message="$1"
-else
+elif [[ "$timezone" == *"America"* ]]; then
     commit_message="New backup from $(date +"%m-%d-%y")"
+else
+    commit_message="New backup from $(date +"%d-%m-%y")"
 fi
 
 # Git commands
