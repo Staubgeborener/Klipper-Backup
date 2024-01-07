@@ -27,7 +27,7 @@ This is a backup script to create manual or automated klipper backups in a githu
      - Click Create repository.
   5. Run your first backup!
      run `./script.sh` from within klipper-backup and check that you recieve no errors and when checking the repository you should see a new commit.
-  6. (Optional but obviously recommended) Automate the process! The most straightforward way will be using `crontab -e` (if it's your first time running the command you will be asked which editor you would like to use, nano is the easiest) once the editor is open for crontab at the very bottom add the line `0 */6 * * * $HOME/klipper-backup/script.sh` which will tell cronitor to run the backup script every 6 hours. You can find other options and examples here: https://crontab.guru/examples.html
+  6. (Optional but obviously recommended) Automate the process! The most straightforward way will be using `crontab -e` (if it's your first time running the command you will be asked which editor you would like to use, nano is the easiest) once the editor is open for crontab at the very bottom add the line `0 */6 * * * $HOME/klipper-backup/script.sh` which will tell cron to run the backup script every 6 hours. You can find other options and examples here: https://crontab.guru/examples.html
 
 ## Moonraker update manager
 To add this repository to moonraker's update manager for easy updating, you need to add the following into ```moonraker.conf```
