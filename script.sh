@@ -4,10 +4,7 @@
 parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)
 
 # Initialize variables from .env file
-github_token=$(grep 'github_token=' "$parent_path"/.env | sed 's/^.*=//')
-github_username=$(grep 'github_username=' "$parent_path"/.env | sed 's/^.*=//')
-github_repository=$(grep 'github_repository=' "$parent_path"/.env | sed 's/^.*=//')
-backup_folder=$(grep 'backup_folder=' "$parent_path"/.env | sed 's/^.*=//')
+source "$parent_path"/.env
 
 # Change directory to parent path
 cd "$parent_path" || exit
@@ -48,8 +45,13 @@ fi
 
 # Git commands
 cd "$HOME/$backup_parent_directory"
+# Check if .git exists else init git repo
+if [ ! -d ".git" ]; then
+  git init
+fi
 git config init.defaultBranch main #supress git warning about branch name changes coming soon
-git init
+[[ "$commit_username" != "" ]] && git config user.name "$commit_username" || git config user.name "$(whoami)"
+[[ "$commit_email" != "" ]] && git config user.email "$commit_email" || git config user.email "$(whoami)@$(hostname --long)"
 git add .
 git commit -m "$commit_message"
 git push -u https://"$github_token"@github.com/"$github_username"/"$github_repository".git main
