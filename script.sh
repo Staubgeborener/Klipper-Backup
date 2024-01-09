@@ -23,6 +23,7 @@ while IFS= read -r path; do
     # Check if it's a symbolic link
     if [ -h "$file" ]; then
       echo "Skipping symbolic link: $file"
+      # Check if file is an extra backup of printer.cfg moonraker/klipper seems to like to make 4-5 of these sometimes no need to back them all up as well.
     elif [[ $(basename "$file") =~ ^printer-[0-9]+_[0-9]+\.cfg$ ]]; then
         echo "Skipping file: $file"
     else
@@ -51,6 +52,6 @@ git config init.defaultBranch main #supress git warning about branch name change
 git init
 git add .
 git commit -m "$commit_message"
-git push -u --set-upstream https://"$github_token"@github.com/"$github_username"/"$github_repository".git main
+git push -u https://"$github_token"@github.com/"$github_username"/"$github_repository".git main
 # Remove klipper folder after backup so that any file deletions can be logged on next backup
 rm -rf $HOME/$backup_folder/
