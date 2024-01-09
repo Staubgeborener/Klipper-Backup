@@ -20,7 +20,7 @@ fi
 
 while IFS= read -r path; do
   # Iterate over every file in the path
-  for file in "$HOME/$path"/*; do
+  for file in $HOME/$path; do
     # Check if it's a symbolic link
     if [ -h "$file" ]; then
       echo "Skipping symbolic link: $file"
