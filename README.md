@@ -33,7 +33,7 @@ This is a backup script to create manual or automated klipper backups in a githu
 To add this repository to moonraker's update manager for easy updating, you need to add the following into ```moonraker.conf```
 *This is just for this repositories updates, not updates of your config backups. Those do not get added to moonraker.
 ```
-[update_manager client klipper-backup]
+[update_manager klipper-backup]
 type: git_repo
 path: ~/klipper-backup
 origin: https://github.com/Tylerjet/klipper-backup.git
