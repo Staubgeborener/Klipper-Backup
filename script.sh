@@ -7,7 +7,6 @@ parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)
 github_token=$(grep 'github_token=' "$parent_path"/.env | sed 's/^.*=//')
 github_username=$(grep 'github_username=' "$parent_path"/.env | sed 's/^.*=//')
 github_repository=$(grep 'github_repository=' "$parent_path"/.env | sed 's/^.*=//')
-
 backup_folder=$(grep 'backup_folder=' "$parent_path"/.env | sed 's/^.*=//')
 
 # Change directory to parent path
@@ -48,7 +47,7 @@ fi
 
 # Git commands
 cd "$HOME/$backup_parent_directory"
-git config --global init.defaultBranch main #supress git warning about branch name changes coming soon
+git config init.defaultBranch main #supress git warning about branch name changes coming soon
 git init
 git add .
 git commit -m "$commit_message"
