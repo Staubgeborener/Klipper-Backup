@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Check for updates
+[ $(git rev-parse HEAD) = $(git ls-remote $(git rev-parse --abbrev-ref @{u} | \
+sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "Klipper-backup is $(tput setaf 1)not$(tput sgr0) up to date, consider making a $(tput setaf 1)git pull$(tput sgr0) to update\n"
+
 # Set parent directory path
 parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)
 
@@ -47,13 +51,21 @@ fi
 cd "$HOME/$backup_parent_directory"
 # Check if .git exists else init git repo
 if [ ! -d ".git" ]; then
+  mkdir .git 
+  cd .git
+  echo "[init]
+          defaultBranch = $branch_name" >> config #Add desired branch name to config before init
+  cd ..
   git init
+  branch=$(git symbolic-ref --short -q HEAD)
+else
+  branch=$(git symbolic-ref --short -q HEAD)
 fi
-git config init.defaultBranch main #supress git warning about branch name changes coming soon
+
 [[ "$commit_username" != "" ]] && git config user.name "$commit_username" || git config user.name "$(whoami)"
 [[ "$commit_email" != "" ]] && git config user.email "$commit_email" || git config user.email "$(whoami)@$(hostname --long)"
 git add .
 git commit -m "$commit_message"
-git push -u https://"$github_token"@github.com/"$github_username"/"$github_repository".git main
+git push -u https://"$github_token"@github.com/"$github_username"/"$github_repository".git $branch
 # Remove klipper folder after backup so that any file deletions can be logged on next backup
 rm -rf $HOME/$backup_folder/
