@@ -5,7 +5,7 @@ This is a backup script to create manual or automated klipper backups in a githu
 
 ## Installation
   1. Glone the repo and copy .env.example to .env:
-     `git clone https://github.com/Tylerjet/klipper-backup.git && cp ./klipper-backup/.env.example ./klipper-backup/.env`
+     `git clone https://github.com/Staubgeborener/klipper-backup.git && cp ./klipper-backup/.env.example ./klipper-backup/.env`
   2. navigate into the klipper-backup folder `cd klipper-backup` and edit the .env file: `nano .env` inside of .env, edit the following lines:
      ```
       github_token=ghp_xxxxxxxxxxxxxxxxxxxx
@@ -36,7 +36,7 @@ To add this repository to moonraker's update manager for easy updating, you need
 [update_manager klipper-backup]
 type: git_repo
 path: ~/klipper-backup
-origin: https://github.com/Tylerjet/klipper-backup.git
+origin: https://github.com/Staubgeborener/klipper-backup.git
 is_system_service: False
 primary_branch: main
 ```
