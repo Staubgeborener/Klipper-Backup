@@ -52,10 +52,8 @@ cd "$HOME/$backup_parent_directory"
 # Check if .git exists else init git repo
 if [ ! -d ".git" ]; then
   mkdir .git 
-  cd .git
   echo "[init]
-          defaultBranch = $branch_name" >> config #Add desired branch name to config before init
-  cd ..
+          defaultBranch = $branch_name" >> .git/config #Add desired branch name to config before init
   git init
   branch=$(git symbolic-ref --short -q HEAD)
 else
