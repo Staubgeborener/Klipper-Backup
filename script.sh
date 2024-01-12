@@ -28,13 +28,14 @@ while IFS= read -r path; do
     elif [[ $(basename "$file") =~ ^printer-[0-9]+_[0-9]+\.cfg$ ]]; then
         echo "Skipping file: $file"
     else
-      cp $file $HOME/$backup_folder/
+      cp -r $file $HOME/$backup_folder/
     fi
   done
 done < <(grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//')
 
 # Add basic readme to backup repo
 backup_parent_directory=$(dirname "$backup_folder")
+cp "$parent_path"/.gitignore "$HOME/$backup_parent_directory/.gitignore"
 echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." > "$HOME/$backup_parent_directory/README.md"
 
 # Individual commit message, if no parameter is set, use the current timestamp as commit message

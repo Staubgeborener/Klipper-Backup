@@ -6,7 +6,8 @@ This is a backup script to create manual or automated klipper backups in a githu
 ## RTFM
 I would suggest reading the [wiki](https://github.com/Staubgeborener/klipper-backup/wiki), as this provides detailed step-by-step instructions.
 
-If you have already used the script before release 1.0, please read [this wiki article](https://github.com/Staubgeborener/klipper-backup/wiki/migration) before opening an issue!
+> [!IMPORTANT]  
+> If you have already used the script before release 1.0, please read [this wiki article](https://github.com/Staubgeborener/klipper-backup/wiki/migration) before opening an issue!
 
 ## YouTube
 The user [Minimal 3DP](https://github.com/minimal3dp) has created a video about the initial setup and use of klipper-backup and made it available on YouTube. This and the wiki should explain many questions in advance.
