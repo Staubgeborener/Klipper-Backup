@@ -65,6 +65,6 @@ fi
 [[ "$commit_email" != "" ]] && git config user.email "$commit_email" || git config user.email "$(whoami)@$(hostname --long)"
 git add .
 git commit -m "$commit_message"
-git push -u https://"$github_token"@github.com/"$github_username"/"$github_repository".git $branch
+git push -f -u https://"$github_token"@github.com/"$github_username"/"$github_repository".git $branch
 # Remove klipper folder after backup so that any file deletions can be logged on next backup
 rm -rf $HOME/$backup_folder/
