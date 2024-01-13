@@ -13,7 +13,7 @@ source "$parent_path"/.env
 # Check that backup_folder is not set to root of users home directory
 backup_folderDepth=$(echo "$backup_folder" | tr '/' '\n' | grep -c .)
 if [[ $backup_folder == '.' ]]; then
-  echo "$(tput setaf 1)Your \$backup_folder path cannot be the root of: $HOME"
+  echo "$(tput setaf 1)Your backup_folder path cannot be the root of: $HOME"
   echo "Please change the path location in .env!$(tput sgr0)"
   exit
 fi
