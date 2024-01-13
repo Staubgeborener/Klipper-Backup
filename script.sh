@@ -28,11 +28,13 @@ if [ ! -d $backup_path ]; then
   mkdir -p $backup_path
 fi
 
-if (grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//') > /dev/null; then
-  echo -e "$(tput setaf 1)Warning: Some paths in the .env file appear to be directories.\nBe sure to include /* at the end of the path or you may have undesireable results when backing up files.$(tput sgr0)\n"
-fi
-
 while IFS= read -r path; do
+  # Check that the path is not a file (so it must be some sort of directory) and check if it ends in /* and add if it does not exist
+  if [[ ! "$path" =~ \*$ && ! "$path" =~ /$ && ! -f "$path" ]]; then
+    path="$path/*"
+  elif [[ ! "$path" =~ \$ && ! -f "$path" ]]; then
+    path="$path*"
+  fi
   # Iterate over every file in the path
   for file in $HOME/$path; do
     # Check if it's a symbolic link
@@ -42,7 +44,7 @@ while IFS= read -r path; do
     elif [[ $(basename "$file") =~ ^printer-[0-9]+_[0-9]+\.cfg$ ]]; then
         echo "Skipping file: $file"
     else
-      cp -r $file $HOME/$backup_folder/
+      cp -r $file $backup_path/
     fi
   done
 done < <(grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//')
