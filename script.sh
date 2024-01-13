@@ -30,9 +30,10 @@ fi
 
 while IFS= read -r path; do
   # Check that the path is not a file (so it must be some sort of directory) and check if it ends in /* and add if it does not exist
-  if [[ ! "$path" =~ \*$ && ! "$path" =~ /$ && ! -f "$path" ]]; then
+  # Also checking if file ends in any file extension (.txt,.cfg, etc...) as linux test with -f reports that .cfg is not a file
+  if [[ ! "$path" =~ \*$ && ! "$path" =~ /$ && ! -f "$path" && ! "$path" =~ \.[^.]+$ ]]; then
     path="$path/*"
-  elif [[ ! "$path" =~ \$ && ! -f "$path" ]]; then
+  elif [[ ! "$path" =~ \$ && ! -f "$path" && ! "$path" =~ \.[^.]+$ ]]; then
     path="$path*"
   fi
   # Iterate over every file in the path
