@@ -50,9 +50,9 @@ done < <(grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//')
 # Check if backup_folder path depth is greater than 1, this is needed to ensure that if path is only 1 level deep we do not create the git repo in /home/{username}/
 # we DO NOT want to use backup_path here as we want to exclude /home/{username}/ from the awk search
 if [[ $backup_folderDepth -gt 1 ]]; then
-backup_parent_directory=$(echo "$backup_folder" | awk -F'/' '{print $1}') # first level of backup path
+  backup_parent_directory=$(echo "$backup_folder" | awk -F'/' '{print $1}') # first level of backup path
 else
-backup_parent_directory=$backup_folder
+  backup_parent_directory=$backup_folder
 fi
 
 cp "$parent_path"/.gitignore "$HOME/$backup_parent_directory/.gitignore"
