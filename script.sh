@@ -13,9 +13,9 @@ source "$parent_path"/.env
 # Check that backup_folder is not set to root of users home directory
 backup_folderDepth=$(echo "$backup_folder" | tr '/' '\n' | grep -c .)
 if [[ $backup_folder == '.' ]]; then
-echo "Your \$backup_folder path cannot be the root of: $HOME"
-echo "Please change the path location in .env!"
-exit 1
+  echo "$(tput setaf 1)Your \$backup_folder path cannot be the root of: $HOME"
+  echo "Please change the path location in .env!$(tput sgr0)"
+  exit
 fi
 
 # Change directory to parent path
@@ -26,6 +26,10 @@ backup_path="$HOME/$backup_folder"
 # Check if backup folder exists, create one if it does not
 if [ ! -d $backup_path ]; then
   mkdir -p $backup_path
+fi
+
+if (grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//') > /dev/null; then
+  echo -e "$(tput setaf 1)Warning: Some paths in the .env file appear to be directories.\nBe sure to include /* at the end of the path or you may have undesireable results when backing up files.$(tput sgr0)\n"
 fi
 
 while IFS= read -r path; do
@@ -72,23 +76,37 @@ cd "$HOME/$backup_parent_directory"
 if [ ! -d ".git" ]; then
   mkdir .git
   echo "[init]
-          defaultBranch = $branch_name" >> .git/config #Add desired branch name to config before init
+        defaultBranch = $branch_name" >> .git/config #Add desired branch name to config before init
   git init
-  branch=$(git symbolic-ref --short -q HEAD)
-else
-  branch=$(git symbolic-ref --short -q HEAD)
+
+# Check if the current checked out branch matches the branch name given in .env if not then redefine branch_name to use the checked out branch and warn the user of the mismatch
+elif [[ $(git symbolic-ref --short -q HEAD) != $branch_name ]]; then
+  branch_name=$(git symbolic-ref --short -q HEAD)
+  echo "$(tput setaf 1)The branch name defined in .env does not match the branch that is currently checked out, to remove this warning update branch_name in .env to $branch_name$(tput sgr0)"
 fi
 
 [[ "$commit_username" != "" ]] && git config user.name "$commit_username" || git config user.name "$(whoami)"
 [[ "$commit_email" != "" ]] && git config user.email "$commit_email" || git config user.email "$(whoami)@$(hostname --long)"
+
+# Check if remote origin already exists and create if one does not
+if [ -z "$(git remote get-url origin 2>/dev/null)" ]; then
+    git remote add origin https://"$github_token"@github.com/"$github_username"/"$github_repository".git
+fi
+
+git config advice.skippedCherryPicks false
 git add .
 git commit -m "$commit_message"
-git push -f -u https://"$github_token"@github.com/"$github_username"/"$github_repository".git $branch
 
-# Remove backup folder after backup so that any file deletions can be logged on next backup
+# Only attempt to pull or push when actual changes were commited. cleaner output then pulling and pushing when already up to date.
+if [[ $(git rev-parse HEAD) != $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
+  git pull origin $branch_name --rebase
+  git push -u origin $branch_name
+fi
+
+# Remove backup_folder after backup so that any file deletions can be logged on next backup
 if [[ $backup_folderDepth -gt 1 ]]; then
   rm -rf $backup_path
   find $HOME/$backup_parent_directory -type d -empty -delete
 elif [ -d $backup_path ]; then
-    find $backup_path -maxdepth 1 -mindepth 1 ! -name '.git' -exec rm -rf {} \;
+  find $backup_path -maxdepth 1 -mindepth 1 ! -name '.git' -exec rm -rf {} \;
 fi
