@@ -42,7 +42,7 @@ while IFS= read -r path; do
     elif [[ $(basename "$file") =~ ^printer-[0-9]+_[0-9]+\.cfg$ ]]; then
         echo "Skipping file: $file"
     else
-      cp -r $file $backup_path/
+      cp $file $HOME/$backup_folder/
     fi
   done
 done < <(grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//')
