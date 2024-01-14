@@ -29,9 +29,9 @@ if [ ! -d $backup_path ]; then
 fi
 
 while IFS= read -r path; do
-  # Check if path is a directory
-  if [[ -d "$HOME/$path" ]]; then
-  # Check if path does not end in /* includes a file extention and add
+  # Check if path is a directory or not a file (needed for /* checking as /* treats the path as not a directory)
+  if [[ -d "$HOME/$path" || ! -f "$HOME/$path" ]]; then
+  # Check if path does not end in /* or /
     if [[ ! "$path" =~ /\*$ && ! "$path" =~ /$ ]]; then
       path="$path/*"
     elif [[ ! "$path" =~ \$ && ! "$path" =~ /\*$ ]]; then
