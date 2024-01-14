@@ -29,12 +29,14 @@ if [ ! -d $backup_path ]; then
 fi
 
 while IFS= read -r path; do
-  # Check that the path is not a file (so it must be some sort of directory) and check if it ends in /* and add if it does not exist
-  # Also checking if file ends in any file extension (.txt,.cfg, etc...) as linux test with -f reports that .cfg is not a file
-  if [[ ! "$path" =~ \*$ && ! "$path" =~ /$ && ! -f "$path" && ! "$path" =~ \.[^.]+$ ]]; then
-    path="$path/*"
-  elif [[ ! "$path" =~ \$ && ! -f "$path" && ! "$path" =~ \.[^.]+$ ]]; then
-    path="$path*"
+  # Check if path is a directory
+  if [[ -d "$HOME/$path" ]]; then
+  # Check if path does not end in /* includes a file extention and add
+    if [[ ! "$path" =~ /\*$ && ! "$path" =~ /$ ]]; then
+      path="$path/*"
+    elif [[ ! "$path" =~ \$ && ! "$path" =~ /\*$ ]]; then
+      path="$path*"
+    fi
   fi
   # Iterate over every file in the path
   for file in $HOME/$path; do
