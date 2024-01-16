@@ -10,24 +10,16 @@ parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)
 # Initialize variables from .env file
 source "$parent_path"/.env
 
-# Check that backup_folder is not set to root of users home directory
-backup_folderDepth=$(echo "$backup_folder" | tr '/' '\n' | grep -c .)
-if [[ $backup_folder == '.' ]]; then
-  echo "$(tput setaf 1)Your backup_folder path cannot be the root of: $HOME"
-  echo "Please change the path location in .env!$(tput sgr0)"
-  exit
-fi
-
-# Change directory to parent path
-cd "$parent_path" || exit
-
+backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
 
 # Check if backup folder exists, create one if it does not
-if [ ! -d $backup_path ]; then
-  mkdir -p $backup_path
+if [ ! -d "$backup_path" ]; then
+  mkdir -p "$backup_path"
 fi
 
+# cd to $HOME location, this keeps the script from adding /home/{username} to the folder structure when using --parents
+cd "$HOME"
 while IFS= read -r path; do
   # Check if path is a directory or not a file (needed for /* checking as /* treats the path as not a directory)
   if [[ -d "$HOME/$path" || ! -f "$HOME/$path" ]]; then
@@ -39,7 +31,7 @@ while IFS= read -r path; do
     fi
   fi
   # Iterate over every file in the path
-  for file in $HOME/$path; do
+  for file in $path; do
     # Check if it's a symbolic link
     if [ -h "$file" ]; then
       echo "Skipping symbolic link: $file"
@@ -47,23 +39,15 @@ while IFS= read -r path; do
     elif [[ $(basename "$file") =~ ^printer-[0-9]+_[0-9]+\.cfg$ ]]; then
         echo "Skipping file: $file"
     else
-      cp -r $file $backup_path/
+      cp -r --parents "$file" "$backup_path/"
     fi
   done
 done < <(grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//')
 
-# Check if backup_folder path depth is greater than 1, this is needed to ensure that if path is only 1 level deep we do not create the git repo in /home/{username}/
-# we DO NOT want to use backup_path here as we want to exclude /home/{username}/ from the awk search
-if [[ $backup_folderDepth -gt 1 ]]; then
-  backup_parent_directory=$(echo "$backup_folder" | awk -F'/' '{print $1}') # first level of backup path
-else
-  backup_parent_directory=$backup_folder
-fi
-
-cp "$parent_path"/.gitignore "$HOME/$backup_parent_directory/.gitignore"
+cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
 # Create and add Readme to backup folder
-echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." > "$HOME/$backup_parent_directory/README.md"
+echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." > "$backup_path/README.md"
 
 # Individual commit message, if no parameter is set, use the current timestamp as commit message
 timezone=$(timedatectl | grep "Time zone" | awk '{print $3}')
@@ -76,16 +60,16 @@ else
 fi
 
 # Git commands
-cd "$HOME/$backup_parent_directory"
+cd "$backup_path"
 # Check if .git exists else init git repo
 if [ ! -d ".git" ]; then
   mkdir .git
   echo "[init]
-        defaultBranch = $branch_name" >> .git/config #Add desired branch name to config before init
+        defaultBranch = "$branch_name"" >> .git/config #Add desired branch name to config before init
   git init
 
 # Check if the current checked out branch matches the branch name given in .env if not then redefine branch_name to use the checked out branch and warn the user of the mismatch
-elif [[ $(git symbolic-ref --short -q HEAD) != $branch_name ]]; then
+elif [[ $(git symbolic-ref --short -q HEAD) != "$branch_name" ]]; then
   branch_name=$(git symbolic-ref --short -q HEAD)
   echo "$(tput setaf 1)The branch name defined in .env does not match the branch that is currently checked out, to remove this warning update branch_name in .env to $branch_name$(tput sgr0)"
 fi
@@ -104,14 +88,10 @@ git commit -m "$commit_message"
 
 # Only attempt to pull or push when actual changes were commited. cleaner output then pulling and pushing when already up to date.
 if [[ $(git rev-parse HEAD) != $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
-  git pull origin $branch_name --rebase
-  git push -u origin $branch_name
+  git pull origin "$branch_name" --rebase
+  git push -u origin "$branch_name"
 fi
 
-# Remove backup_folder after backup so that any file deletions can be logged on next backup
-if [[ $backup_folderDepth -gt 1 ]]; then
-  rm -rf $backup_path
-  find $HOME/$backup_parent_directory -type d -empty -delete
-elif [ -d $backup_path ]; then
-  find $backup_path -maxdepth 1 -mindepth 1 ! -name '.git' -exec rm -rf {} \;
-fi
+# Remove files except .git folder after backup so that any file deletions can be logged on next backup
+find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' -exec rm -rf {} \;
+
