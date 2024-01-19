@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# Check for updates
-[ $(git rev-parse HEAD) = $(git ls-remote $(git rev-parse --abbrev-ref @{u} | \
-sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "Klipper-backup is $(tput setaf 1)not$(tput sgr0) up to date, consider making a $(tput setaf 1)git pull$(tput sgr0) to update\n"
-
 # Set parent directory path
 parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)
 
@@ -12,6 +8,10 @@ source "$parent_path"/.env
 
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
+
+# Check for updates
+[ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | \
+sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "Klipper-backup is $(tput setaf 1)not$(tput sgr0) up to date, consider making a $(tput setaf 1)git pull$(tput sgr0) to update\n"
 
 # Check if backup folder exists, create one if it does not
 if [ ! -d "$backup_path" ]; then
