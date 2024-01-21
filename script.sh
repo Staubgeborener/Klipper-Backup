@@ -74,8 +74,21 @@ elif [[ $(git symbolic-ref --short -q HEAD) != "$branch_name" ]]; then
   git branch -m "$branch_name"
 fi
 
-[[ "$commit_username" != "" ]] && git config user.name "$commit_username" || git config user.name "$(whoami)"
-[[ "$commit_email" != "" ]] && git config user.email "$commit_email" || git config user.email "$(whoami)@$(hostname --long)"
+# Check if username is defined in .env
+if [[ "$commit_username" != "" ]]; then
+  git config user.name "$commit_username"
+else
+  git config user.name "$(whoami)"
+  sed -i "s/^commit_username=.*/commit_username=$(whoami)" "$parent_path"/.env
+fi
+
+# Check if email is defined in .env
+if [[ "$commit_email" != "" ]]; then
+  git config user.email "$commit_email"
+else
+  git config user.email "$(whoami)@$(hostname --long)-$(git rev-parse --short HEAD)"
+  sed -i "s/^commit_email=.*/commit_email=$(whoami)@$(hostname --long)-$(git rev-parse --short HEAD)/" "$parent_path"/.env
+fi
 
 # Check if remote origin already exists and create if one does not
 if [ -z "$(git remote get-url origin 2>/dev/null)" ]; then
