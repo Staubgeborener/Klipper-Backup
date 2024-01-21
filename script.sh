@@ -79,7 +79,7 @@ if [[ "$commit_username" != "" ]]; then
   git config user.name "$commit_username"
 else
   git config user.name "$(whoami)"
-  sed -i "s/^commit_username=.*/commit_username=$(whoami)" "$parent_path"/.env
+  sed -i "s/^commit_username=.*/commit_username=\"$(whoami)\"/" "$parent_path"/.env
 fi
 
 # Check if email is defined in .env
@@ -87,7 +87,7 @@ if [[ "$commit_email" != "" ]]; then
   git config user.email "$commit_email"
 else
   git config user.email "$(whoami)@$(hostname --long)-$(git rev-parse --short HEAD)"
-  sed -i "s/^commit_email=.*/commit_email=$(whoami)@$(hostname --long)-$(git rev-parse --short HEAD)/" "$parent_path"/.env
+  sed -i "s/^commit_email=.*/commit_email=\"$(whoami)@$(hostname --long)-$(git rev-parse --short HEAD)\"/" "$parent_path"/.env
 fi
 
 # Check if remote origin already exists and create if one does not
