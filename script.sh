@@ -11,7 +11,7 @@ backup_path="$HOME/$backup_folder"
 
 # Check for updates
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | \
-sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "Klipper-backup is $(tput setaf 1)not$(tput sgr0) up to date, consider making a $(tput setaf 1)git pull$(tput sgr0) to update\n"
+sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "NEW klipper-backup version available!\n"
 
 # Check if backup folder exists, create one if it does not
 if [ ! -d "$backup_path" ]; then
@@ -68,10 +68,10 @@ if [ ! -d ".git" ]; then
         defaultBranch = "$branch_name"" >> .git/config #Add desired branch name to config before init
   git init
 
-# Check if the current checked out branch matches the branch name given in .env if not then redefine branch_name to use the checked out branch and warn the user of the mismatch
+# Check if the current checked out branch matches the branch name given in .env if not update to new branch
 elif [[ $(git symbolic-ref --short -q HEAD) != "$branch_name" ]]; then
-  branch_name=$(git symbolic-ref --short -q HEAD)
-  echo "$(tput setaf 1)The branch name defined in .env does not match the branch that is currently checked out, to remove this warning update branch_name in .env to $branch_name$(tput sgr0)"
+  echo "New branch in .env detected, rename $(git symbolic-ref --short -q HEAD) to $branch_name branch"
+  git branch -m "$branch_name"
 fi
 
 [[ "$commit_username" != "" ]] && git config user.name "$commit_username" || git config user.name "$(whoami)"
@@ -80,6 +80,11 @@ fi
 # Check if remote origin already exists and create if one does not
 if [ -z "$(git remote get-url origin 2>/dev/null)" ]; then
     git remote add origin https://"$github_token"@github.com/"$github_username"/"$github_repository".git
+fi
+
+# Check if remote origin changed and update when it is
+if [[ "$github_repository" != $(git remote get-url origin | sed 's/https:\/\/.*@github.com\///' | sed 's/\.git$//' | xargs basename) ]]; then
+    git remote set-url origin https://"$github_token"@github.com/"$github_username"/"$github_repository".git
 fi
 
 git config advice.skippedCherryPicks false
@@ -94,4 +99,3 @@ fi
 
 # Remove files except .git folder after backup so that any file deletions can be logged on next backup
 find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' -exec rm -rf {} \;
-
