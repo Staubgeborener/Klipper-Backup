@@ -106,7 +106,22 @@ git commit -m "$commit_message"
 
 # Only attempt to pull or push when actual changes were commited. cleaner output then pulling and pushing when already up to date.
 if [[ $(git rev-parse HEAD) != $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
-  git pull origin "$branch_name" --rebase
+  #check if branch exists on remote (newly created repos will not yet have a remote)
+  if git show-ref --verify --quiet "refs/remotes/origin/$branch_name"; then
+    git pull origin "$branch_name" --rebase
+  fi
+
+  # Check if a rebase is in progress
+  if [ -f .git/REBASE_HEAD ]; then
+    # Rebase error occurred, list conflicted files and add them
+    for file in $(git diff --name-only --diff-filter=U); do
+      git add "$file"
+    done
+
+    # Continue with the rebase
+    git rebase --continue
+  fi
+
   git push -u origin "$branch_name"
 fi
 
