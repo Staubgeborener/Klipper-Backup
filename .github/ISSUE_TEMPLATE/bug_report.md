@@ -15,6 +15,7 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **Informationen**
+Use [markdown syntax ](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#styling-text), like `backticks`.
 Please post the entire output from your terminal that is related to the bug, and remember to censor your token.
 
 **To Reproduce**
