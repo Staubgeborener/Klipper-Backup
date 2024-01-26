@@ -2,8 +2,8 @@ name: ci
 on:
   push:
     branches:
-      - master 
-      - main
+      - docs
+    workflow_dispatch:
 permissions:
   contents: write
 jobs:
