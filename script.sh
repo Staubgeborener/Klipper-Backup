@@ -114,6 +114,10 @@ fi
 cd "$backup_path"
 git add .
 git commit -m "$commit_message"
+# Check if HEAD still matches remote (Means there are no updates to push) and create a empty commit just informing that there are no new updates to push
+if [[ $(git rev-parse HEAD) == $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
+git commit --allow-empty -m "$commit_message - No new changes pushed"
+fi
 git push -u origin "$branch_name"
 
 # Remove files except .git folder after backup so that any file deletions can be logged on next backup
