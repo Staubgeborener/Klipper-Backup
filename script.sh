@@ -104,7 +104,7 @@ echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated G
 # Individual commit message, if no parameter is set, use the current timestamp as commit message
 timezone=$(timedatectl | grep "Time zone" | awk '{print $3}')
 if [ -n "$1" ]; then
-    commit_message="$1"
+    commit_message="$@"
     elif [[ "$timezone" == *"America"* ]]; then
     commit_message="New backup from $(date +"%m-%d-%y")"
 else
