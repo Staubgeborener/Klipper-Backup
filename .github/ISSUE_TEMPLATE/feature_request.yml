@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         This issue form is for feature requests only!
-        If you have a bug report, please use [bug_report](/new?template=bug_report.yml)
+        If you have a bug report, please use [bug_report](/Staubgeborener/klipper-backup/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml&title=%5BBug%5D%3A+)
   - type: textarea
     id: related-to-problem
     attributes:
