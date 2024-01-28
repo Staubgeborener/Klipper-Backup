@@ -26,7 +26,7 @@ To save the changes made in nano do `ctrl + s` then `ctrl + x`
      - Click Create repository.
   5. Run your first backup!
      Run `./script.sh` from within klipper-backup and check that you receive no errors and when checking the repository you should see a new commit.
-  6. (Optional but obviously recommended) Automate the process! The most straightforward way will be using `crontab -e` (if it's your first time running the command you will be asked which editor you would like to use, nano is the easiest) once the editor is open for crontab at the very bottom add the line `@reboot $HOME/klipper-backup/script.sh` which will tell cron to run the backup script every system startup. You can find other options and examples here: https://crontab.guru/examples.html or in [this section](https://github.com/Staubgeborener/klipper-backup/wiki/Execute#cron).
+  6. (Optional but obviously recommended) Automate the process! The most straightforward way will be using `crontab -e` (if it's your first time running the command you will be asked which editor you would like to use, nano is the easiest) once the editor is open for crontab at the very bottom add the line `@reboot sleep 60 && $HOME/klipper-backup/script.sh` which will tell cron to run the backup script every system startup. You can find other options and examples here: https://crontab.guru/examples.html or in [this section](https://github.com/Staubgeborener/klipper-backup/wiki/Execute#cron).
 
 ## Moonraker update manager
 To add this repository to moonraker's update manager for easy updating, you need to add the following into ```moonraker.conf```
