@@ -1,17 +1,16 @@
-# Welcome to MkDocs
+# Klipper-Backup - script for manual or automated GitHub backups. Lightweight, pragmatic and comfortable.
+This wiki provides a complete step-by-step guide to set up [klipper-backup 💾](https://github.com/Staubgeborener/klipper-backup). This guide is specified for the implementation on a Unix system.
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+## Getting started
+To get started with Klipper-Backup, please jump to [Getting Started Guide](https://staubgeborener.github.io/klipper-backup/GettingStarted/) to see detailed instructions.
+However, there is also a [TL;DR](tldr.md) if you want to get the script running as quickly as possible and are not interested about background information.
 
-## Commands
+## Features
+- feature list
+- feature list
+- feature list
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+## Media
+The user [Minimal 3DP](https://github.com/minimal3dp) has created a video about the initial setup and use of Klipper-Backup and made it available on YouTube. This and the docs should explain many questions in advance.
 
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+[![The Ultimate Guide to Using Klipper Macros to Backup Your Configuration Files](https://img.youtube.com/vi/fR2jIegqv3A/0.jpg)](https://www.youtube.com/watch?v=fR2jIegqv3A "The Ultimate Guide to Using Klipper Macros to Backup Your Configuration Files")
