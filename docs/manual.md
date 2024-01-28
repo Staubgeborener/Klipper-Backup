@@ -1,4 +1,3 @@
-There are three ways to run the script:
 ## Shell
 Just start the script manually via the shell.
 
@@ -7,12 +6,6 @@ Just start the script manually via the shell.
 ```
 
 The script automatically uses the current timestamp as the commit message and automatic determines the format for the timestamp based on the timezone (America: month/day/year, otherwise: day/month/year). If you want to customize this, you can call the script as follows `~/klipper-backup/script.sh "my commit message"`.
-
-## cron
-Run the script when starting mainsailos respectively the 3d printer. Type `crontab -e` and add this line:
-```shell
-@reboot sleep 60 && $HOME/klipper-backup/script.sh
-```
 
 ## Klipper macro
 I created a klipper macro `[gcode_macro update_git]` to run the backup manually in the mainsailos gui. This requires the [G-Code Shell Command Extension](https://github.com/th33xitus/kiauh/blob/master/docs/gcode_shell_command.md) which you can get very easily through [KIAUH](https://github.com/th33xitus/kiauh).

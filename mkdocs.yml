@@ -51,8 +51,9 @@ nav:
   - Getting Started:
       - Installation: installation.md
       - Configuration: configuration.md
-      - Updates: updates.md
-      - Execute: execute.md
+      - Updates: updating.md
+      - Automated Backups: automation.md
+      - Manual Backups: manual.md
   - Addition:
-      - TL;DR: tldr.md
+      - Quickstart: quickstart.md
       - Migration: migration.md
