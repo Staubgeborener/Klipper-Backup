@@ -44,9 +44,11 @@ sed -i "s/github_repository=.*/github_repository=$old_github_repository/" ~/klip
 echo -e "$(tput setaf 1)NOW EDIT THE PATH_ PARAMETERS IN YOUR NEW .env !$(tput sgr0)"
 ```
 
+The following [gist](https://gist.github.com/Staubgeborener/53be20d08afee07f50bed20ee4d229a4) can be ran with a one line command to perform the migration.
+
 ```shell
 bash <(curl -sL https://gist.githubusercontent.com/Staubgeborener/53be20d08afee07f50bed20ee4d229a4/raw/0a455f891dc8c843b4964bbb3a0f835d3ad7b43a/klipper-backup-migration.sh)
 ```
-The following [gist](https://gist.github.com/Staubgeborener/53be20d08afee07f50bed20ee4d229a4) can be ran with a one line command to perform the migration.
+
 !!!danger
     Be cautious and thoroughly evaluate scripts obtained from external sources. you should always check that the code you are executing is safe no matter who it comes from.
