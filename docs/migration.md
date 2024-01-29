@@ -1,20 +1,31 @@
 **This is for users who have used Klipper-Backup before release 1.0**
 
-The steps are very clear:
+## Manual Migration
+The following covers manually migrating your old `.env` file to the new `.env` file.  
 
-1. Go into your home directory: `cd ~`
+1. Go into your home directory: 
+```
+cd ~
+```  
+2. Backup your `.env` file: (you can use some of your old information later)  
+```
+cp ~/klipper-backup/.env .env.backup
+```
+3. Delete the old klipper-backup folder: 
+```
+sudo rm -r ~/klipper-backup
+```  
+4. Clone the new klipper-backup version:
+```
+git clone https://github.com/Staubgeborener/klipper-backup.git && chmod +x ./klipper-backup/script.sh && cp ./klipper-backup/.env.example ./klipper-backup/.env
+```  
+5. Now use the information from your old `.env.backup` backup file and edit the new `.env` file.
+You can still use your old token, for example.
+!!! warning
+    **DON'T just copy the old `.env` file into the new folder, this will NOT work!**  
+    Take a look at how the new paths are structured and read the documentation and notes inside of <a href="https://github.com/Staubgeborener/klipper-backup/blob/main/.env.example" target="_blank">.env.example</a> for more information.
 
-2. Backup you `.env`: `cp ~/klipper-backup/.env ~` (you can use some old information later)
-
-3. Delete the old klipper-backup folder: `sudo rm -r ~/klipper-backup`
-
-4. Clone the new klipper-backup version: `git clone https://github.com/Staubgeborener/klipper-backup.git && chmod +x ./klipper-backup/script.sh && cp ./klipper-backup/.env.example ./klipper-backup/.env`
-
-5. Now use the information from your old `.env` backup file and edit the new `.env` file. You can still use your old token, for example. **But please be patient about the new `.env` syntax! DON'T just copy the old `.env` file into the new folder, this will NOT work!** Just look how your old `.env` looks `cat ~/.env`, the new one `cat ~/klipper-backup/.env` and read [this section](configuration.md/#env)
-
-***
-
-A simple script could be something like this
+## Semi-Manual Migration
 ```shell
 #!/bin/bash
 cd ~
@@ -32,7 +43,10 @@ sed -i "s/github_repository=.*/github_repository=$old_github_repository/" ~/klip
 
 echo -e "$(tput setaf 1)NOW EDIT THE PATH_ PARAMETERS IN YOUR NEW .env !$(tput sgr0)"
 ```
-I have created a [gist](https://gist.github.com/Staubgeborener/53be20d08afee07f50bed20ee4d229a4) with this script, so you can run it automatically with the following command:
+
 ```shell
 bash <(curl -sL https://gist.githubusercontent.com/Staubgeborener/53be20d08afee07f50bed20ee4d229a4/raw/0a455f891dc8c843b4964bbb3a0f835d3ad7b43a/klipper-backup-migration.sh)
 ```
+The following [gist](https://gist.github.com/Staubgeborener/53be20d08afee07f50bed20ee4d229a4) can be ran with a one line command to perform the migration.
+!!!danger
+    Be cautious and thoroughly evaluate scripts obtained from external sources. you should always check that the code you are executing is safe no matter who it comes from.
