@@ -20,4 +20,4 @@ However, there is also a [Quickstart](quickstart.md) if you want to get the scri
 ## Media
 The user [Minimal 3DP](https://github.com/minimal3dp) has created a video about the initial setup and use of Klipper-Backup and made it available on YouTube. This and the docs should explain many questions in advance.
 
-[![The Ultimate Guide to Using Klipper Macros to Backup Your Configuration Files](https://img.youtube.com/vi/fR2jIegqv3A/0.jpg)](https://www.youtube.com/watch?v=fR2jIegqv3A "The Ultimate Guide to Using Klipper Macros to Backup Your Configuration Files")
+[![Klipper Backups! A New Guide to Using Klipper Macros to Backup Your Configuration Files](https://img.youtube.com/vi/J4_dlCtZY48/0.jpg)](https://www.youtube.com/watch?v=J4_dlCtZY48 "Klipper Backups! A New Guide to Using Klipper Macros to Backup Your Configuration Files")
