@@ -19,7 +19,6 @@ It's also possible to back up whole directories instead of single files. To do s
 ```ini
 path_klipperdata=printer_data/config/*
 ```
-This will back up all files inside the `printer_data` folder. If you are interested in subfolders, read [this Q&A](https://github.com/Staubgeborener/klipper-backup/wiki/Questions-and-Answers#question-i-want-to-push-folders-recursively-with-subfolders-how-does-it-work).
 
 To back up a single file, use this syntax:
 ```ini
@@ -34,7 +33,7 @@ By default, the `.env` file and the `secrets.conf` are included in the `.gitigno
 
 So let's say you want to use `nano` as your editor of choice (you can use whatever editor you want, for example `vi`, `nvim`, `emacs`, etc) to edit the `.env` file with your personal information:
 1. Move into the `klipper-backup` directory: `cd ~/klipper-backup`
-2. Check if there is a hidden `.env` file inside this directory: `ls -la` (if not, pretty sure you didn't do what was described in the [wiki](https://github.com/Staubgeborener/klipper-backup/wiki/Installation#choose-the-way-of-implementation))
+2. Check if there is a hidden `.env` file inside this directory: `ls -la`
 3. Edit `.env` content with `nano`: `nano .env`
 4. Move with your arrow keys ↑ ← ↓ → to the important lines and copy/paste the important content inside (often the right mouse button is used to paste in ssh terminals)
 5. Save content and exit `nano` with `^X` (which means `CTRL+X`) -> `(Y)ES` -> `[Enter]`
