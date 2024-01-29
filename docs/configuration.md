@@ -41,4 +41,4 @@ So let's say you want to use `nano` as your editor of choice (you can use whatev
 
 A small `nano` YouTube tutorial can be found [here](https://youtu.be/mE2YghYpBBE?t=57).
 
-Next: [The update section](updates.md)
+Next: [The update section](updating.md)
