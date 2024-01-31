@@ -32,6 +32,7 @@ By default, the `.env` file and the `secrets.conf` are included in the `.gitigno
 ## How can I edit files in terminal?
 
 So let's say you want to use `nano` as your editor of choice (you can use whatever editor you want, for example `vi`, `nvim`, `emacs`, etc) to edit the `.env` file with your personal information:
+
 1. Move into the `klipper-backup` directory: `cd ~/klipper-backup`
 2. Check if there is a hidden `.env` file inside this directory: `ls -la`
 3. Edit `.env` content with `nano`: `nano .env`
