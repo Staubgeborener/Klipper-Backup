@@ -16,12 +16,9 @@ gcode:
     RUN_SHELL_COMMAND CMD=update_git_script
 
 [gcode_shell_command update_git_script]
-command: bash /home/pi/klipper-backup/script.sh
+command: bash -c "bash $HOME/klipper-backup/script.sh"
 timeout: 90.0
 verbose: True
 ```
-
-!!! note "Keep in mind"
-    If you use this macro like this, replace the user `pi` with your username if necessary.
 
 ![klipper-backup-macro-image](https://i.imgur.com/UglWf6t.png)

@@ -36,7 +36,7 @@ So let's say you want to use `nano` as your editor of choice (you can use whatev
 2. Check if there is a hidden `.env` file inside this directory: `ls -la`
 3. Edit `.env` content with `nano`: `nano .env`
 4. Move with your arrow keys ↑ ← ↓ → to the important lines and copy/paste the important content inside (often the right mouse button is used to paste in ssh terminals)
-5. Save content and exit `nano` with `^X` (which means `CTRL+X`) -> `(Y)ES` -> `[Enter]`
+5. Save content and exit `nano` with ++ctrl+"x"++ -> ++"(Y)ES"++ -> ++"[Enter]"++
 
 A small `nano` YouTube tutorial can be found [here](https://youtu.be/mE2YghYpBBE?t=57).
 
