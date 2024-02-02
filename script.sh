@@ -6,8 +6,7 @@ parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)
 # Initialize variables from .env file
 source "$parent_path"/.env
 
-backup_folder="config_backup"
-backup_path="$HOME/$backup_folder"
+backup_path=${backup_path:-"$HOME/config_backup"}
 
 # Check for updates
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | \
