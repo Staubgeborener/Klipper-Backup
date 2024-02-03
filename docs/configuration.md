@@ -1,5 +1,5 @@
 ## .env
-Now you need your [GitHub token](installation#create-github-token).
+Now you need your [GitHub token](installation.md#create-github-token).
 
 1. Open the `.env` file inside your repository (for example with `vi`, `vim` or `nano`)
 2. Copy the new token into the `.env` file at `github_token`
