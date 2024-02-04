@@ -1,4 +1,6 @@
-# Klipper-Backup - script for manual or automated GitHub backups. Lightweight, pragmatic and comfortable. 
+<h1 style="margin-bottom:0;">Welcome to Klipper-Backup wiki</h1>
+<h6 style="margin-top:0;">Klipper-Backup is a script for manual or automated GitHub backups. It's Lightweight, pragmatic and comfortable.</h6>  
+
 This wiki provides a complete step-by-step guide to set up [klipper-backup 💾](https://github.com/Staubgeborener/klipper-backup). This guide is specified for the implementation on a Unix system.
 
 ## Getting started
