@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+error_exit() {
+    echo "Error: $1" >&2
+    exit 1
+}
+
 # Set parent directory path
 parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)
 
@@ -12,9 +17,19 @@ backup_path=${backup_path:-"$HOME/config_backup"}
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | \
 sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "NEW klipper-backup version available!\n"
 
+# Print error if backup folder contains unexpected files
+if [[ -d "$backup_path" && -n "$(ls -A "$backup_path" 2>/dev/null | grep -v '^\.git$')" ]]; then
+    error_exit "The backup path is not valid for the operation"
+fi
+
 # Check if backup folder exists, create one if it does not
 if [ ! -d "$backup_path" ]; then
-    mkdir -p "$backup_path"
+    mkdir -p "$backup_path" || error_exit "Can't create backup folder"
+fi
+
+# Check if the current user has write permissions
+if [ ! -w "$backup_path" ]; then
+    error_exit "$backup_path is not writable by the current user"
 fi
 
 # Git commands
@@ -104,7 +119,7 @@ echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated G
 timezone=$(timedatectl | grep "Time zone" | awk '{print $3}')
 if [ -n "$1" ]; then
     commit_message="$@"
-    elif [[ "$timezone" == *"America"* ]]; then
+elif [[ "$timezone" == *"America"* ]]; then
     commit_message="New backup from $(date +"%m-%d-%y")"
 else
     commit_message="New backup from $(date +"%d-%m-%y")"
