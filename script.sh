@@ -54,12 +54,12 @@ fi
 
 # Check if remote origin already exists and create if one does not
 if [ -z "$(git remote get-url origin 2>/dev/null)" ]; then
-    git remote add origin https://"$github_token"@github.com/"$github_username"/"$github_repository".git
+    git remote add origin https://"$github_token"@"$git_url"/"$github_username"/"$github_repository".git
 fi
 
 # Check if remote origin changed and update when it is
 if [[ "$github_repository" != $(git remote get-url origin | sed 's/https:\/\/.*@github.com\///' | sed 's/\.git$//' | xargs basename) ]]; then
-    git remote set-url origin https://"$github_token"@github.com/"$github_username"/"$github_repository".git
+    git remote set-url origin https://"$github_token"@"$git_url"/"$github_username"/"$github_repository".git
 fi
 
 git config advice.skippedCherryPicks false
