@@ -60,10 +60,8 @@ if [ -z "$(git remote get-url origin 2>/dev/null)" ]; then
 fi
 
 # Check if remote origin changed and update when it is
-if [[ "$github_repository" != $(git remote get-url origin | sed 's/https:\/\/.*@github.com\///' | sed 's/\.git$//' | xargs basename) ]]; then
 if [[ "$full_git_url" != $(git remote get-url origin) ]]; then
     git remote set-url origin "$full_git_url"
-fi
 fi
 
 git config advice.skippedCherryPicks false
