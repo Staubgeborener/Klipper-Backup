@@ -39,9 +39,10 @@ You can also use cron jobs for scheduling backups.
 1. Edit the crontab file using:
 ```
 crontab -e
-```
-!!! info
-    if it's your first time running the command you will be asked which editor you would like to use, nano is the easiest  
+```  
+
+    !!! info
+        if it's your first time running the command you will be asked which editor you would like to use, nano is the easiest  
 
 2. Once the editor is open, at the very bottom of the file add the line:
 ```
