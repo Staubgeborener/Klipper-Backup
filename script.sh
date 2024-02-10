@@ -45,7 +45,11 @@ if [[ "$commit_email" != "" ]]; then
     git config user.email "$commit_email"
 else
     # Get the MAC address of the first network interface for unique id
-    mac_address=$(ipconfig | grep -o -E '([0-9a-fA-F]:?){6}' | head -n 1)
+    if ! command -v ifconfig &> /dev/null; then
+        mac_address=$(ipconfig | grep -o -E '([0-9a-fA-F]:?){6}' | head -n 1)
+    else
+        mac_address=$(ifconfig | grep -o -E '([0-9a-fA-F]:?){6}' | head -n 1)
+    fi
     # Use the MAC address to generate a unique identifier
     unique_id=$(echo "$mac_address" | sha256sum | cut -c 1-8)
     git config user.email "$(whoami)@$(hostname --long)-$unique_id"
