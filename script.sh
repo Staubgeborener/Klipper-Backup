@@ -8,6 +8,7 @@ source "$parent_path"/.env
 
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
+git_url=${git_url:-"github.com"}
 
 # Check for updates
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | \
