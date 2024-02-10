@@ -106,13 +106,11 @@ cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." > "$backup_path/README.md"
 
 # Individual commit message, if no parameter is set, use the current timestamp as commit message
-timezone=$(timedatectl | grep "Time zone" | awk '{print $3}')
+
 if [ -n "$1" ]; then
     commit_message="$@"
-    elif [[ "$timezone" == *"America"* ]]; then
-    commit_message="New backup from $(date +"%m-%d-%y")"
 else
-    commit_message="New backup from $(date +"%d-%m-%y")"
+    commit_message="New backup from $(date +"%x - %X")"
 fi
 
 cd "$backup_path"
