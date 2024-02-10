@@ -8,6 +8,8 @@ source "$parent_path"/.env
 
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
+git_host=${git_host:-"github.com"}
+full_git_url="https://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
 
 # Check for updates
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | \
@@ -45,7 +47,11 @@ if [[ "$commit_email" != "" ]]; then
     git config user.email "$commit_email"
 else
     # Get the MAC address of the first network interface for unique id
-    mac_address=$(ipconfig | grep -o -E '([0-9a-fA-F]:?){6}' | head -n 1)
+    if ! command -v ifconfig &> /dev/null; then
+        mac_address=$(ipconfig | grep -o -E '([0-9a-fA-F]:?){6}' | head -n 1)
+    else
+        mac_address=$(ifconfig | grep -o -E '([0-9a-fA-F]:?){6}' | head -n 1)
+    fi
     # Use the MAC address to generate a unique identifier
     unique_id=$(echo "$mac_address" | sha256sum | cut -c 1-8)
     git config user.email "$(whoami)@$(hostname --long)-$unique_id"
@@ -54,12 +60,12 @@ fi
 
 # Check if remote origin already exists and create if one does not
 if [ -z "$(git remote get-url origin 2>/dev/null)" ]; then
-    git remote add origin https://"$github_token"@github.com/"$github_username"/"$github_repository".git
+    git remote add origin "$full_git_url"
 fi
 
 # Check if remote origin changed and update when it is
-if [[ "$github_repository" != $(git remote get-url origin | sed 's/https:\/\/.*@github.com\///' | sed 's/\.git$//' | xargs basename) ]]; then
-    git remote set-url origin https://"$github_token"@github.com/"$github_username"/"$github_repository".git
+if [[ "$full_git_url" != $(git remote get-url origin) ]]; then
+    git remote set-url origin "$full_git_url"
 fi
 
 git config advice.skippedCherryPicks false
