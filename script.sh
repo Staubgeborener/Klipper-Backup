@@ -112,7 +112,6 @@ cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." > "$backup_path/README.md"
 
 # Individual commit message, if no parameter is set, use the current timestamp as commit message
-
 if [ -n "$1" ]; then
     commit_message="$@"
 else
