@@ -92,5 +92,6 @@ sudo systemctl start klipper-backup-filewatch.service
 ```  
 
     !!! note
-        When making large edits where you might want to stop the service you can go into your service manager and stop the service below is an example of its location in fluidd. 
+        When making large edits where you might want to stop the service you can go into your service manager and stop the service below is an example of its location in fluidd.  
+        
         ![fluidd-service-manager](https://i.imgur.com/kOct70v.gif)
