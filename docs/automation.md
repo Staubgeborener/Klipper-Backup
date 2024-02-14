@@ -90,3 +90,5 @@ sudo systemctl daemon-reload
 sudo systemctl enable klipper-backup-filewatch.service
 sudo systemctl start klipper-backup-filewatch.service
 ```
+5. When making large edits where you might want to stop the service you can go into your service manager and stop the service below is an example of its location in fluidd. 
+![fluidd-service-manager](https://i.imgur.com/mQgVY7J.gif)
