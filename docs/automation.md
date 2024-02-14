@@ -3,12 +3,12 @@ There are a couple different methods for automating backups you can choose to us
 ## Backup on boot
 1. Create the service file in systemd
 ```shell 
-sudo nano /etc/systemd/system/klipper-backup.service
+sudo nano /etc/systemd/system/klipper-backup-on-boot.service
 ```  
 2. Copy and paste the below text (be sure to uncomment the correct `after=` and `wants=` lines based on if your linux install is using network manager)  
 ```shell
 [Unit]
-Description=Klipper Backup Service
+Description=Klipper Backup On-boot Service
 #Uncomment below lines if using network manager
 #After=NetworkManager-wait-online.service
 #Wants=NetworkManager-wait-online.service
@@ -27,8 +27,8 @@ WantedBy=default.target
 3. Reload the service daemon, enable the service and start the service
 ```
 sudo systemctl daemon-reload
-sudo systemctl enable klipper-backup.service
-sudo systemctl start klipper-backup.service
+sudo systemctl enable klipper-backup-on-boot.service
+sudo systemctl start klipper-backup-on-boot.service
 ```
 
 ## Cron
@@ -49,3 +49,44 @@ crontab -e
 0 */4 * * * $HOME/klipper-backup/script.sh
 ```
 This tells cron to run the backup script every 4 hours. You can find other cron examples here: <a href="https://crontab.guru/examples.html" target="_blank">https://crontab.guru/examples.html</a>
+
+## Backup on file changes
+!!! warning "Important Info"
+    The following service relies on the inotify-tools package. 
+    
+    To install the package run ```sudo apt-get install inotify-tools``` in your terminal.
+2. Create the service file in systemd
+```shell 
+sudo nano /etc/systemd/system/klipper-backup-filewatch.service
+```  
+3. Copy and paste the below text (be sure to uncomment the correct `after=` and `wants=` lines based on if your linux install is using network manager)  
+```shell
+[Unit]
+Description=Klipper Backup Filewatch Service
+#Uncomment below lines if using network manager
+#After=NetworkManager-wait-online.service
+#Wants=NetworkManager-wait-online.service
+#Uncomment below lines if not using network manager
+#After=network-online.target
+#Wants=network-online.target
+
+[Service]
+User={replace with your username}
+Type=simple
+ExecStart=/bin/bash -c '\
+    exclude_pattern=".swp|.tmp|printer-[0-9]*_[0-9]*.cfg|.bak|.bkp"; \
+    inotifywait -mrPq -e close_write -e move -e delete --exclude "$exclude_pattern" $HOME/printer_data/config/ | \
+    while read -r path event file; do \
+        echo "Event Type: $event, Watched Path: $path, File Name: $file"; \
+        bash -c '\''bash $HOME/klipper-backup/script.sh "Files modified - $(date +\"%%x - %%X\")"'\'' > /dev/null 2>&1; \
+    done'
+
+[Install]
+WantedBy=default.target
+```
+4. Reload the service daemon, enable the service and start the service
+```
+sudo systemctl daemon-reload
+sudo systemctl enable klipper-backup-filewatch.service
+sudo systemctl start klipper-backup-filewatch.service
+```
