@@ -1,7 +1,7 @@
 <h1 style="margin-bottom:0;">Welcome to Klipper-Backup wiki</h1>
 <h6 style="margin-top:0;">Klipper-Backup is a script for manual or automated GitHub backups. It's Lightweight, pragmatic and comfortable.</h6>  
 
-This wiki provides a complete step-by-step guide to set up [klipper-backup 💾](https://github.com/Staubgeborener/klipper-backup). This guide is specified for the implementation on a Unix system.
+This documentation provides a complete step-by-step guide to set up [klipper-backup 💾](https://github.com/Staubgeborener/klipper-backup). This guide is specified for the implementation on a Unix system.
 
 ## Getting started
 To get started with Klipper-Backup, please jump to [Getting Started Guide](installation.md) to see detailed instructions.
@@ -11,7 +11,7 @@ However, there is also a [Quickstart](quickstart.md) if you want to get the scri
 
 ## Features
 - The script does the most complex work in the background automatically
-- Works perfectly with [gocde macros](manual.md/#klipper-macro)
+- Works perfectly with [gcode macros](manual.md/#klipper-macro)
 - Can also be executed [manually in the terminal](manual.md/#shell)
 - Automatic backups with [cron](automation.md/#cron)
 - Switch between repositories and branches at any time

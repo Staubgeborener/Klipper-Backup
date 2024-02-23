@@ -1,4 +1,4 @@
-**This is for users who have used Klipper-Backup before release 1.0**
+**This is for users who have used Klipper-Backup before release 1.0.0**
 
 ## Manual Migration
 The following covers manually migrating your old `.env` file to the new `.env` file.  
