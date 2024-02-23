@@ -12,7 +12,7 @@ Now you need your [GitHub token](installation.md#create-github-token).
 4. `git_host=""`. if you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host=""` to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits.  
     
     !!! warning "Important Note"
-        When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls) or [feature request](https://github.com/Staubgeborener/klipper-backup/issues)  
+        When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls) or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml)  
 
 Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here (**note the pattern!** It must start with `path_` followed by the path) are considered in the backup. I am using the default paths. You can also comment out content inside the `.env` file with `#`, for example this here will use `path_klipperdata` but ignores `path_macroscfg`:
 ```ini
