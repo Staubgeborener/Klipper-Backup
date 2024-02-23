@@ -8,6 +8,7 @@ source "$parent_path"/.env
 
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
+empty_commit=${empty_commit:-"yes"}
 git_host=${git_host:-"github.com"}
 full_git_url="https://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
 
@@ -122,7 +123,7 @@ cd "$backup_path"
 git add .
 git commit -m "$commit_message"
 # Check if HEAD still matches remote (Means there are no updates to push) and create a empty commit just informing that there are no new updates to push
-if [[ $(git rev-parse HEAD) == $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
+if [[ "$empty_commit" = "yes" && $(git rev-parse HEAD) == $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
     git commit --allow-empty -m "$commit_message - No new changes pushed"
 fi
 git push -u origin "$branch_name"
