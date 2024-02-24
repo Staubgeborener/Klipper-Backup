@@ -80,7 +80,7 @@ if git ls-remote --exit-code --heads origin $branch_name >/dev/null 2>&1; then
     git pull origin "$branch_name"
     # Delete the pulled files so that the directory is empty again before copying the new backup
     # The pull is only needed so that the repository nows its on latest and does not require rebases or merges
-    find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' -exec rm -rf {} \;
+    find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' ! -name 'README.md' -exec rm -rf {} \;
 fi
 
 cd "$HOME"
@@ -120,9 +120,6 @@ for i in ${exclude[@]}; do
     echo $i >>"$backup_path/.gitignore"
 done
 
-# Create and add Readme to backup folder
-echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." >"$backup_path/README.md"
-
 # Individual commit message, if no parameter is set, use the current timestamp as commit message
 if [ -n "$1" ]; then
     commit_message="$@"
@@ -131,6 +128,10 @@ else
 fi
 
 cd "$backup_path"
+# Create and add Readme to backup folder if it doesn't already exist
+if ! [ -f "README.md" ]; then
+    echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." >"$backup_path/README.md"
+fi
 git add .
 git commit -m "$commit_message"
 # Check if HEAD still matches remote (Means there are no updates to push) and create a empty commit just informing that there are no new updates to push
