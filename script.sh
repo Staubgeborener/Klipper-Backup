@@ -14,6 +14,7 @@ backup_path="$HOME/$backup_folder"
 empty_commit=${empty_commit:-"yes"}
 git_host=${git_host:-"github.com"}
 full_git_url="https://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
+exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "*.csv" "*.zip"}
 
 # Check for updates
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} |
@@ -111,6 +112,13 @@ while IFS= read -r path; do
 done < <(grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//')
 
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
+
+# Loop through exclude array and add each element to the end of .gitignore so that git does not upload them to remote
+for i in ${exclude[@]}; do
+    # add new line to end of .gitignore if there is not one
+    [[ $(tail -c1 "$backup_path/.gitignore" | wc -l) -eq 0 ]] && echo "" >>"$backup_path/.gitignore"
+    echo $i >>"$backup_path/.gitignore"
+done
 
 # Create and add Readme to backup folder
 echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." >"$backup_path/README.md"
