@@ -35,7 +35,7 @@ path_singlefile=printer_data/config/singlefile.cfg
 ## .gitignore (do not upload certain files)
 To edit the `.gitignore` file, which is responsible for preventing certain files from being uploaded, you have to name the corresponding files in the `.env` file. This is important because you do not want to have sensitive data like passwords, tokens, etc. in a public backup. This also means that this file prevents your token from being [revoked](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation#token-revoked-when-pushed-to-a-public-repository-or-public-gist).
 By default, the `.env` file and the `secrets.conf` are included in the `.gitignore` and can be extended accordingly.
-Basically it's an Array of strings in [].gitignore pattern git format](https://git-scm.com/docs/gitignore#_pattern_format). New additions must be enclosed in double quotes and should follow the pattern format as noted in the mentioned link:
+Basically it's an Array of strings in [.gitignore pattern git format](https://git-scm.com/docs/gitignore#_pattern_format). New additions must be enclosed in double quotes and should follow the pattern format as noted in the mentioned link:
 ```ini
 exclude=( \
 "*.swp" \
