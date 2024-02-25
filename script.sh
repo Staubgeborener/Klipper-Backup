@@ -115,7 +115,8 @@ done < <(grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//')
 
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
-# Loop through exclude array and add each element to the end of .gitignore so that git does not upload them to remote
+# utilize gits native exclusion file .gitignore to add files that should not be uploaded to remote.
+# Loop through exclude array and add each element to the end of .gitignore
 for i in ${exclude[@]}; do
     # add new line to end of .gitignore if there is not one
     [[ $(tail -c1 "$backup_path/.gitignore" | wc -l) -eq 0 ]] && echo "" >>"$backup_path/.gitignore"
@@ -134,7 +135,6 @@ cd "$backup_path"
 if ! [ -f "README.md" ]; then
     echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." >"$backup_path/README.md"
 fi
-
 # Untrack all files so that any new excluded files are correctly ignored and deleted from remote
 git rm -r --cached . >/dev/null 2>&1
 git add .
