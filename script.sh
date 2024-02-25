@@ -34,7 +34,7 @@ if [ ! -d ".git" ]; then
     git init
 # Check if the current checked out branch matches the branch name given in .env if not branch listed in .env
 elif [[ $(git symbolic-ref --short -q HEAD) != "$branch_name" ]]; then
-    echo -e "Branch: $branch_name in .env does not match the currently checked out branch of: $(git symbolic-ref --short -q HEAD).\nSwitching to branch: $branch_name"
+    echo -e "Branch: $branch_name in .env does not match the currently checked out branch of: $(git symbolic-ref --short -q HEAD)."
     # Create branch if it does not exist
     if git show-ref --quiet refs/heads/"$branch"; then
         git checkout "$branch_name"
