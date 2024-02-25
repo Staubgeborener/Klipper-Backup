@@ -32,9 +32,24 @@ To back up a single file, use this syntax:
 path_singlefile=printer_data/config/singlefile.cfg
 ```
 
-## .gitignore
-There is also another hidden file which is called `.gitignore`. All filenames mentioned here will not be included in the backup and thus not uploaded to GitHub. This is important because you do not want to have sensitive data like passwords, tokens, etc. in a public backup. This also means that this file prevents your token from being [revoked](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation#token-revoked-when-pushed-to-a-public-repository-or-public-gist).
+## .gitignore (do not upload certain files)
+To edit the `.gitignore` file, which is responsible for preventing certain files from being uploaded, you have to name the corresponding files in the `.env` file. This is important because you do not want to have sensitive data like passwords, tokens, etc. in a public backup. This also means that this file prevents your token from being [revoked](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation#token-revoked-when-pushed-to-a-public-repository-or-public-gist).
 By default, the `.env` file and the `secrets.conf` are included in the `.gitignore` and can be extended accordingly.
+Basically it's an Array of strings in [].gitignore pattern git format](https://git-scm.com/docs/gitignore#_pattern_format). New additions must be enclosed in double quotes and should follow the pattern format as noted in the mentioned link:
+```ini
+exclude=( \
+"*.swp" \
+"*.tmp" \
+"printer-[0-9]*_[0-9]*.cfg" \
+"*.bak" \
+"*.bkp" \
+"*.csv" \
+"*.zip" \
+)
+```
+
+## Create own README.md
+If there is a need to adapt the `README.md` files, this can be done at any time. To do this, the script must be run at least once, after which the `README.md` can be edited manually in the `~/config_backup` folder. This is then taken into account during the next upload and adjusted accordingly.
 
 ## How can I edit files in terminal?
 
