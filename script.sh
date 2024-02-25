@@ -72,8 +72,6 @@ if [[ "$full_git_url" != $(git remote get-url origin) ]]; then
     git remote set-url origin "$full_git_url"
 fi
 
-git config advice.skippedCherryPicks false
-
 # Check if branch exists on remote (newly created repos will not yet have a remote) and pull any new changes
 if git ls-remote --exit-code --heads origin $branch_name >/dev/null 2>&1; then
     git pull origin "$branch_name"
