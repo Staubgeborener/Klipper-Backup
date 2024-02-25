@@ -129,6 +129,9 @@ cd "$backup_path"
 if ! [ -f "README.md" ]; then
     echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." >"$backup_path/README.md"
 fi
+
+# Untrack all files so that any new excluded files are correctly ignored and deleted from remote
+git rm -r --cached . >/dev/null 2>&1
 git add .
 git commit -m "$commit_message"
 # Check if HEAD still matches remote (Means there are no updates to push) and create a empty commit just informing that there are no new updates to push
