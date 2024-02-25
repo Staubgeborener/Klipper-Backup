@@ -36,10 +36,10 @@ if [ ! -d ".git" ]; then
 elif [[ $(git symbolic-ref --short -q HEAD) != "$branch_name" ]]; then
     echo -e "Branch: $branch_name in .env does not match the currently checked out branch of: $(git symbolic-ref --short -q HEAD)."
     # Create branch if it does not exist
-    if git show-ref --quiet refs/heads/"$branch"; then
-        git checkout "$branch_name"
+    if git show-ref --quiet --verify "refs/heads/$branch_name"; then
+        git checkout "$branch_name" >/dev/null
     else
-        git checkout -b "$branch_name"
+        git checkout -b "$branch_name" >/dev/null
     fi
 fi
 
