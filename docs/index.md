@@ -22,7 +22,7 @@ The user [Minimal 3DP](https://github.com/minimal3dp) has created a video about 
 [![Klipper Backups! A New Guide to Using Klipper Macros to Backup Your Configuration Files](https://img.youtube.com/vi/J4_dlCtZY48/0.jpg)](https://www.youtube.com/watch?v=J4_dlCtZY48 "Klipper Backups! A New Guide to Using Klipper Macros to Backup Your Configuration Files")
 
 ## Contributors
-Thank you to everyone who has contributed to the project!
+<p>Thank you to everyone who has contributed to the project!</p>
 <a href="https://github.com/staubgeborener/klipper-backup/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=staubgeborener/klipper-backup" />
 </a>
