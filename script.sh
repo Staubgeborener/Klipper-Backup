@@ -32,10 +32,15 @@ if [ ! -d ".git" ]; then
     echo "[init]
     defaultBranch = "$branch_name"" >>.git/config #Add desired branch name to config before init
     git init
-# Check if the current checked out branch matches the branch name given in .env if not update to new branch
+# Check if the current checked out branch matches the branch name given in .env if not branch listed in .env
 elif [[ $(git symbolic-ref --short -q HEAD) != "$branch_name" ]]; then
-    echo "New branch in .env detected, rename $(git symbolic-ref --short -q HEAD) to $branch_name branch"
-    git branch -m "$branch_name"
+    echo "Branch: $branch_name in .env does not match the currently checked out branch: $(git symbolic-ref --short -q HEAD) switching to branch: $branch_name"
+    # Create branch if it does not exist
+    if git show-ref --quiet refs/heads/"$branch"; then
+        git checkout "$branch_name"
+    else
+        git checkout -b "$branch_name"
+    fi
 fi
 
 # Check if username is defined in .env
