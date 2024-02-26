@@ -12,8 +12,9 @@ source "$parent_path"/.env
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
 empty_commit=${empty_commit:-"yes"}
+git_protocol=${git_protocol:-"https"}
 git_host=${git_host:-"github.com"}
-full_git_url="https://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
+full_git_url=$git_protocol"://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
 exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "*.csv" "*.zip"}
 
 # Check for updates
