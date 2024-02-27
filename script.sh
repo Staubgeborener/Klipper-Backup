@@ -59,7 +59,7 @@ else
     if ! command -v ifconfig &>/dev/null; then
         mac_address=$(ipconfig | grep -o -E '([0-9a-fA-F]:?){6}' | head -n 1)
     else
-        mac_address=$(ifconfig | grep -o -E '([0-9a-fA-F]:?){6}' | head -n 1)
+        mac_address=$(ip addr | grep -o -E '([0-9a-fA-F]:?){6}' | head -n 1)
     fi
     # Use the MAC address to generate a unique identifier
     unique_id=$(echo "$mac_address" | sha256sum | cut -c 1-8)
