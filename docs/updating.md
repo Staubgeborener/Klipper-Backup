@@ -1,6 +1,10 @@
 ## Moonraker update manager
 To add this repository to moonraker's update manager for easy updating, you need to add the following into ```moonraker.conf```
-*This is just for these repositories updates, not updates of your config backups. Those do not get added to moonraker.
+commits.  
+    
+    !!! warning "Important Note"
+        This is just for these repositories updates, not updates of your config backups. Those do not get added to moonraker.
+
 ```yaml
 [update_manager klipper-backup]
 type: git_repo
@@ -13,7 +17,7 @@ primary_branch: main
 ## Update via shell/console
 
 If the script is executed (e.g. with `./script.sh`) and a new update is available, you will be notified with the following message
-> Klipper-backup is not up to date, consider making a git pull to update
+> NEW klipper-backup version available!
 
 To pull the update navigate to the klipper-backup folder and run `git pull`:
 ```shell
