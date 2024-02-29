@@ -56,10 +56,10 @@ fi
 if [[ "$commit_email" != "" ]]; then
     git config user.email "$commit_email"
 else
-    # Use the MAC address to generate a unique identifier
     unique_id=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 7 | head -n 1)
-    git config user.email "$(whoami)@$(hostname --short)-$unique_id"
-    sed -i "s/^commit_email=.*/commit_email=\"$(whoami)@$(hostname --short)-$unique_id\"/" "$parent_path"/.env
+    user_email=$(whoami)@$(hostname --short)-$unique_id
+    git config user.email "$user_email"
+    sed -i "s/^commit_email=.*/commit_email=\"$user_email\"/" "$parent_path"/.env
 fi
 
 # Check if remote origin already exists and create if one does not
