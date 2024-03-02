@@ -127,10 +127,11 @@ install_repo() {
             if [ "$(git rev-parse HEAD)" = "$(git ls-remote $(git rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1)" ]; then
                 echo -e "${G}●${NC} Klipper-Backup ${G}is up to date.${NC}\n"
             else
+                echo -e "${Y}●${NC} Update for klipper-backup ${Y}Available!${NC}\n"
                 questionline=$(getcursor)
-                if ask_yn "Update is available for Klipper-Backup, proceed with update?"; then
-                    tput cup $(($questionline - 1)) 0
-                    clearUp
+                if ask_yn "Proceed with update?"; then
+                    tput cup $(($questionline - 3)) 0
+                    tput ed
                     loading_wheel "${Y}●${NC} Updating Klipper-Backup" &
                     loading_pid=$!
                     if git pull >/dev/null 2>&1; then
@@ -146,7 +147,6 @@ install_repo() {
                 fi
             fi
         fi
-        configure
     else
         tput cup $(($questionline - 1)) 0
         clearUp
@@ -193,15 +193,20 @@ configure() {
 }
 
 patch_klipper-backup_update_manager() {
-    if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
+ questionline=$(getcursor)
+ if [[ -d $HOME/moonraker ]]; then
+    if ask_yn "Would you like to add klipper-backup to moonraker update manager?"; then
+        tput cup $(($questionline - 2)) 0
+        tput ed
+        pos1=$(getcursor)
+        loading_wheel "${Y}●${NC} Adding klipper-backup to update manager" &
+        loading_pid=$!
+        if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
         ### add new line to conf if it doesn't end with one
         if [[ $(tail -c1 "$HOME/printer_data/config/moonraker.conf" | wc -l) -eq 0 ]]; then
             echo "" >>"$HOME/printer_data/config/moonraker.conf"
         fi
-        ### add klipper-backup update manager section to moonraker.conf
-        sleep .5
-        logo
-        echo -e "${Y}●${NC} Adding klipper-backup to update manager."
+
         if /usr/bin/env bash -c "cat >> $HOME/printer_data/config/moonraker.conf" <<MOONRAKER_CONF; then
 
 [update_manager klipper-backup]
@@ -211,10 +216,20 @@ origin: https://github.com/Staubgeborener/klipper-backup.git
 managed_services: moonraker
 primary_branch: main
 MOONRAKER_CONF
-            sleep .5
-            echo -e "${Y}●${NC} Restarting moonraker."
             sudo systemctl restart moonraker.service
         fi
+    fi
+        kill $loading_pid
+        echo -e "\r\033[K${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
+    else
+        tput cup $(($questionline - 2)) 0
+        tput ed
+        echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
+    fi
+    else
+        tput cup $(($questionline - 2)) 0
+        tput ed
+        echo -e "${R}●${NC} Moonraker is not installed update manager configuration ${R}Skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
     fi
 }
 
@@ -241,12 +256,13 @@ install_filewatch_service() {
             run_command "${buildCommands[i]}"
         done
 
+        cd ..
         sudo rm -rf inotify-tools
         pos2=$(getcursor)
         tput cup $(($pos1 - 1)) 0
         echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
         tput ed
-        tput cup $pos1 0
+        tput cup $(($pos1 - 1)) 0
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
         sudo /usr/bin/env bash -c "cat > /etc/systemd/system/klipper-backup-filewatch.service" <<KLIPPER_SERVICE
@@ -361,6 +377,7 @@ install_cron() {
 
 logo
 install_repo
+configure
 patch_klipper-backup_update_manager
 install_filewatch_service
 install_backup_service
