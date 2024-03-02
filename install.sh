@@ -36,7 +36,6 @@ loading_wheel() {
 
 getcursor() {
     local pos
-
     IFS='[;' read -p $'\e[6n' -d R -a pos -rs || echo "failed with error: $? ; ${pos[*]}"
     echo "${pos[1]}"
 }
@@ -147,7 +146,7 @@ install_repo() {
                         kill $loading_pid
                         echo -e "\r\033[K${G}●${NC} Updating Klipper-Backup ${G}Done!${NC}\n\n Restarting installation script"
                         sleep 1
-                        exec "$0"
+                        exec $parent_path/install.sh
                     fi
                 else
                     tput cup $(($questionline - 3)) 0
@@ -384,6 +383,8 @@ install_cron() {
     fi
 }
 
+clear
+sudo -v
 logo
 install_repo
 configure
