@@ -13,7 +13,7 @@ cp ~/klipper-backup/.env .env.backup
 ```
 3. Delete the old klipper-backup folder: 
 ```
-sudo rm -r ~/klipper-backup
+sudo rm -rf ~/klipper-backup ~/config_backup
 ```  
 4. Clone the new klipper-backup version:
 ```
