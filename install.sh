@@ -2,8 +2,17 @@
 
 set -e
 
+parent_path=$(
+    cd "$(dirname "${BASH_SOURCE[0]}")"
+    pwd -P
+)
+
 # Create unique id for git email
 unique_id=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 7 | head -n 1)
+
+if [[ ! -f .env ]]; then
+    cp $parent_path/.env.example $parent_path/.env
+fi
 
 wantsafter() {
     if dpkg -l | grep -q '^ii.*network-manager' && systemctl is-active --quiet "NetworkManager"; then
@@ -141,7 +150,7 @@ install_repo() {
                         exec "$0"
                     fi
                 else
-                    tput cup $(($questionline - 1)) 0
+                    tput cup $(($questionline - 3)) 0
                     clearUp
                     echo -e "${M}●${NC} Klipper-Backup update ${M}Skipped!${NC}\n"
                 fi
@@ -333,7 +342,7 @@ Wants=$(wantsafter)
 [Service]
 User=$(whoami)
 Type=oneshot
-ExecStart=/bin/bash -c 'bash $HOME/klipper-backup/script.sh "New Backup on boot \$(date +%%D)"'
+ExecStart=bash -c "bash $HOME/klipper-backup/script.sh \"New Backup on boot - \$(date +\"%%x - %%X\")\""
 
 [Install]
 WantedBy=default.target
