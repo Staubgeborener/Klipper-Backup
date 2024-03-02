@@ -283,7 +283,7 @@ Wants=$(wantsafter)
 [Service]
 User=$(whoami)
 Type=simple
-ExecStart=/bin/bash -c ' \\
+ExecStart=/usr/bin/env bash  -c ' \\
     watchlist=""; \\
     while IFS= read -r path; do \\
         for file in \$path; do \\
@@ -305,7 +305,7 @@ ExecStart=/bin/bash -c ' \\
             file=\$(basename "\$path"); \\
         fi; \\
         echo "Event Type: \$event, Watched Path: \$path, File Name: \$file"; \\
-        file=\$file bash -c '\\''bash $HOME/klipper-backup/script.sh "\$file modified - \$(date +\\"%%x - %%X\\")"'\\'' > /dev/null 2>&1; \
+        file=\$file /usr/bin/env bash -c '\\''/usr/bin/env bash  $HOME/klipper-backup/script.sh "\$file modified - \$(date +\\"%%x - %%X\\")"'\\'' > /dev/null 2>&1; \
     done'
 
 [Install]
@@ -342,7 +342,7 @@ Wants=$(wantsafter)
 [Service]
 User=$(whoami)
 Type=oneshot
-ExecStart=bash -c "bash $HOME/klipper-backup/script.sh \"New Backup on boot - \$(date +\"%%x - %%X\")\""
+ExecStart=/usr/bin/env bash  -c "/usr/bin/env bash $HOME/klipper-backup/script.sh \"New Backup on boot - \$(date +\"%%x - %%X\")\""
 
 [Install]
 WantedBy=default.target
