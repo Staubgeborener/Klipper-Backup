@@ -1,5 +1,5 @@
 ## Installation
-  1. Clone the github repository and copy .env.example to .env:
+  1. Clone the github repository and copy `.env.example` to `.env`:
     ```shell
     git clone https://github.com/Staubgeborener/klipper-backup.git && chmod +x ./klipper-backup/script.sh && cp ./klipper-backup/.env.example ./klipper-backup/.env
     ```  
