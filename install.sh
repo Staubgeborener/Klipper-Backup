@@ -194,7 +194,7 @@ configure() {
 
 patch_klipper-backup_update_manager() {
     questionline=$(getcursor)
-    if [[ -d $HOME/moonraker ]]; then
+    if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2&>1; then
         if ask_yn "Would you like to add klipper-backup to moonraker update manager?"; then
             tput cup $(($questionline - 2)) 0
             tput ed
@@ -362,7 +362,7 @@ install_cron() {
         if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
             (
                 crontab -l 2>/dev/null
-                echo "0 */4 * * * $HOME/klipper-backup/script.sh"
+                echo "0 */4 * * * $HOME/klipper-backup/script.sh \"Cron backup - \$(date +\"%%x - %%X\")\""
             ) | crontab -
         fi
         sleep .5
