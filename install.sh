@@ -194,7 +194,7 @@ configure() {
 
 patch_klipper-backup_update_manager() {
     questionline=$(getcursor)
-    if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2&>1; then
+    if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
         if ask_yn "Would you like to add klipper-backup to moonraker update manager?"; then
             tput cup $(($questionline - 2)) 0
             tput ed
