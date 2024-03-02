@@ -18,7 +18,8 @@ sudo pacman -S git
 2. Click on the `+` in the upper right corner
 3. Click on "New repository"
 
-!!!danger Don't create a `README.md` at this point! You can create your own later.
+!!!danger 
+    Don't create a `README.md` at this point! You can create your own later.
 
 ![create-github-repository](https://i.imgur.com/pMKBQWt.png)
 
