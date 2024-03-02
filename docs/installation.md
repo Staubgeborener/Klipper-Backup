@@ -33,7 +33,7 @@ Copy the new token, you will need this later.
 
 ## Install klipper-backup
 ```shell
-git clone https://github.com/Staubgeborener/klipper-backup.git && chmod +x ./klipper-backup/script.sh && cp ./klipper-backup/.env.example ./klipper-backup/.env
+cd ~ && git clone https://github.com/Staubgeborener/klipper-backup.git && chmod +x ./klipper-backup/script.sh && cp ./klipper-backup/.env.example ./klipper-backup/.env
 ```
 
 [Now edit your `.env` file](configuration.md).
