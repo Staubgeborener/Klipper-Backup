@@ -193,21 +193,21 @@ configure() {
 }
 
 patch_klipper-backup_update_manager() {
- questionline=$(getcursor)
- if [[ -d $HOME/moonraker ]]; then
-    if ask_yn "Would you like to add klipper-backup to moonraker update manager?"; then
-        tput cup $(($questionline - 2)) 0
-        tput ed
-        pos1=$(getcursor)
-        loading_wheel "${Y}●${NC} Adding klipper-backup to update manager" &
-        loading_pid=$!
-        if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
-        ### add new line to conf if it doesn't end with one
-        if [[ $(tail -c1 "$HOME/printer_data/config/moonraker.conf" | wc -l) -eq 0 ]]; then
-            echo "" >>"$HOME/printer_data/config/moonraker.conf"
-        fi
+    questionline=$(getcursor)
+    if [[ -d $HOME/moonraker ]]; then
+        if ask_yn "Would you like to add klipper-backup to moonraker update manager?"; then
+            tput cup $(($questionline - 2)) 0
+            tput ed
+            pos1=$(getcursor)
+            loading_wheel "${Y}●${NC} Adding klipper-backup to update manager" &
+            loading_pid=$!
+            if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
+                ### add new line to conf if it doesn't end with one
+                if [[ $(tail -c1 "$HOME/printer_data/config/moonraker.conf" | wc -l) -eq 0 ]]; then
+                    echo "" >>"$HOME/printer_data/config/moonraker.conf"
+                fi
 
-        if /usr/bin/env bash -c "cat >> $HOME/printer_data/config/moonraker.conf" <<MOONRAKER_CONF; then
+                if /usr/bin/env bash -c "cat >> $HOME/printer_data/config/moonraker.conf" <<MOONRAKER_CONF; then
 
 [update_manager klipper-backup]
 type: git_repo
@@ -216,16 +216,16 @@ origin: https://github.com/Staubgeborener/klipper-backup.git
 managed_services: moonraker
 primary_branch: main
 MOONRAKER_CONF
-            sudo systemctl restart moonraker.service
+                    sudo systemctl restart moonraker.service
+                fi
+            fi
+            kill $loading_pid
+            echo -e "\r\033[K${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
+        else
+            tput cup $(($questionline - 2)) 0
+            tput ed
+            echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
         fi
-    fi
-        kill $loading_pid
-        echo -e "\r\033[K${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
-    else
-        tput cup $(($questionline - 2)) 0
-        tput ed
-        echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
-    fi
     else
         tput cup $(($questionline - 2)) 0
         tput ed
