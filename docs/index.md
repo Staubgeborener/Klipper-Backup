@@ -15,9 +15,9 @@ However, there is also a [Quickstart](quickstart.md) if you want to get the scri
 - Switch between repositories and branches at any time
 
 ## Media
-![type:video](https://www.youtube.com/watch?v=47qV9BE2n_Y)
+![type:video](https://www.youtube.com/embed/47qV9BE2n_Y)
 
-![type:video](https://www.youtube.com/watch?v=J4_dlCtZY48)
+![type:video](https://www.youtube.com/embed/J4_dlCtZY48)
 
 ## Contributors
 <p>Thank you to everyone who has contributed to the project!</p>
