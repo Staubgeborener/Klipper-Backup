@@ -15,9 +15,9 @@ However, there is also a [Quickstart](quickstart.md) if you want to get the scri
 - Switch between repositories and branches at any time
 
 ## Media
-[![This Klipper Add-on Could Save You! (Klipper-Backup)](https://img.youtube.com/vi/47qV9BE2n_Y/0.jpg)](https://www.youtube.com/watch?v=47qV9BE2n_Y "This Klipper Add-on Could Save You! (Klipper-Backup)")
+![type:video](https://www.youtube.com/watch?v=47qV9BE2n_Y)
 
-[![Klipper Backups! A New Guide to Using Klipper Macros to Backup Your Configuration Files](https://img.youtube.com/vi/J4_dlCtZY48/0.jpg)](https://www.youtube.com/watch?v=J4_dlCtZY48 "Klipper Backups! A New Guide to Using Klipper Macros to Backup Your Configuration Files")
+![type:video](https://www.youtube.com/watch?v=J4_dlCtZY48)
 
 ## Contributors
 <p>Thank you to everyone who has contributed to the project!</p>
