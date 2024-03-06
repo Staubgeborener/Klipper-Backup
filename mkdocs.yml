@@ -52,6 +52,7 @@ plugins:
   - mkdocs-video:
       css_style:
         width: "50%"
+        height: 18.172vw;
 
 markdown_extensions:
   - abbr
