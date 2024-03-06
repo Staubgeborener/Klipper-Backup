@@ -49,7 +49,11 @@ theme:
         name: Switch to system preference
 
 plugins:
-  - mkdocs-video
+  - mkdocs-video:
+      is_video: True
+      video_controls: True
+      css_style:
+        width: "50%"
 
 markdown_extensions:
   - abbr
