@@ -35,4 +35,4 @@
     Run `./script.sh` from within klipper-backup and check that you receive no errors and when
     checking the repository you should see a new commit.  
 
-  8. Optional: now you can e.g. set a [macro](manual.md/#gcode-macro) or use an [automated solution](automation.md) to execute the script with a ui and add a [moonraker entry](updating.md/#moonraker-update-manager) for future updates.
+  8. Optional: now you can e.g. set a [macro](manual.md/#gcode-macro) to execute the script with a ui or use an [automated solution](automation.md). Also you can add a [moonraker entry](updating.md/#moonraker-update-manager) for future updates.
