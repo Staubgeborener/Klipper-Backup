@@ -50,8 +50,6 @@ theme:
 
 plugins:
   - mkdocs-video:
-      is_video: True
-      video_controls: True
       css_style:
         width: "50%"
 
