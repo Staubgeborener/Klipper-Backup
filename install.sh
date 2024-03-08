@@ -89,33 +89,6 @@ ask_yn() {
     done
 }
 
-ask_token() {
-    local prompt="$1: "
-    local input=""
-    echo -n "$prompt" >&2
-    stty -echo # Disable echoing of characters
-    while IFS= read -rs -n 1 char; do
-        if [[ $char == $'\0' || $char == $'\n' ]]; then
-            break
-        fi
-        input+=$char
-        echo -n "*" >&2 # Explicitly echo asterisks to stderr
-    done
-    stty echo # Re-enable echoing
-    echo >&2  # Move to a new line after user input
-    echo "$input"
-}
-
-ask_textinput() {
-    if [ -n "$2" ]; then
-        read -rp "$1 (default is $2): " input
-        echo "${input:-$2}"
-    else
-        read -rp "$1: " input
-        echo "$input"
-    fi
-}
-
 install_repo() {
     questionline=$(getcursor)
     if ask_yn "Do you want to proceed with the installation/(re)configuration?"; then
