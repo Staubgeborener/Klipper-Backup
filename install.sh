@@ -49,6 +49,7 @@ run_command() {
     echo -e "\r\033[K   ${G}●${NC} Running $command ${G}Done!${NC}"
 }
 
+# Move cursor up one line and clear the line
 clearUp() {
     echo -e "\r\033[K\033[1A"
 }
@@ -170,28 +171,84 @@ configure() {
         tput cup $(($questionline - 1)) 0
         clearUp
         pos1=$(getcursor)
-        ghtoken=$(ask_token "Enter your github token")
-        ghuser=$(ask_textinput "Enter your github username")
-        ghrepo=$(ask_textinput "Enter your repository name")
-        repobranch=$(ask_textinput "Enter your desired branch name" "main")
-        commitname=$(ask_textinput "Enter desired commit username" "$(whoami)")
-        commitemail=$(ask_textinput "Enter desired commit email" "$(whoami)@$(hostname --short)-$unique_id")
-        #echo "Set token: $ghtoken"
-        sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
-        #echo "Set Username: $ghuser"
-        sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
-        #echo "Set Repo Name: $ghrepo"
-        sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
-        #echo "Set branch: $repobranch"
-        sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
-        #echo "Set commit username: $commitname"
-        sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
-        #echo "Set commit email: $commitemail"
-        sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
-        tput cup $(($pos1 - 1)) 0
-        tput ed
-        echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
-        pos1=$(getcursor)
+
+        getToken() {
+            ghtoken=$(whiptail --passwordbox "Enter your github token:" 8 39 3>&1 1>&2 2>&3)
+            exitstatus=$?
+            if [ $exitstatus = 0 ]; then
+                sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
+                echo $ghtoken
+                getUser
+            else
+                tput cup $(($questionline - 1)) 0
+                clearUp
+                echo -e "\r\033[K${R}●${NC} Configuration ${R}Cancelled!${NC}\n"
+                pos1=$(getcursor)
+                exit 1
+            fi
+        }
+
+        getUser() {
+            ghuser=$(whiptail --cancel-button "Back" --inputbox "Enter your github username:" 8 39 3>&1 1>&2 2>&3)
+            exitstatus=$?
+            if [ $exitstatus = 0 ]; then
+                sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
+                echo $ghuser
+                getRepo
+            else
+                getToken
+            fi
+        }
+        getRepo() {
+            ghrepo=$(whiptail --cancel-button "Back" --inputbox "Enter your repository name:" 8 39 3>&1 1>&2 2>&3)
+            exitstatus=$?
+            if [ $exitstatus = 0 ]; then
+                sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
+                echo $ghrepo
+                getBranch
+            else
+                getUser
+            fi
+        }
+        getBranch() {
+            repobranch=$(whiptail --cancel-button "Back" --inputbox "Enter your desired branch name:" 8 39 "main" 3>&1 1>&2 2>&3)
+            exitstatus=$?
+            if [ $exitstatus = 0 ]; then
+                sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
+                echo $repobranch
+                getCommitName
+            else
+                getRepo
+            fi
+        }
+        getCommitName() {
+            commitname=$(whiptail --cancel-button "Back" --inputbox "Enter desired commit username:" 8 39 "$(whoami)" 3>&1 1>&2 2>&3)
+            exitstatus=$?
+            if [ $exitstatus = 0 ]; then
+                sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
+                echo $commitname
+                getCommitEmail
+            else
+                getBranch
+            fi
+        }
+        getCommitEmail() {
+            commitemail=$(whiptail --cancel-button "Back" --inputbox "Enter desired commit email:" 8 39 "$(whoami)@$(hostname --short)-$unique_id" 3>&1 1>&2 2>&3)
+            exitstatus=$?
+            if [ $exitstatus = 0 ]; then
+                sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
+                echo $commitemail
+                tput cup $(($pos1 - 1)) 0
+                tput ed
+                echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
+                pos1=$(getcursor)
+            else
+                getCommitName
+            fi
+        }
+        set +e
+        getToken
+        set -e
     else
         tput cup $(($questionline - 1)) 0
         clearUp
