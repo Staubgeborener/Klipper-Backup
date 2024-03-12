@@ -11,8 +11,9 @@ However, there is also a [Quickstart](quickstart.md) if you want to get the scri
 - The script does the most complex work in the background automatically
 - Works perfectly with [gcode macros](manual.md/#klipper-macro)
 - Can also be executed [manually in the terminal](manual.md/#shell)
-- Automatic backups with [cron](automation.md/#cron)
+- Automatic backups with [cron](automation.md/#cron) or a service that [reacts to file changes](automation.md/#backup-on-file-changes)
 - Switch between repositories and branches at any time
+- Fully customizable with [parameters](configuration.md/#env)
 
 ## Media
 ![type:video](https://www.youtube.com/embed/47qV9BE2n_Y)
