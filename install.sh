@@ -89,6 +89,126 @@ ask_yn() {
     done
 }
 
+ask_token() {
+    local prompt="$1: "
+    local input=""
+    echo -n "$prompt" >&2
+    stty -echo # Disable echoing of characters
+    while IFS= read -rs -n 1 char; do
+        if [[ $char == $'\0' || $char == $'\n' ]]; then
+            break
+        fi
+        input+=$char
+        echo -n "*" >&2 # Explicitly echo asterisks to stderr
+    done
+    stty echo # Re-enable echoing
+    echo >&2  # Move to a new line after user input
+    echo "$input"
+}
+
+ask_textinput() {
+    if [ -n "$2" ]; then
+        read -rp "$1 (default is $2): " input
+        echo "${input:-$2}"
+    else
+        read -rp "$1: " input
+        echo "$input"
+    fi
+}
+
+# Function to move the cursor to a specific position
+function move_cursor() {
+    echo -e "\033[${1};${2}H"
+}
+
+# Function to display the menu and return status codes
+function menu() {
+    choice=1
+    while true; do
+        # Highlight the current choice
+        if [ $choice -eq 1 ]; then
+            echo -e "\e[7m1. Confirm\e[0m"
+            echo "2. Re-enter"
+        else
+            echo "1. Confirm"
+            echo -e "\e[7m2. Re-enter\e[0m"
+        fi
+
+        read -sn 1 key
+
+        case $key in
+        [1-2]) # Number keys 1 and 2
+            choice=$key
+            ;;
+        A) # Up arrow
+            if [ $choice -eq 2 ]; then
+                ((choice--))
+            fi
+            ;;
+        B) # Down arrow
+            if [ $choice -eq 1 ]; then
+                ((choice++))
+            fi
+            ;;
+        "") # Enter key
+            case $choice in
+            1)
+                return 0
+                ;;
+            2)
+                return 1
+                ;;
+            esac
+            ;;
+        esac
+
+        move_cursor $pos2 0
+
+    done
+}
+
+check_ghToken() {
+    GITHUB_TOKEN="$1"
+    API_URL="https://api.github.com/user"
+
+    response=$(curl -s -H "Authorization: token $GITHUB_TOKEN" $API_URL)
+
+    if [[ $response =~ "message" ]]; then
+        ghtoken_username=""
+        echo $ghtoken_username
+    else
+        ghtoken_username=$(echo $response | jq -r '.login')
+        echo $ghtoken_username
+    fi
+}
+
+check_dependencies() {
+    if ! command -v jq &>/dev/null; then
+        # Check the package manager and attempt a silent install
+        if command -v apt-get &>/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y jq
+        elif command -v dnf &>/dev/null; then
+            sudo dnf install -y jq
+        elif command -v pacman &>/dev/null; then
+            sudo pacman -S --noconfirm jq
+        elif command -v apk &>/dev/null; then
+            sudo apk add jq
+        else
+            echo "Unsupported package manager. Please install jq manually."
+            return 1
+        fi
+
+        # Check if the installation was successful
+        if command -v jq &>/dev/null; then
+            echo "jq has been installed."
+        else
+            echo "Installation failed. Please install jq manually."
+            return 1
+        fi
+    fi
+}
+
 install_repo() {
     questionline=$(getcursor)
     if ask_yn "Do you want to proceed with the installation/(re)configuration?"; then
@@ -137,91 +257,130 @@ install_repo() {
     fi
 }
 
-pos1=""
 configure() {
+    ghtoken_username=""
     questionline=$(getcursor)
     if ask_yn "Do you want to proceed with (re)configuring Klipper-Backup?"; then
         tput cup $(($questionline - 1)) 0
         clearUp
         pos1=$(getcursor)
+        pos2=$(getcursor)
 
         getToken() {
-            ghtoken=$(whiptail --passwordbox "Enter your github token:" 8 39 3>&1 1>&2 2>&3)
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
-                echo $ghtoken
-                getUser
-            else
-                tput cup $(($questionline - 1)) 0
-                clearUp
-                echo -e "\r\033[K${R}●${NC} Configuration ${R}Cancelled!${NC}\n"
-                pos1=$(getcursor)
-                exit 1
-            fi
-        }
+            ghtoken=$(ask_token "Enter your GitHub token")
 
-        getUser() {
-            ghuser=$(whiptail --cancel-button "Back" --inputbox "Enter your github username:" 8 39 3>&1 1>&2 2>&3)
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
-                echo $ghuser
-                getRepo
+            # Call check_ghToken once and store the exit status in a variable
+            result=$(check_ghToken "$ghtoken")
+
+            # Check the exit status directly, and use the global variable for username
+            if [ "$result" != "" ]; then
+                sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
+                ghtoken_username=$result
             else
+                tput cup $(($pos2 - 1)) 0
+                tput ed
+                echo "Invalid Github token, Please re-enter your token!"
+                pos2=$(getcursor)
                 getToken
             fi
         }
-        getRepo() {
-            ghrepo=$(whiptail --cancel-button "Back" --inputbox "Enter your repository name:" 8 39 3>&1 1>&2 2>&3)
+        getUser() {
+            pos2=$(getcursor)
+            ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
+
+            menu
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
-                echo $ghrepo
-                getBranch
+                sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
+                tput cup $pos2 0
+                tput ed
             else
+                tput cup $(($pos2 - 1)) 0
+                tput ed
                 getUser
             fi
         }
-        getBranch() {
-            repobranch=$(whiptail --cancel-button "Back" --inputbox "Enter your desired branch name:" 8 39 "main" 3>&1 1>&2 2>&3)
+        getRepo() {
+            pos2=$(getcursor)
+            ghrepo=$(ask_textinput "Enter your repository name")
+
+            menu
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
-                echo $repobranch
-                getCommitName
+                sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
+                tput cup $pos2 0
+                tput ed
             else
+                tput cup $(($pos2 - 1)) 0
+                tput ed
                 getRepo
             fi
         }
-        getCommitName() {
-            commitname=$(whiptail --cancel-button "Back" --inputbox "Enter desired commit username:" 8 39 "$(whoami)" 3>&1 1>&2 2>&3)
+        getBranch() {
+            pos2=$(getcursor)
+            repobranch=$(ask_textinput "Enter your desired branch name" "main")
+
+            menu
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
-                echo $commitname
-                getCommitEmail
+                sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
+                tput cup $pos2 0
+                tput ed
             else
+                tput cup $(($pos2 - 1)) 0
+                tput ed
                 getBranch
             fi
         }
-        getCommitEmail() {
-            commitemail=$(whiptail --cancel-button "Back" --inputbox "Enter desired commit email:" 8 39 "$(whoami)@$(hostname --short)-$unique_id" 3>&1 1>&2 2>&3)
+        getCommitName() {
+            pos2=$(getcursor)
+            commitname=$(ask_textinput "Enter desired commit username" "$(whoami)")
+
+            menu
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
-                echo $commitemail
-                tput cup $(($pos1 - 1)) 0
+                sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
+                tput cup $pos2 0
                 tput ed
-                echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
-                pos1=$(getcursor)
             else
+                tput cup $(($pos2 - 1)) 0
+                tput ed
                 getCommitName
             fi
         }
-        set +e
-        getToken
-        set -e
+        getCommitEmail() {
+            pos2=$(getcursor)
+            commitemail=$(ask_textinput "Enter desired commit email" "$(whoami)@$(hostname --short)-$unique_id")
+
+            menu
+            exitstatus=$?
+            if [ $exitstatus = 0 ]; then
+                sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
+                tput cup $pos2 0
+                tput ed
+            else
+                tput cup $(($pos2 - 1)) 0
+                tput ed
+                getCommitEmail
+            fi
+        }
+
+        while true; do
+            set +e
+            getToken
+            getUser
+            getRepo
+            getBranch
+            getCommitName
+            getCommitEmail
+            set -e
+            break
+        done
+
+        tput cup $(($pos1 - 1)) 0
+        tput ed
+        echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
+        pos1=$(getcursor)
     else
         tput cup $(($questionline - 1)) 0
         clearUp
@@ -415,6 +574,7 @@ install_cron() {
 
 clear
 sudo -v
+check_dependencies
 logo
 install_repo
 configure
