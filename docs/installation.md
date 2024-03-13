@@ -3,14 +3,12 @@ You need [git](https://git-scm.com/download/linux) for this script.
 
 **Debian / Ubuntu based distributions**
 ```shell
-sudo apt update
-sudo apt install git
+sudo apt update && sudo apt install git
 ```
 
 **Arch / Manjaro based distributions**
 ```shell
-sudo pacman -Syu
-sudo pacman -S git
+sudo pacman -Syu && sudo pacman -S git
 ```
 
 ## Prepare GitHub repository
