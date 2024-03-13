@@ -457,9 +457,8 @@ install_filewatch_service() {
         sudo rm -rf inotify-tools
         pos2=$(getcursor)
         tput cup $(($pos1 - 1)) 0
-        echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
         tput ed
-        tput cup $(($pos1 - 1)) 0
+        echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
         sudo /usr/bin/env bash -c "cat > /etc/systemd/system/klipper-backup-filewatch.service" <<KLIPPER_SERVICE
