@@ -9,6 +9,7 @@ parent_path=$(
 # Initialize variables from .env file
 source "$parent_path"/.env
 
+remove_backups="$remove_klipper_backups"
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
 empty_commit=${empty_commit:-"yes"}
