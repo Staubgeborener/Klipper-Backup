@@ -146,6 +146,7 @@ find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' ! -name 'README.md' -
 
 if [[ "$remove_backups" == "true" ]]; then
     find "$backup_path" -name "printer-*.cfg" -delete
+    echo "Klipper backups have been deleted"
 else
     echo "Klipper backup deletion skipped due to (remove_klipper_backups=false) in .env"
 fi
