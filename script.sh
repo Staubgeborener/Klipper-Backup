@@ -9,6 +9,7 @@ parent_path=$(
 # Initialize variables from .env file
 source "$parent_path"/.env
 
+remove_backups="$remove_klipper_backups"
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
 empty_commit=${empty_commit:-"yes"}
@@ -142,3 +143,10 @@ git push -u origin "$branch_name"
 
 # Remove files except .git folder after backup so that any file deletions can be logged on next backup
 find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' ! -name 'README.md' -exec rm -rf {} \;
+
+if [[ "$remove_backups" == "true" ]]; then
+    find "$HOME/printer_data/config/" -name "printer-*.cfg" -delete
+    echo "Klipper backups have been deleted"
+else
+    echo "Klipper backup deletion skipped due to (remove_klipper_backups=false) in .env"
+fi
