@@ -14,15 +14,13 @@ A klipper macro can look like this:
 [gcode_macro update_git]
 gcode:
     {% if params.MESSAGE|default("") != "" %}
-        RUN_SHELL_COMMAND CMD=update_git_script PARAMS="{params.MESSAGE}"
+        RUN_SHELL_COMMAND CMD=update_git_script PARAMS="'{params.MESSAGE}'"
     {% else %}
         RUN_SHELL_COMMAND CMD=update_git_script
     {% endif %}
 
 [gcode_shell_command update_git_script]
-# replace /home/pi/ with your actual directory.
-
-command: bash /home/pi/klipper-backup/script.sh
+command: bash -c "bash $HOME/klipper-backup/script.sh $0"
 timeout: 90.0
 verbose: True
 
