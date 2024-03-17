@@ -20,10 +20,14 @@ gcode:
     {% endif %}
 
 [gcode_shell_command update_git_script]
+# replace /home/pi/ with your actual directory.
+
 command: bash /home/pi/klipper-backup/script.sh
 timeout: 90.0
 verbose: True
+
 ```
+
 For a custom commit message using the klipper macro in console, type `update_git MESSAGE="YourMessage"`.
 ***
 ![klipper-backup-macro-image](https://i.imgur.com/UglWf6t.png)
