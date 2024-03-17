@@ -13,12 +13,25 @@ A klipper macro can look like this:
 ```yaml
 [gcode_macro update_git]
 gcode:
-    RUN_SHELL_COMMAND CMD=update_git_script
+    {% set message = params.MESSAGE|default() %}
+    {% if message %}
+        RUN_SHELL_COMMAND CMD=update_git_script_message PARAMS="'{params.MESSAGE}'"
+    {% else %}
+        RUN_SHELL_COMMAND CMD=update_git_script
+    {% endif %}
 
 [gcode_shell_command update_git_script]
 command: bash -c "bash $HOME/klipper-backup/script.sh"
 timeout: 90.0
 verbose: True
+
+[gcode_shell_command update_git_script_message]
+command: bash -c "bash $HOME/klipper-backup/script.sh $0"
+timeout: 90.0
+verbose: True
+
 ```
 
+For a custom commit message using the klipper macro in console, type `update_git MESSAGE="YourMessage"`.
+***
 ![klipper-backup-macro-image](https://i.imgur.com/UglWf6t.png)
