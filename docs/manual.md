@@ -20,7 +20,7 @@ gcode:
     {% endif %}
 
 [gcode_shell_command update_git_script]
-command: bash -c "bash $HOME/klipper-backup/script.sh"
+command: bash /home/pi/klipper-backup/script.sh
 timeout: 90.0
 verbose: True
 ```
