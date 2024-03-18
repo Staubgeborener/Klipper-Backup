@@ -19,7 +19,7 @@ Description=Klipper Backup On-boot Service
 [Service]
 User={replace with your username}
 Type=oneshot
-ExecStart=/bin/bash -c 'bash $HOME/klipper-backup/script.sh "New Backup on boot $(date +%%D)"'
+ExecStart=/bin/bash -c 'bash $HOME/klipper-backup/script.sh "New Backup on boot $(date +"%%x - %%X")"'
 
 [Install]
 WantedBy=default.target
