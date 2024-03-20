@@ -25,6 +25,6 @@ cd ~/klipper-backup && git pull
 ```
 
 !!! warning "Important Note" 
-    Editing most files (with the exception of .env) inside of the `klipper-backup` folder, can lead to a 'dirty' repository, which will cause moonraker or the local git repository to be unable to pull updates until resolved. See [How to contribute](contribute.md) for how you should setup your dev environment. For Pull requests see [pull request](https://github.com/Staubgeborener/klipper-backup/pulls) or you are welcome to open a [feature request](https://github.com/Staubgeborener/klipper-backup/issues).
+    Editing most files (with the exception of .env) inside of the `klipper-backup` folder, can lead to a ['dirty' repository](https://docs.mainsail.xyz/setup/updates/update-manager#dirty), which will cause moonraker or the local git repository to be unable to pull updates until resolved. For Pull requests see [pull request](https://github.com/Staubgeborener/klipper-backup/pulls) or you are welcome to open a [feature request](https://github.com/Staubgeborener/klipper-backup/issues).
 
 There are different ways to start your backup, either [manually](manual.md) or [automatically](automation.md).
