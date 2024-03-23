@@ -4,9 +4,9 @@
     cd ~ && git clone https://github.com/Staubgeborener/klipper-backup.git && chmod +x ./klipper-backup/script.sh && cp ./klipper-backup/.env.example ./klipper-backup/.env
     ```
 
-  2. Next to create the repository:
+  2. Create a [new](https://github.com/new) repository:
     - In the upper-right corner of any page in GitHub, select +, then click New repository.
-    - Type a name for your repository (use the same name you chose for step 5), and an optional description.
+    - Type a name for your repository, and an optional description.
     - Choose a repository visibility. (You can select either one)
     - Click Create repository.  
 
@@ -21,9 +21,9 @@
     cd klipper-backup && nano .env
     ```  
 
-  5. Replace `ghp_xxxxxxxxxxxxxxxxxxxx` with the token you copied from step 2.
+  5. Replace `ghp_xxxxxxxxxxxxxxxxxxxx` with the token you copied from step 3.
 
-  6. Replace `USERNAME` with your GitHub username and `REPOSITORY` with the name you would like to use for the backup repository (we will create that repository in the next step).
+  6. Replace `USERNAME` with your GitHub username and `REPOSITORY` with the name used in step 2.
 
     ```ini
     github_username=USERNAME
