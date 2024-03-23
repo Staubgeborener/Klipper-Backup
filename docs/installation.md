@@ -1,5 +1,5 @@
 ## git
-You need [git](https://git-scm.com/download/linux) for this script.
+You need [git](https://git-scm.com/download/linux){:target="_blank"} for this script.
 
 **Debian / Ubuntu based distributions**
 ```shell

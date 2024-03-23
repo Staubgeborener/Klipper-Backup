@@ -13,7 +13,7 @@ Now you need your [GitHub token](installation.md#create-github-token).
 5. `git_host=""`. If you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host=""` to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits.  
     
     !!! warning "Important Note"
-        When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls) or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml)  
+        When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}  
 
 Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here (**note the pattern!** It must start with `path_` followed by the path) are considered in the backup. I am using the default paths. You can also comment out content inside the `.env` file with `#`, for example this here will use `path_klipperdata` but ignores `path_macroscfg`:
 ```ini
@@ -36,7 +36,7 @@ path_singlefile=printer_data/config/singlefile.cfg
 ## .gitignore (do not upload certain files)
 To edit the `.gitignore` file, which is responsible for preventing certain files from being uploaded, you have to name the corresponding files in the `.env` file. This is important because you do not want to have sensitive data like passwords, tokens, etc. in a public backup. This also means that this file prevents your token from being [revoked](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation#token-revoked-when-pushed-to-a-public-repository-or-public-gist).
 By default, the `.env` file and the `secrets.conf` are included in the `.gitignore` and can be extended accordingly.
-Basically it's an Array of strings in [.gitignore pattern git format](https://git-scm.com/docs/gitignore#_pattern_format). New additions must be enclosed in double quotes and should follow the pattern format as noted in the mentioned link:
+Basically it's an Array of strings in [.gitignore pattern git format](https://git-scm.com/docs/gitignore#_pattern_format){:target="_blank"}. New additions must be enclosed in double quotes and should follow the pattern format as noted in the mentioned link:
 ```ini
 exclude=( \
 "*.swp" \
@@ -62,7 +62,7 @@ So let's say you want to use `nano` as your editor of choice (you can use whatev
 4. Move with your arrow keys ↑ ← ↓ → to the important lines and copy/paste the important content inside (often the right mouse button is used to paste in ssh terminals)
 5. Save content and exit `nano` with ++ctrl+"x"++ -> ++"(Y)ES"++ -> ++"[Enter]"++
 
-A small `nano` YouTube tutorial can be found [here](https://youtu.be/mE2YghYpBBE?t=57).
+A small `nano` YouTube tutorial can be found [here](https://youtu.be/mE2YghYpBBE?t=57){:target="_blank"}.
 
 !!! warning "Important Note"
     In case you get an error message like `-sh: nano: not found` you should install `nano`: `sudo apt install nano`

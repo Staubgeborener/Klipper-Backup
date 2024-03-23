@@ -48,7 +48,7 @@ crontab -e
 ```
 0 */4 * * * $HOME/klipper-backup/script.sh
 ```
-This tells cron to run the backup script every 4 hours. You can find other cron examples here: <a href="https://crontab.guru/examples.html" target="_blank">https://crontab.guru/examples.html</a>
+This tells cron to run the backup script every 4 hours. You can find other cron examples here: [https://crontab.guru/examples.html](https://crontab.guru/examples.html){:target="_blank"}
 
 ## Backup on file changes
 !!! warning "Important Info"
