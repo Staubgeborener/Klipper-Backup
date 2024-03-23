@@ -18,7 +18,7 @@ wantsafter() {
     if dpkg -l | grep -q '^ii.*network-manager' && systemctl is-active --quiet "NetworkManager"; then
         echo "NetworkManager-wait-online.service"
     else
-        echo"network-online.target"
+        echo "network-online.target"
     fi
 }
 
@@ -461,43 +461,10 @@ install_filewatch_service() {
         echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
-        sudo /usr/bin/env bash -c "cat > /etc/systemd/system/klipper-backup-filewatch.service" <<KLIPPER_SERVICE
-[Unit]
-Description=Klipper Backup Filewatch Service
-After=$(wantsafter)
-Wants=$(wantsafter)
-
-[Service]
-User=$(whoami)
-Type=simple
-ExecStart=/usr/bin/env bash  -c ' \\
-    watchlist=""; \\
-    while IFS= read -r path; do \\
-        for file in \$path; do \\
-            if [ ! -h "\$file" ]; then \\
-                file_dir=\$(dirname "\$file"); \\
-                if [ "\$file_dir" = "." ]; then \\
-                    watchlist+=" \$HOME/\$file"; \\
-                else \\
-                    watchlist+=" \$HOME/\$file_dir"; \\
-                fi; \\
-            fi; \\
-        done; \\
-    done < <(grep -v '^#' "\$HOME/klipper-backup/.env" | grep 'path_' | sed 's/^.*=//'); \\
-    watchlist=\$(echo "\$watchlist" | tr \\' \\' \\'\n\\' | sort -u | tr \\'\n\\' \\' \\'); \\
-    exclude_pattern=".swp|.tmp|printer-[0-9]*_[0-9]*.cfg|.bak|.bkp"; \\
-    inotifywait -mrP -e close_write -e move -e delete --exclude "\$exclude_pattern" \$watchlist | \\
-    while read -r path event file; do \\
-        if [ -z \$file ]; then \\
-            file=\$(basename "\$path"); \\
-        fi; \\
-        echo "Event Type: \$event, Watched Path: \$path, File Name: \$file"; \\
-        file=\$file /usr/bin/env bash -c '\\''/usr/bin/env bash  $HOME/klipper-backup/script.sh "\$file modified - \$(date +\\"%%x - %%X\\")"'\\'' > /dev/null 2>&1; \
-    done'
-
-[Install]
-WantedBy=default.target
-KLIPPER_SERVICE
+        sudo cp $parent_path/service-files/klipper-backup-filewatch.service /etc/systemd/system/klipper-backup-filewatch.service
+        sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
+        sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
+        sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-filewatch.service"
         sudo systemctl daemon-reload
         sudo systemctl enable klipper-backup-filewatch.service
         sudo systemctl start klipper-backup-filewatch.service
@@ -520,20 +487,10 @@ install_backup_service() {
         pos1=$(getcursor)
         loading_wheel "${Y}●${NC} Installing on-boot service" &
         loading_pid=$!
-        sudo /usr/bin/env bash -c "cat > /etc/systemd/system/klipper-backup-on-boot.service" <<KLIPPER_SERVICE
-[Unit]
-Description=Klipper Backup On-boot Service
-After=$(wantsafter)
-Wants=$(wantsafter)
-
-[Service]
-User=$(whoami)
-Type=oneshot
-ExecStart=/usr/bin/env bash  -c "/usr/bin/env bash $HOME/klipper-backup/script.sh \"New Backup on boot - \$(date +\"%%x - %%X\")\""
-
-[Install]
-WantedBy=default.target
-KLIPPER_SERVICE
+        sudo cp $parent_path/service-files/klipper-backup-on-boot.service /etc/systemd/system/klipper-backup-on-boot.service
+        sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
+        sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
+        sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-on-boot.service"
         sudo systemctl daemon-reload
         sudo systemctl enable klipper-backup-on-boot.service
         sudo systemctl start klipper-backup-on-boot.service
