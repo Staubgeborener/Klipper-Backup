@@ -4,7 +4,7 @@
     cd ~ && git clone https://github.com/Staubgeborener/klipper-backup.git && chmod +x ./klipper-backup/script.sh && cp ./klipper-backup/.env.example ./klipper-backup/.env
     ```
 
-  2. Create a [new](https://github.com/new) repository:
+  2. Create a [new](https://github.com/new){:target="_blank"} repository:
     - In the upper-right corner of any page in GitHub, select +, then click New repository.
     - Type a name for your repository, and an optional description.
     - Choose a repository visibility. (You can select either one)
