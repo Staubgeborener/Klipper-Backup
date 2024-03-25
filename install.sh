@@ -249,15 +249,7 @@ patch_klipper-backup_update_manager() {
                     echo "" >>"$HOME/printer_data/config/moonraker.conf"
                 fi
 
-                if /usr/bin/env bash -c "cat >> $HOME/printer_data/config/moonraker.conf" <<MOONRAKER_CONF; then
-
-[update_manager klipper-backup]
-type: git_repo
-path: ~/klipper-backup
-origin: https://github.com/Staubgeborener/klipper-backup.git
-managed_services: moonraker
-primary_branch: main
-MOONRAKER_CONF
+                if /usr/bin/env bash -c "cat $parent_path/install-files/moonraker.conf >> $HOME/printer_data/config/moonraker.conf"; then
                     sudo systemctl restart moonraker.service
                 fi
             fi
@@ -320,7 +312,7 @@ install_filewatch_service() {
         echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
-        sudo cp $parent_path/service-files/klipper-backup-filewatch.service /etc/systemd/system/klipper-backup-filewatch.service
+        sudo cp $parent_path/install-files/klipper-backup-filewatch.service /etc/systemd/system/klipper-backup-filewatch.service
         sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
         sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
         sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-filewatch.service"
@@ -360,7 +352,7 @@ install_backup_service() {
         pos1=$(getcursor)
         loading_wheel "${Y}●${NC} Installing on-boot service" &
         loading_pid=$!
-        sudo cp $parent_path/service-files/klipper-backup-on-boot.service /etc/systemd/system/klipper-backup-on-boot.service
+        sudo cp $parent_path/install-files/klipper-backup-on-boot.service /etc/systemd/system/klipper-backup-on-boot.service
         sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
         sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
         sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-on-boot.service"
