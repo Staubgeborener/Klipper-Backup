@@ -13,18 +13,18 @@ source $parent_path/install-utils.sh
 
 set -e
 
-main () {
-clear
-sudo -v
-check_dependencies
-logo
-install_repo
-configure
-patch_klipper-backup_update_manager
-install_filewatch_service
-install_backup_service
-install_cron
-echo -e "${G}●${NC} Installation Complete!\n"
+main() {
+    clear
+    sudo -v
+    check_dependencies
+    logo
+    install_repo
+    configure
+    patch_klipper-backup_update_manager
+    install_filewatch_service
+    install_backup_service
+    install_cron
+    echo -e "${G}●${NC} Installation Complete!\n"
 }
 
 check_dependencies() {
@@ -277,7 +277,7 @@ MOONRAKER_CONF
 
 install_filewatch_service() {
     questionline=$(getcursor)
-    if systemctl is-active  >/dev/null 2>&1; then
+    # if systemctl is-active  >/dev/null 2>&1; then
     message="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
     if ask_yn "$message"; then
         tput cup $(($questionline - 2)) 0
