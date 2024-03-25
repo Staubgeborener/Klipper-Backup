@@ -277,9 +277,18 @@ MOONRAKER_CONF
 
 install_filewatch_service() {
     questionline=$(getcursor)
+    tput cup $(($questionline - 2)) 0
+    tput ed
+    pos1=$(getcursor)
+    loading_wheel "${Y}●${NC} Checking for filewatch service" &
+    loading_pid=$!
     if service_exists klipper-backup-filewatch; then
+        echo -e "\r\033[K"
+        kill $loading_pid
         message="Would you like to reinstall the filewatch backup service? (this will trigger a backup after changes are detected)"
     else
+        echo -e "\r\033[K"
+        kill $loading_pid
         message="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
     fi
     if ask_yn "$message"; then
@@ -331,9 +340,18 @@ install_filewatch_service() {
 
 install_backup_service() {
     questionline=$(getcursor)
+    tput cup $(($questionline - 2)) 0
+    tput ed
+    pos1=$(getcursor)
+    loading_wheel "${Y}●${NC} Checking for on-boot service" &
+    loading_pid=$!
     if service_exists klipper-backup-on-boot; then
+        echo -e "\r\033[K"
+        kill $loading_pid
         message="Would you like to reinstall the on-boot backup service?"
     else
+        echo -e "\r\033[K"
+        kill $loading_pid
         message="Would you like to install the on-boot backup service?"
     fi
     if ask_yn "$message"; then
