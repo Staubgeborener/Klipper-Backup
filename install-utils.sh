@@ -1,15 +1,6 @@
 # Create unique id for git email
 unique_id=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 7 | head -n 1)
 
-parent_path=$(
-    cd "$(dirname "${BASH_SOURCE[0]}")"
-    pwd -P
-)
-
-if [[ ! -f .env ]]; then
-    cp $parent_path/.env.example $parent_path/.env
-fi
-
 wantsafter() {
     if dpkg -l | grep -q '^ii.*network-manager' && systemctl is-active --quiet "NetworkManager"; then
         echo "NetworkManager-wait-online.service"
@@ -180,8 +171,8 @@ check_ghToken() {
 
 service_exists() {
     if systemctl list-unit-files | grep -q "$1.service"; then
-        return 0  # Service exists
+        return 0 # Service exists
     else
-        return 1  # Service does not exist
+        return 1 # Service does not exist
     fi
 }

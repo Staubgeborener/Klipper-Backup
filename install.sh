@@ -277,8 +277,11 @@ MOONRAKER_CONF
 
 install_filewatch_service() {
     questionline=$(getcursor)
-    # if systemctl is-active  >/dev/null 2>&1; then
-    message="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
+    if service_exists klipper-backup-filewatch; then
+        message="Would you like to reinstall the filewatch backup service? (this will trigger a backup after changes are detected)"
+    else
+        message="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
+    fi
     if ask_yn "$message"; then
         tput cup $(($questionline - 2)) 0
         tput ed
@@ -328,7 +331,12 @@ install_filewatch_service() {
 
 install_backup_service() {
     questionline=$(getcursor)
-    if ask_yn "Would you like to install the on-boot backup service?"; then
+    if service_exists klipper-backup-on-boot; then
+        message="Would you like to reinstall the on-boot backup service?"
+    else
+        message="Would you like to install the on-boot backup service?"
+    fi
+    if ask_yn "$message"; then
         tput cup $(($questionline - 2)) 0
         tput ed
         pos1=$(getcursor)
@@ -353,13 +361,13 @@ install_backup_service() {
 
 install_cron() {
     questionline=$(getcursor)
-    if ask_yn "Would you like to install the cron task?"; then
-        tput cup $(($questionline - 2)) 0
-        tput ed
-        pos1=$(getcursor)
-        loading_wheel "${Y}●${NC} Installing cron task" &
-        loading_pid=$!
-        if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
+    if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
+        if ask_yn "Would you like to install the cron task?"; then
+            tput cup $(($questionline - 2)) 0
+            tput ed
+            pos1=$(getcursor)
+            loading_wheel "${Y}●${NC} Installing cron task" &
+            loading_pid=$!
             (
                 crontab -l 2>/dev/null
                 echo "0 */4 * * * $HOME/klipper-backup/script.sh \"Cron backup - \$(date +\"%%x - %%X\")\""
