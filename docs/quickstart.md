@@ -11,7 +11,7 @@
     - Click Create repository.  
 
   3. Create your github token. You will need to get a GitHub token (classic or Fine-grained, either works) just ensure you have set access to the repository and have push/pull & commit permissions.
-    For more info on classic and fine-grained PATS, see the following: [https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)    
+    For more info on classic and fine-grained PATS, see the following: [https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens){:target="_blank"}    
 
     !!! warning "IMPORTANT"
         *Make sure you note down your access token, as once you close out of the window, you cannot retrieve it again and will have to make a new one.  

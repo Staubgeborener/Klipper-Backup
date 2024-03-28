@@ -56,7 +56,7 @@ This tells cron to run the backup script every 4 hours. You can find other cron 
     
     To install the package run ```sudo apt-get install inotify-tools``` in your terminal. 
     
-    If you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow [these instructions](https://gist.github.com/Staubgeborener/0455c557e14bc20dd26713f2c8256906).
+    If you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow [these instructions](https://gist.github.com/Staubgeborener/0455c557e14bc20dd26713f2c8256906){:target="_blank"}.
 
 2. Create the service file in systemd
 ```shell 
