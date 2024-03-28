@@ -56,7 +56,7 @@ check_dependencies() {
 
 install_repo() {
     questionline=$(getcursor)
-    if ask_yn "Do you want to proceed with the installation/(re)configuration?"; then
+    if ask_yn "Do you want to proceed with installation/(re)configuration?"; then
         tput cup $(($questionline - 1)) 0
         clearUp
         cd "$HOME"
@@ -105,7 +105,12 @@ install_repo() {
 configure() {
     ghtoken_username=""
     questionline=$(getcursor)
-    if ask_yn "Do you want to proceed with (re)configuring Klipper-Backup?"; then
+    if grep -q "github_token=ghp_xxxxxxxxxxxxxxxx" "$parent_path"/.env; then # Check if the github token still matches the value when initially copied from .env.example
+        message="Do you want to proceed with configuring the Klipper-Backup .env?"
+    else
+        message="Do you want to proceed with reconfiguring the Klipper-Backup .env?"
+    fi
+    if ask_yn "$message"; then
         tput cup $(($questionline - 1)) 0
         clearUp
         pos1=$(getcursor)
@@ -113,18 +118,14 @@ configure() {
 
         getToken() {
             ghtoken=$(ask_token "Enter your GitHub token")
-
-            # Call check_ghToken once and store the exit status in a variable
-            result=$(check_ghToken "$ghtoken")
-
-            # Check the exit status directly, and use the global variable for username
+            result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
             if [ "$result" != "" ]; then
                 sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
                 ghtoken_username=$result
             else
                 tput cup $(($pos2 - 1)) 0
                 tput ed
-                echo "Invalid Github token, Please re-enter your token!"
+                echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
                 pos2=$(getcursor)
                 getToken
             fi
@@ -252,13 +253,18 @@ patch_klipper-backup_update_manager() {
                 if /usr/bin/env bash -c "cat $parent_path/install-files/moonraker.conf >> $HOME/printer_data/config/moonraker.conf"; then
                     sudo systemctl restart moonraker.service
                 fi
+
+                kill $loading_pid
+                echo -e "\r\033[K${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
+            else
+                tput cup $(($questionline - 2)) 0
+                tput ed
+                echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
             fi
-            kill $loading_pid
-            echo -e "\r\033[K${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
         else
             tput cup $(($questionline - 2)) 0
             tput ed
-            echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
+            echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
         fi
     else
         tput cup $(($questionline - 2)) 0
