@@ -9,7 +9,7 @@ if [[ ! -f .env ]]; then
     cp $parent_path/.env.example $parent_path/.env
 fi
 
-source $parent_path/install-utils.sh
+source $parent_path/install-utils.func
 
 set -e
 
