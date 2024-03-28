@@ -125,8 +125,8 @@ configure() {
             else
                 tput cup $(($pos2 - 1)) 0
                 tput ed
-                echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
                 pos2=$(getcursor)
+                echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
                 getToken
             fi
         }
