@@ -84,14 +84,21 @@ ask_token() {
     while IFS= read -rs -n 1 char; do
         if [[ $char == $'\0' || $char == $'\n' ]]; then
             break
+        elif [[ $char == $'\177' ]]; then  # Check for backspace character
+            if [ -n "$input" ]; then  # Check if input is not empty
+                input=${input%?}      # Remove last character from input
+                echo -en "\b \b" >&2  # Move cursor back, overwrite with space, move cursor back again
+            fi
+        else
+            input+=$char
+            echo -n "*" >&2 # Explicitly echo asterisks to stderr
         fi
-        input+=$char
-        echo -n "*" >&2 # Explicitly echo asterisks to stderr
     done
     stty echo # Re-enable echoing
     echo >&2  # Move to a new line after user input
     echo "$input"
 }
+
 
 ask_textinput() {
     if [ -n "$2" ]; then
