@@ -388,14 +388,18 @@ install_cron() {
                 crontab -l 2>/dev/null
                 echo "0 */4 * * * $HOME/klipper-backup/script.sh \"Cron backup - \$(date +\"%%x - %%X\")\""
             ) | crontab -
+            sleep .5
+            kill $loading_pid
+            echo -e "\r\033[K${G}●${NC} Installing cron task ${G}Done!${NC}\n"
+        else
+            tput cup $(($questionline - 2)) 0
+            tput ed
+            echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
         fi
-        sleep .5
-        kill $loading_pid
-        echo -e "\r\033[K${G}●${NC} Installing cron task ${G}Done!${NC}\n"
     else
         tput cup $(($questionline - 2)) 0
         tput ed
-        echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
+        echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
     fi
 }
 
