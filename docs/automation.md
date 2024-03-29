@@ -42,7 +42,7 @@ crontab -e
 ```  
 
     !!! info
-        if it's your first time running the command you will be asked which editor you would like to use, nano is the easiest  
+        If it's your first time running the command you will be asked which editor you would like to use, nano is the easiest  
 
 2. Once the editor is open, at the very bottom of the file add the line:
 ```
