@@ -1,4 +1,4 @@
-name: Get latest inotify version
+name: Update Inotify Version
 on:
   schedule:
     - cron: "*/1 * * * *"
