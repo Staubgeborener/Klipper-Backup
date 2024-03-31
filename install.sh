@@ -87,6 +87,9 @@ install_repo() {
                         echo -e "\r\033[K${G}●${NC} Updating Klipper-Backup ${G}Done!${NC}\n\n Restarting installation script"
                         sleep 1
                         exec $parent_path/install.sh
+                    else
+                        kill $loading_pid
+                        echo -e "\r\033[K${R}●${NC} Error Updating Klipper-Backup: Repository is dirty and cannot update"
                     fi
                 else
                     tput cup $(($questionline - 3)) 0
