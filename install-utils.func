@@ -1,4 +1,6 @@
 # Create unique id for git email
+unique_id=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | dd bs=7 count=1 2>/dev/null)
+
 wantsafter() {
     if dpkg -l | grep -q '^ii.*network-manager' && systemctl is-active --quiet "NetworkManager"; then
         echo "NetworkManager-wait-online.service"

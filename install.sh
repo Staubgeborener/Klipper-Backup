@@ -10,7 +10,6 @@ if [[ ! -f .env ]]; then
 fi
 
 source $parent_path/install-utils.func
-unique_id=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 7 | head -n 1)
 
 set -e
 
@@ -324,9 +323,9 @@ install_filewatch_service() {
         sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
         sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
         sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-filewatch.service"
-        sudo systemctl daemon-reload
-        sudo systemctl enable klipper-backup-filewatch.service
-        sudo systemctl start klipper-backup-filewatch.service
+        sudo systemctl daemon-reload >/dev/null
+        sudo systemctl enable klipper-backup-filewatch.service >/dev/null
+        sudo systemctl start klipper-backup-filewatch.service >/dev/null
         sleep .5
         kill $loading_pid
         echo -e "\r\033[K${G}●${NC} Installing filewatch service ${G}Done!${NC}\n"
@@ -364,9 +363,9 @@ install_backup_service() {
         sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
         sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
         sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-on-boot.service"
-        sudo systemctl daemon-reload
-        sudo systemctl enable klipper-backup-on-boot.service
-        sudo systemctl start klipper-backup-on-boot.service
+        sudo systemctl daemon-reload >/dev/null
+        sudo systemctl enable klipper-backup-on-boot.service >/dev/null
+        sudo systemctl start klipper-backup-on-boot.service >/dev/null
         sleep .5
         kill $loading_pid
         echo -e "\r\033[K${G}●${NC} Installing on-boot service ${G}Done!${NC}\n"
