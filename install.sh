@@ -74,7 +74,6 @@ install_repo() {
             if [ "$(git rev-parse HEAD)" = "$(git ls-remote $(git rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1)" ]; then
                 echo -e "${G}●${NC} Klipper-Backup ${G}is up to date.${NC}\n"
             else
-                # TODO: Handle dirty repository/pull errors
                 echo -e "${Y}●${NC} Update for klipper-backup ${Y}Available!${NC}\n"
                 questionline=$(getcursor)
                 if ask_yn "Proceed with update?"; then
