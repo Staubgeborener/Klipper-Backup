@@ -22,10 +22,12 @@ jobs:
           | grep "tag_name" \
           | sed -E 's/.*"([^"]+)".*/\1/' \
           > docs/inotify_version
+      - name: Add inotify_version to Git index
+        run: |
+          git add docs/inotify_version
       - name: Commit and push changes
         run: |
           git config --global user.email "github-actions@example.com"
           git config --global user.name "GitHub Actions"
-          git add inotify_version
           git commit -m "Update Inotify version"
           git push
