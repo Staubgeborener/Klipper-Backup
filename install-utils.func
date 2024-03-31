@@ -84,10 +84,10 @@ ask_token() {
     while IFS= read -rs -n 1 char; do
         if [[ $char == $'\0' || $char == $'\n' ]]; then
             break
-        elif [[ $char == $'\177' ]]; then  # Check for backspace character
-            if [ -n "$input" ]; then  # Check if input is not empty
-                input=${input%?}      # Remove last character from input
-                echo -en "\b \b" >&2  # Move cursor back, overwrite with space, move cursor back again
+        elif [[ $char == $'\177' ]]; then # Check for backspace character
+            if [ -n "$input" ]; then      # Check if input is not empty
+                input=${input%?}          # Remove last character from input
+                echo -en "\b \b" >&2      # Move cursor back, overwrite with space, move cursor back again
             fi
         else
             input+=$char
@@ -98,7 +98,6 @@ ask_token() {
     echo >&2  # Move to a new line after user input
     echo "$input"
 }
-
 
 ask_textinput() {
     if [ -n "$2" ]; then
@@ -181,5 +180,20 @@ service_exists() {
         return 0 # Service exists
     else
         return 1 # Service does not exist
+    fi
+}
+
+checkinotify() {
+    local_version=$(inotifywait -h | grep -oP '\d+\.\d+\.\d+\.\d+')
+    # Get the latest release information from the GitHub repository
+    latest_release=$(curl -s "https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest")
+    # Extract the latest release version number
+    latest_version=$(echo "$latest_release" | jq -r '.tag_name')
+
+    # Compare the installed version with the latest version
+    if [[ $local_version == $latest_version ]]; then
+        return 0 #Local matches latest
+    else
+        return 1 #Local does not match latest
     fi
 }

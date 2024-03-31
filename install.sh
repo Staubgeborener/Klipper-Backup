@@ -299,29 +299,31 @@ install_filewatch_service() {
         tput cup $(($questionline - 2)) 0
         tput ed
         pos1=$(getcursor)
-        echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
-        sudo rm -rf inotify-tools/                              # remove folder incase it for some reason still exists
-        sudo rm -f /usr/bin/fsnotifywait /usr/bin/fsnotifywatch # remove symbolic links to keep error about file exists from occurring
-        loading_wheel "   ${Y}●${NC} Clone inotify-tools repo" &
-        loading_pid=$!
-        git clone https://github.com/inotify-tools/inotify-tools.git 2>/dev/null
-        kill $loading_pid
-        echo -e "\r\033[K   ${G}●${NC} Clone inotify-tools repo ${G}Done!${NC}"
-        sudo apt-get install autoconf autotools-dev automake libtool -y >/dev/null 2>&1
+        if ! checkinotify; then # Checks if the version of inotify installed matches the latest release
+            echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
+            sudo rm -rf inotify-tools/                              # remove folder incase it for some reason still exists
+            sudo rm -f /usr/bin/fsnotifywait /usr/bin/fsnotifywatch # remove symbolic links to keep error about file exists from occurring
+            loading_wheel "   ${Y}●${NC} Clone inotify-tools repo" &
+            loading_pid=$!
+            git clone https://github.com/inotify-tools/inotify-tools.git 2>/dev/null
+            kill $loading_pid
+            echo -e "\r\033[K   ${G}●${NC} Clone inotify-tools repo ${G}Done!${NC}"
+            sudo apt-get install autoconf autotools-dev automake libtool -y >/dev/null 2>&1
 
-        cd inotify-tools/
+            cd inotify-tools/
 
-        buildCommands=("./autogen.sh" "./configure --prefix=/usr" "make" "make install")
-        for ((i = 0; i < ${#buildCommands[@]}; i++)); do
-            run_command "${buildCommands[i]}"
-        done
+            buildCommands=("./autogen.sh" "./configure --prefix=/usr" "make" "make install")
+            for ((i = 0; i < ${#buildCommands[@]}; i++)); do
+                run_command "${buildCommands[i]}"
+            done
 
-        cd ..
-        sudo rm -rf inotify-tools
-        pos2=$(getcursor)
-        tput cup $(($pos1 - 1)) 0
-        tput ed
-        echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
+            cd ..
+            sudo rm -rf inotify-tools
+            pos2=$(getcursor)
+            tput cup $(($pos1 - 1)) 0
+            tput ed
+            echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
+        fi
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
         sudo cp $parent_path/install-files/klipper-backup-filewatch.service /etc/systemd/system/klipper-backup-filewatch.service
