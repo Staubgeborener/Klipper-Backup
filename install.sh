@@ -10,6 +10,7 @@ if [[ ! -f .env ]]; then
 fi
 
 source $parent_path/install-utils.func
+unique_id=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 7 | head -n 1)
 
 set -e
 
