@@ -1,0 +1,25 @@
+name: Get latest inotify version
+on:
+  schedule:
+    - cron: "*/1 * * * *"
+  workflow_dispatch:
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Get latest Inotify version
+        run: |
+          curl -s https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest \
+          | grep "tag_name" \
+          | sed -E 's/.*"([^"]+)".*/\1/' \
+          > inotify_version
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "github-actions@example.com"
+          git config --global user.name "GitHub Actions"
+          git add inotify_version
+          git commit -m "Update Inotify version"
+          git push
