@@ -53,7 +53,7 @@ plugins:
       css_style:
         width: "50%"
         height: 18.172vw;
-  - markdown-include:
+  - include-markdown:
       base_path: docs
 
 markdown_extensions:
