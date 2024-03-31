@@ -3,10 +3,13 @@ on:
   schedule:
     - cron: "*/1 * * * *"
   workflow_dispatch:
+permissions:
+  contents: write
 
 jobs:
   update_version:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
