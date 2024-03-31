@@ -1,7 +1,6 @@
 name: Get latest inotify version
 on:
-  push:
-    branches:
+  branches:
       - docs
   schedule:
     - cron: "0 0 * * *"
