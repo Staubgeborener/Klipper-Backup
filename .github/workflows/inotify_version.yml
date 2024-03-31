@@ -21,7 +21,7 @@ jobs:
           curl -s https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest \
           | grep "tag_name" \
           | sed -E 's/.*"([^"]+)".*/\1/' \
-          > inotify_version
+          > docs/inotify_version
       - name: Commit and push changes
         run: |
           git config --global user.email "github-actions@example.com"
