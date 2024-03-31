@@ -1,6 +1,5 @@
 name: Get latest inotify version
 on:
-<<<<<<< Updated upstream
   push:
     branches:
       - docs
@@ -9,19 +8,11 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
-=======
-  schedule:
-    - cron: "*/1 * * * *"
-  workflow_dispatch:
->>>>>>> Stashed changes
 
 jobs:
   update_version:
     runs-on: ubuntu-latest
-<<<<<<< Updated upstream
     
-=======
->>>>>>> Stashed changes
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -30,23 +21,13 @@ jobs:
           curl -s https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest \
           | grep "tag_name" \
           | sed -E 's/.*"([^"]+)".*/\1/' \
-<<<<<<< Updated upstream
           > docs/inotify_version
       - name: Add inotify_version to Git index
         run: |
           git add docs/inotify_version
-=======
-          > inotify_version
->>>>>>> Stashed changes
       - name: Commit and push changes
         run: |
           git config --global user.email "github-actions@example.com"
           git config --global user.name "GitHub Actions"
-<<<<<<< Updated upstream
           git commit -m "Update Inotify version"
           git push
-=======
-          git add inotify_version
-          git commit -m "Update Inotify version"
-          git push
->>>>>>> Stashed changes

@@ -56,8 +56,8 @@ This tells cron to run the backup script every 4 hours. You can find other cron 
     
     To install the package run ```sudo apt-get install inotify-tools``` in your terminal. 
 
-    Please check with `inotifywait -h` if you are using the latest release {% include "inotify_version" %}. If this is not the case or if you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow [these instructions](https://gist.github.com/Staubgeborener/0455c557e14bc20dd26713f2c8256906){:target="_blank"}.
-    {! include "inotify_version" !} `{! include "inotify_version" !}` {% include "inotify_version" %} `{% include "inotify_version" %}`
+    Please check with `inotifywait -h` if you are using the latest release [{% include "inotify_version" %}](https://github.com/inotify-tools/inotify-tools/releases/latest). If this is not the case or if you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow [these instructions](https://gist.github.com/Staubgeborener/0455c557e14bc20dd26713f2c8256906){:target="_blank"}.
+
 2. Create the service file in systemd
 ```shell 
 sudo nano /etc/systemd/system/klipper-backup-filewatch.service
