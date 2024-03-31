@@ -58,7 +58,7 @@ This tells cron to run the backup script every 4 hours. You can find other cron 
 
     Please check with `inotifywait -h` if you are using the latest release . If this is not the case or if you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow [these instructions](https://gist.github.com/Staubgeborener/0455c557e14bc20dd26713f2c8256906){:target="_blank"}.
 
-Latest release `inotify-tools`: {% include "inotify_version" %} [source](https://github.com/inotify-tools/inotify-tools/releases/latest)
+Latest release `inotify-tools`: {% include "inotify_version" %} ([source](https://github.com/inotify-tools/inotify-tools/releases/latest))
 
 2. Create the service file in systemd
 ```shell 
