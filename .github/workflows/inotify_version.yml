@@ -22,7 +22,7 @@ jobs:
       - name: Get latest Inotify version
         id: get_latest_version
         run: |
-          latest_version=$(curl -s https://api.github.com/repos/staubgeborener/klipper-backup/releases/latest | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
+          latest_version=$(curl -s https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
           echo "::set-output name=latest_version::$latest_version"
 
       - name: Read inotify_version content
