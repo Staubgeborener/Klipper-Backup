@@ -1,32 +1,51 @@
-name: Get latest inotify version
+name: Update Inotify Version
 on:
   branches:
     - docs
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
-permissions:
-  contents: write
 
 jobs:
   update_version:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Ensure inotify_version file exists
+        run: |
+          if [ ! -f "docs/inotify_version" ]; then
+            touch docs/inotify_version
+          fi
+
       - name: Get latest Inotify version
+        id: get_latest_version
         run: |
-          curl -s https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest \
-          | grep "tag_name" \
-          | sed -E 's/.*"([^"]+)".*/\1/' \
-          > docs/inotify_version
-      - name: Add inotify_version to Git index
+          latest_version=$(curl -s https://api.github.com/repos/staubgeborener/klipper-backup/releases/latest | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "::set-output name=latest_version::$latest_version"
+
+      - name: Read inotify_version content
+        id: read_inotify_version
         run: |
-          git add docs/inotify_version
+          current_version=$(cat docs/inotify_version)
+          echo "::set-output name=current_version::$current_version"
+
+      - name: Compare versions
+        id: compare_versions
+        run: |
+          if [ "${{ steps.read_inotify_version.outputs.current_version }}" = "${{ steps.get_latest_version.outputs.latest_version }}" ]; then
+            echo "::set-output name=push_required::false"
+          else
+            echo "::set-output name=push_required::true"
+          fi
+
       - name: Commit and push changes
+        if: steps.compare_versions.outputs.push_required == 'true'
         run: |
+          echo "${{ steps.get_latest_version.outputs.latest_version }}" > docs/inotify_version
           git config --global user.email "github-actions@example.com"
           git config --global user.name "GitHub Actions"
+          git add docs/inotify_version
           git commit -m "Update Inotify version"
           git push
