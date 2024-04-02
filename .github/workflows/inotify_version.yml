@@ -42,7 +42,7 @@ jobs:
       - name: Commit and push changes
         if: steps.compare_versions.outputs.push_required == 'true'
         run: |
-          echo "${{ steps.get_latest_version.outputs.latest_version }}" > docs/inotify_version
+          echo "${{ steps.get_latest_version.outputs.latest_version }} (last check: $(date +'%B %d, %Y'))" > docs/inotify_version
           git config --global user.email "github-actions@example.com"
           git config --global user.name "GitHub Actions"
           git add docs/inotify_version
