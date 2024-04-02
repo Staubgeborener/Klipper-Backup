@@ -1,9 +1,6 @@
 name: Update Inotify Version
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "* * * * *"
   push:
     branches:
       - docs
