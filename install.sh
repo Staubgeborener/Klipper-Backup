@@ -389,7 +389,7 @@ install_backup_service() {
 install_cron() {
     questionline=$(getcursor)
     if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
-        if ask_yn "Would you like to install the cron task?"; then
+        if ask_yn "Would you like to install the cron task? (automatic backup every 4 hours)"; then
             tput cup $(($questionline - 2)) 0
             tput ed
             pos1=$(getcursor)
