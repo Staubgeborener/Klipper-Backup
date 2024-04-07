@@ -24,9 +24,10 @@ exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "
 if [[ ! -v backupPaths ]]; then
     echo ".env file is not using version 2 config, upgrading to V2"
     if bash $parent_path/utils/v1convert.sh; then
-    echo "Upgrade complete restarting script.sh"
-    sleep 1
-    exec $parent_path $@
+        echo "Upgrade complete restarting script.sh"
+        sleep 1
+        exec $parent_path $@
+    fi
 fi
 
 # Check if backup folder exists, create one if it does not
