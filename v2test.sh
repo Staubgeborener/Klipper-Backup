@@ -29,7 +29,7 @@ if [[ ! -v backupPaths ]]; then
     if bash $parent_path/utils/v1convert.sh; then
         echo "Upgrade complete restarting script.sh"
         sleep 1
-        exec "$parent_path/v2test.sh" "$@"
+        exec "$parent_path/v2test.sh" "$@" ################rename back to script.sh when testing complete###############################
     fi
 fi
 
