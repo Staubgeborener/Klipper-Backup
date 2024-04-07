@@ -20,6 +20,15 @@ exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "
 # Check for updates
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "NEW klipper-backup version available!\n"
 
+# Check if .env is v1 version
+if [[ ! -v backupPaths ]]; then
+    echo ".env file is not using version 2 config, upgrading to V2"
+    if bash $parent_path/utils/v1convert.sh; then
+    echo "Upgrade complete restarting script.sh"
+    sleep 1
+    exec $parent_path $@
+fi
+
 # Check if backup folder exists, create one if it does not
 if [ ! -d "$backup_path" ]; then
     mkdir -p "$backup_path"
