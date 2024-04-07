@@ -26,7 +26,7 @@ if [[ ! -v backupPaths ]]; then
     if bash $parent_path/utils/v1convert.sh; then
         echo "Upgrade complete restarting script.sh"
         sleep 1
-        exec $parent_path $@
+        exec "$parent_path/script.sh" "$@"
     fi
 fi
 
