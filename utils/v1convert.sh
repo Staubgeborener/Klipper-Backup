@@ -15,13 +15,13 @@ cp "$envpath" "$envpath.bkp"
 while IFS= read -r line; do
     if [[ $line == *"empty_commit"* ]]; then
         if [[ $line == "#"* ]]; then
-            if [[ $line == *"yes" ]]; then
+            if [[ $line == *"yes"* ]]; then
                 line="#allow_empty_commits=true"
             else
                 line="#allow_empty_commits=false"
             fi
         else
-            if [[ $line == *"yes" ]]; then
+            if [[ $line == *"yes"* ]]; then
                 line="allow_empty_commits=true"
             else
                 line="allow_empty_commits=false"
