@@ -1,4 +1,5 @@
 backupPaths=()
+configOptions=()
 
 scriptsh_parent_path=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
@@ -11,9 +12,25 @@ envpath="$scriptsh_parent_path/.env"
 source "$envpath"
 cp "$envpath" "$envpath.bkp"
 
-configoptions=$(grep -m 1 -n "# Indivdual file syntax:" $envpath | cut -d ":" -f 1 | xargs -I {} expr {} - 1 | xargs -I {} head -n {} $envpath)
+while IFS= read -r line; do
+    if [[ $line == *"empty_commit"* ]]; then
+        if [[ $line == "#"* ]]; then
+            if [[ $line == *"yes" ]]; then
+                line="#allow_empty_commits=true"
+            else
+                line="#allow_empty_commits=false"
+            fi
+        else
+            if [[ $line == *"yes" ]]; then
+                line="allow_empty_commits=true"
+            else
+                line="allow_empty_commits=false"
+            fi
+        fi
+    fi
+    configOptions+="$line \n"
+done < <(grep -m 1 -n "# Indivdual file syntax:" $envpath | cut -d ":" -f 1 | xargs -I {} expr {} - 1 | xargs -I {} head -n {} $envpath)
 
-# echo -e "$configoptions"
 
 while IFS= read -r path; do
     # Check if path is a directory or not a file (needed for /* checking as /* treats the path as not a directory)
@@ -41,9 +58,8 @@ done
 newexclude+=")"
 
 rm "$envpath"
-cat >> "$envpath" << ENVFILE
-$configoptions
-
+cat >>"$envpath" <<ENVFILE
+$(echo -e ${configOptions[@]})
 # Backup paths
 #  Note: script.sh starts its search in \$HOME which is /home/{username}/
 # The array accepts folders or files like the following example
