@@ -97,7 +97,7 @@ cd "$HOME"
 # Iterate through backupPaths array and copy files to the backup folder while ignoring symbolic links
 for path in "${backupPaths[@]}"; do
     fullPath="$HOME/$path"
-    if [[ -d "$fullPath" || ! -f "$fullPath" ]]; then
+    if [[ -d "$fullPath" && ! -f "$fullPath" ]]; then
         # Check if the directory path ends with only a '/'
         if [[ "$path" =~ /$ ]]; then
             # If it ends with '/', replace it with '/*'
