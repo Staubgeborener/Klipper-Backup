@@ -34,6 +34,7 @@ dependencies() {
     loading_pid=$!
     check_dependencies "jq" "curl" "rsync"
     kill $loading_pid
+    sleep 1.5
 }
 
 install_repo() {
