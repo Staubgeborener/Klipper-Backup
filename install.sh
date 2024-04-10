@@ -34,6 +34,7 @@ dependencies() {
     loading_pid=$!
     check_dependencies "jq" "curl" "rsync"
     kill $loading_pid
+    echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
     sleep 1.5
 }
 
