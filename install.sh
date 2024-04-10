@@ -18,7 +18,7 @@ set -e
 main() {
     clear
     sudo -v
-    check_dependencies( ("jq" "curl") )
+    check_dependencies "jq" "curl"
     logo
     install_repo
     configure
