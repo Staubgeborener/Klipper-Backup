@@ -204,24 +204,23 @@ check_dependencies() {
     for ((i = 0; i < ${#$1[@]}; i++)); do
         if ! command -v "${$1[i]}" &>/dev/null; then
             # Check the package manager and attempt a silent install
-            if command -v apt-get 2>/dev/null; then
+            if command -v apt-get &>/dev/null; then
                 sudo apt-get update
-                sudo apt-get install -y "${$1[i]}"
-            elif command -v dnf 2>/dev/null; then
-                sudo dnf install -y "${$1[i]}"
-            elif command -v pacman 2>/dev/null; then
-                sudo pacman -S --noconfirm "${$1[i]}"
-            elif command -v apk 2>/dev/null; then
-                sudo apk add "${$1[i]}"
+                sudo apt-get install -y "${$1[i]}" > /dev/null 2&>1
+            elif command -v dnf &>/dev/null; then
+                sudo dnf install -y "${$1[i]}" > /dev/null 2&>1
+            elif command -v pacman &>/dev/null; then
+                sudo pacman -S --noconfirm "${$1[i]}" > /dev/null 2&>1
+            elif command -v apk &>/dev/null; then
+                sudo apk add "${$1[i]}" > /dev/null 2&>1
             else
                 echo "Unsupported package manager. Please install "${$1[i]}" manually."
                 return 1
             fi
 
             # Check if the installation was successful
-            if command -v "${$1[i]}" 2>/dev/null; then
+            if command -v "${$1[i]}" &>/dev/null; then
                 echo ""${$1[i]}" has been installed."
-                sleep 2
             else
                 echo "Installation failed. Please install "${$1[i]}" manually."
                 return 1
