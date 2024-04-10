@@ -3,9 +3,6 @@
 # set dotglob so that bash treats hidden files/folders starting with . correctly when copying them (ex. .themes from mainsail)
 shopt -s dotglob
 
-# Clear Terminal
-clear
-
 # Set parent directory path
 parent_path=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
@@ -14,6 +11,12 @@ parent_path=$(
 
 # Initialize variables from .env file
 source "$parent_path"/.env
+source "$parent_path"/utils/utils.func
+
+loading_wheel "${Y}●${NC} Checking for installed dependencies" &
+loading_pid=$!
+check_dependencies "jq" "curl" "rsync"
+kill $loading_pid
 
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"

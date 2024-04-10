@@ -20,7 +20,7 @@ main() {
     sudo -v
     loading_wheel "${Y}●${NC} Checking for installed dependencies" &
     loading_pid=$!
-    check_dependencies "jq" "curl"
+    check_dependencies "jq" "curl" "rsync"
     kill $loading_pid
     logo
     install_repo
