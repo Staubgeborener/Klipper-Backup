@@ -18,7 +18,7 @@ set -e
 main() {
     clear
     sudo -v
-    check_dependencies
+    check_dependencies( ("jq" "curl") )
     logo
     install_repo
     configure
@@ -27,36 +27,6 @@ main() {
     install_backup_service
     install_cron
     echo -e "${G}●${NC} Installation Complete!\n"
-}
-
-check_dependencies() {
-    dependencies=("jq" "curl")
-    for ((i = 0; i < ${#dependencies[@]}; i++)); do
-        if ! command -v "${dependencies[i]}" &>/dev/null; then
-            # Check the package manager and attempt a silent install
-            if command -v apt-get &>/dev/null; then
-                sudo apt-get update
-                sudo apt-get install -y "${dependencies[i]}"
-            elif command -v dnf &>/dev/null; then
-                sudo dnf install -y "${dependencies[i]}"
-            elif command -v pacman &>/dev/null; then
-                sudo pacman -S --noconfirm "${dependencies[i]}"
-            elif command -v apk &>/dev/null; then
-                sudo apk add "${dependencies[i]}"
-            else
-                echo "Unsupported package manager. Please install "${dependencies[i]}" manually."
-                return 1
-            fi
-
-            # Check if the installation was successful
-            if command -v "${dependencies[i]}" &>/dev/null; then
-                echo ""${dependencies[i]}" has been installed."
-            else
-                echo "Installation failed. Please install "${dependencies[i]}" manually."
-                return 1
-            fi
-        fi
-    done
 }
 
 install_repo() {
