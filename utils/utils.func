@@ -1,5 +1,7 @@
 # Create unique id for git email
-unique_id=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | dd bs=7 count=1 2>/dev/null)
+getUniqueid() {
+    echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | dd bs=7 count=1 2>/dev/null)
+}
 
 wantsafter() {
     if dpkg -l | grep -q '^ii.*network-manager' && systemctl is-active --quiet "NetworkManager"; then
@@ -196,4 +198,33 @@ checkinotify() {
     else
         return 1 #Local does not match latest
     fi
+}
+
+check_dependencies() {
+    for ((i = 0; i < ${#$1[@]}; i++)); do
+        if ! command -v "${$1[i]}" &>/dev/null; then
+            # Check the package manager and attempt a silent install
+            if command -v apt-get &>/dev/null; then
+                sudo apt-get update
+                sudo apt-get install -y "${$1[i]}"
+            elif command -v dnf &>/dev/null; then
+                sudo dnf install -y "${$1[i]}"
+            elif command -v pacman &>/dev/null; then
+                sudo pacman -S --noconfirm "${$1[i]}"
+            elif command -v apk &>/dev/null; then
+                sudo apk add "${$1[i]}"
+            else
+                echo "Unsupported package manager. Please install "${$1[i]}" manually."
+                return 1
+            fi
+
+            # Check if the installation was successful
+            if command -v "${$1[i]}" &>/dev/null; then
+                echo ""${$1[i]}" has been installed."
+            else
+                echo "Installation failed. Please install "${$1[i]}" manually."
+                return 1
+            fi
+        fi
+    done
 }
