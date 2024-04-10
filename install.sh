@@ -18,10 +18,7 @@ set -e
 main() {
     clear
     sudo -v
-    loading_wheel "${Y}●${NC} Checking for installed dependencies" &
-    loading_pid=$!
-    check_dependencies "jq" "curl" "rsync"
-    kill $loading_pid
+    dependencies
     logo
     install_repo
     configure
@@ -30,6 +27,13 @@ main() {
     install_backup_service
     install_cron
     echo -e "${G}●${NC} Installation Complete!\n"
+}
+
+dependencies() {
+    loading_wheel "${Y}●${NC} Checking for installed dependencies" &
+    loading_pid=$!
+    check_dependencies "jq" "curl" "rsync"
+    kill $loading_pid
 }
 
 install_repo() {
