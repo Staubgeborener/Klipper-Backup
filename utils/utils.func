@@ -219,9 +219,7 @@ check_dependencies() {
             fi
 
             # Check if the installation was successful
-            if command -v "$pkg" &>/dev/null; then
-                echo "'$pkg' has been installed."
-            else
+            if ! command -v "$pkg" &>/dev/null; then
                 echo "Installation failed. Please install '$pkg' manually."
                 return 1
             fi
