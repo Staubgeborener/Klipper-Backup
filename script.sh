@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# set dotglob so that bash treats hidden files/folders starting with . correctly when copying them (ex. .themes from mainsail)
+shopt -s dotglob
+
 # Clear Terminal
 clear
 
