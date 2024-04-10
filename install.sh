@@ -18,7 +18,10 @@ set -e
 main() {
     clear
     sudo -v
+    loading_wheel "${Y}●${NC} Checking for installed dependencies" &
+    loading_pid=$!
     check_dependencies "jq" "curl"
+    kill $loading_pid
     logo
     install_repo
     configure
