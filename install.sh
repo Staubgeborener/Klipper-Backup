@@ -54,41 +54,45 @@ install_repo() {
             kill $loading_pid
             echo -e "\r\033[K${G}●${NC} Installing Klipper-Backup ${G}Done!${NC}\n"
         else
-            cd klipper-backup
-            if [ "$(git rev-parse HEAD)" = "$(git ls-remote $(git rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1)" ]; then
-                echo -e "${G}●${NC} Klipper-Backup ${G}is up to date.${NC}\n"
-            else
-                echo -e "${Y}●${NC} Update for klipper-backup ${Y}Available!${NC}\n"
-                questionline=$(getcursor)
-                if ask_yn "Proceed with update?"; then
-                    tput cup $(($questionline - 3)) 0
-                    tput ed
-                    loading_wheel "${Y}●${NC} Updating Klipper-Backup" &
-                    loading_pid=$!
-                    if git pull >/dev/null 2>&1; then
-                        kill $loading_pid
-                        echo -e "\r\033[K${G}●${NC} Updating Klipper-Backup ${G}Done!${NC}\n\n Restarting installation script"
-                        sleep 1
-                        exec $parent_path/install.sh
-                    else
-                        kill $loading_pid
-                        echo -e "\r\033[K${R}●${NC} Error Updating Klipper-Backup: Repository is dirty running git reset --hard then restarting script"
-                        sleep 1
-                        git reset --hard 2>/dev/null
-                        exec $parent_path/install.sh
-                    fi
-                else
-                    tput cup $(($questionline - 3)) 0
-                    clearUp
-                    echo -e "${M}●${NC} Klipper-Backup update ${M}Skipped!${NC}\n"
-                fi
-            fi
+            check_updates
         fi
     else
         tput cup $(($questionline - 1)) 0
         clearUp
         echo -e "${R}●${NC} Installation aborted.\n"
         exit 1
+    fi
+}
+
+check_updates() {
+    cd ~/klipper-backup
+    if [ "$(git rev-parse HEAD)" = "$(git ls-remote $(git rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1)" ]; then
+        echo -e "${G} ^w^o${NC} Klipper-Backup ${G}is up to date.${NC}\n"
+    else
+        echo -e "${Y} ^w^o${NC} Update for klipper-backup ${Y}Available!${NC}\n"
+        questionline=$(getcursor)
+        if ask_yn "Proceed with update?"; then
+            tput cup $(($questionline - 3)) 0
+            tput ed
+            loading_wheel "${Y} ^w^o${NC} Updating Klipper-Backup" &
+            loading_pid=$!
+            if git pull >/dev/null 2>&1; then
+                kill $loading_pid
+                echo -e "\r\033[K${G} ^w^o${NC} Updating Klipper-Backup ${G}Done!${NC}\n\n Restarting installation script"
+                sleep 1
+                exec $parent_path/install.sh
+            else
+                kill $loading_pid
+                echo -e "\r\033[K${R} ^w^o${NC} Error Updating Klipper-Backup: Repository is dirty running git reset --hard then restarting script"
+                sleep 1
+                git reset --hard 2>/dev/null
+                exec $parent_path/install.sh
+            fi
+        else
+            tput cup $(($questionline - 3)) 0
+            clearUp
+            echo -e "${M} ^w^o${NC} Klipper-Backup update ${M}Skipped!${NC}\n"
+        fi
     fi
 }
 
@@ -395,4 +399,33 @@ install_cron() {
     fi
 }
 
-main
+# Call functions (check whether called by KIAUH or not)
+if [ "$1" == "kiauh" ]; then
+    if [ -z "$2" ]; then
+        echo "Error: KIAUH needs a function specified. Please provide a function name."
+        exit 1
+    else
+        case "$2" in
+            install_repo)
+                sudo -v
+                logo
+                install_repo
+                ;;
+            check_updates)
+                sudo -v
+                logo
+                check_updates
+                ;;
+            *)
+                exit 1
+                ;;
+        esac
+    fi
+else
+    if [ -z "$1" ]; then
+        main
+    else
+        echo "Error: Invalid command. To access functions, use 'kiauh' as the first argument."
+        exit 1
+    fi
+fi
