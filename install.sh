@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+trap 'stty echo; exit' SIGINT
+
 parent_path=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     pwd -P
@@ -399,33 +401,8 @@ install_cron() {
     fi
 }
 
-# Call functions (check whether called by KIAUH or not)
-if [ "$1" == "kiauh" ]; then
-    if [ -z "$2" ]; then
-        echo "Error: KIAUH needs a function specified. Please provide a function name."
-        exit 1
-    else
-        case "$2" in
-            install_repo)
-                sudo -v
-                logo
-                install_repo
-                ;;
-            check_updates)
-                sudo -v
-                logo
-                check_updates
-                ;;
-            *)
-                exit 1
-                ;;
-        esac
-    fi
+if [ "$1" == "check_updates" ]; then
+    check_updates
 else
-    if [ -z "$1" ]; then
-        main
-    else
-        echo "Error: Invalid command. To access functions, use 'kiauh' as the first argument."
-        exit 1
-    fi
+    main
 fi
