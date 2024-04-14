@@ -341,8 +341,9 @@ install_filewatch_service() {
                 # Check if the timeout has been reached
                 if [ $elapsed_time -gt $timeout_duration ]; then
                     echo -e "\r\033[K${R}●${NC} Installing filewatch service took to long to complete!\n"
+                    kill $!
                     kill $loading_pid
-                    break
+                    exit 1
                 fi
 
                 sleep 1
@@ -404,8 +405,9 @@ install_backup_service() {
                 # Check if the timeout has been reached
                 if [ $elapsed_time -gt $timeout_duration ]; then
                     echo -e "\r\033[K${R}●${NC} Installing on-boot service took to long to complete!\n"
+                    kill $!
                     kill $loading_pid
-                    break
+                    exit 1
                 fi
 
                 sleep 1
