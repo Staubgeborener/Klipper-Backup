@@ -316,17 +316,40 @@ install_filewatch_service() {
         fi
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
-        sudo systemctl stop klipper-backup-filewatch.service 2>/dev/null
-        sudo cp $parent_path/install-files/klipper-backup-filewatch.service /etc/systemd/system/klipper-backup-filewatch.service
-        sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
-        sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
-        sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-filewatch.service"
-        sudo systemctl daemon-reload 2>/dev/null
-        sudo systemctl enable klipper-backup-filewatch.service 2>/dev/null
-        sudo systemctl start klipper-backup-filewatch.service 2>/dev/null
-        sleep .5
-        kill $loading_pid
-        echo -e "\r\033[K${G}●${NC} Installing filewatch service ${G}Done!${NC}\n"
+        if (
+            !(
+            sudo systemctl stop klipper-backup-filewatch.service 2>/dev/null
+            sudo cp $parent_path/install-files/klipper-backup-filewatch.service /etc/systemd/system/klipper-backup-filewatch.service
+            sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
+            sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
+            sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-filewatch.service"
+            sudo systemctl daemon-reload 2>/dev/null
+            sudo systemctl enable klipper-backup-filewatch.service 2>/dev/null
+            sudo systemctl start klipper-backup-filewatch.service 2>/dev/null
+            sleep .5
+            kill $loading_pid
+        ) &
+
+            start_time=$(date +%s)
+            timeout_duration=20
+
+            while [ "$(ps -p $! -o comm=)" ]; do
+                # Calculate elapsed time
+                end_time=$(date +%s)
+                elapsed_time=$((end_time - start_time))
+
+                # Check if the timeout has been reached
+                if [ $elapsed_time -gt $timeout_duration ]; then
+                    echo -e "\r\033[K${R}●${NC} Installing filewatch service took to long to complete!\n"
+                    kill $loading_pid
+                    break
+                fi
+
+                sleep 1
+            done
+        ); then
+            echo -e "\r\033[K${G}●${NC} Installing filewatch service ${G}Done!${NC}\n"
+        fi
     else
         tput cup $(($questionline - 2)) 0
         tput ed
@@ -357,17 +380,39 @@ install_backup_service() {
         pos1=$(getcursor)
         loading_wheel "${Y}●${NC} Installing on-boot service" &
         loading_pid=$!
-        sudo systemctl stop klipper-backup-on-boot.service 2>/dev/null
-        sudo cp $parent_path/install-files/klipper-backup-on-boot.service /etc/systemd/system/klipper-backup-on-boot.service
-        sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
-        sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
-        sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-on-boot.service"
-        sudo systemctl daemon-reload 2>/dev/null
-        sudo systemctl enable klipper-backup-on-boot.service 2>/dev/null
-        sudo systemctl start klipper-backup-on-boot.service 2>/dev/null
-        sleep .5
-        kill $loading_pid
-        echo -e "\r\033[K${G}●${NC} Installing on-boot service ${G}Done!${NC}\n"
+        if (
+            !(
+            sudo systemctl stop klipper-backup-on-boot.service 2>/dev/null
+            sudo cp $parent_path/install-files/klipper-backup-on-boot.service /etc/systemd/system/klipper-backup-on-boot.service
+            sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
+            sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-on-boot.service"
+            sudo sed -i "s/^User=.*/User=${SUDO_USER:-$USER}/" "/etc/systemd/system/klipper-backup-on-boot.service"
+            sudo systemctl daemon-reload 2>/dev/null
+            sudo systemctl enable klipper-backup-on-boot.service 2>/dev/null
+            sudo systemctl start klipper-backup-on-boot.service 2>/dev/null
+            kill $loading_pid
+        ) &
+
+            start_time=$(date +%s)
+            timeout_duration=20
+
+            while [ "$(ps -p $! -o comm=)" ]; do
+                # Calculate elapsed time
+                end_time=$(date +%s)
+                elapsed_time=$((end_time - start_time))
+
+                # Check if the timeout has been reached
+                if [ $elapsed_time -gt $timeout_duration ]; then
+                    echo -e "\r\033[K${R}●${NC} Installing on-boot service took to long to complete!\n"
+                    kill $loading_pid
+                    break
+                fi
+
+                sleep 1
+            done
+        ); then
+            echo -e "\r\033[K${G}●${NC} Installing on-boot service ${G}Done!${NC}\n"
+        fi
     else
         tput cup $(($questionline - 2)) 0
         tput ed
