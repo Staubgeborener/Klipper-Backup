@@ -316,6 +316,7 @@ install_filewatch_service() {
         fi
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
+        udo systemctl stop klipper-backup-filewatch.service 2>/dev/null
         sudo cp $parent_path/install-files/klipper-backup-filewatch.service /etc/systemd/system/klipper-backup-filewatch.service
         sudo sed -i "s/^After=.*/After=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
         sudo sed -i "s/^Wants=.*/Wants=$(wantsafter)/" "/etc/systemd/system/klipper-backup-filewatch.service"
