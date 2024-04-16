@@ -7,8 +7,9 @@ Wants=
 User=
 Type=simple
 ExecStart=/usr/bin/env bash  -c ' \
+    source "$HOME"/klipper-backup/.env \
     watchlist=""; \
-    while IFS= read -r path; do \
+    for path in "${backupPaths[@]}"; do \
         for file in $path; do \
             if [ ! -h "$file" ]; then \
                 file_dir=$(dirname "$file"); \
@@ -19,7 +20,7 @@ ExecStart=/usr/bin/env bash  -c ' \
                 fi; \
             fi; \
         done; \
-    done < <(grep -v '^#' "$HOME/klipper-backup/.env" | grep 'path_' | sed 's/^.*=//'); \
+    done; \
     watchlist=$(echo "$watchlist" | tr \' \' \'\n\' | sort -u | tr \'\n\' \' \'); \
     exclude_pattern=".swp|.tmp|printer-[0-9]*_[0-9]*.cfg|.bak|.bkp"; \
     inotifywait -mrP -e close_write -e move -e delete --exclude "$exclude_pattern" $watchlist | \
