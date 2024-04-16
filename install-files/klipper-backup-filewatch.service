@@ -6,7 +6,7 @@ Wants=
 [Service]
 User=
 Type=simple
-ExecStart=/usr/bin/env bash -c '$HOME/klipper-backup/utils/filewatch.sh'
+ExecStart=/usr/bin/env bash -c '"$HOME/klipper-backup/utils/filewatch.sh"'
 
 [Install]
 WantedBy=default.target
