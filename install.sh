@@ -292,7 +292,7 @@ install_filewatch_service() {
         pos1=$(getcursor)
         if ! checkinotify; then # Checks if the version of inotify installed matches the latest release
             removeOldInotify
-            check_dependencies "libinotifytools-dev"
+            check_dependencies "libinotifytools0-dev"
             echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
             sudo rm -rf inotify-tools/                              # remove folder incase it for some reason still exists
             sudo rm -f /usr/bin/fsnotifywait /usr/bin/fsnotifywatch # remove symbolic links to keep error about file exists from occurring
