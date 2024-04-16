@@ -290,7 +290,7 @@ install_filewatch_service() {
         tput cup $(($questionline - 2)) 0
         tput ed
         pos1=$(getcursor)
-        if ! checkinotify; then # Checks if the version of inotify installed matches the latest release
+        if ! checkinotify >/dev/null 2>&1; then # Checks if the version of inotify installed matches the latest release
             removeOldInotify
             check_dependencies "libinotifytools0-dev"
             echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
