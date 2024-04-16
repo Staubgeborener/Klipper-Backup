@@ -113,7 +113,7 @@ configure() {
         pos2=$(getcursor)
 
         getToken() {
-            echo -n "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens (Ensure you set access to the backup repository and have push/pull & commit permissions for the token)"    
+            echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens (Ensure you set access to the backup repository and have push/pull & commit permissions for the token) \n"    
             ghtoken=$(ask_token "Enter your GitHub token")
             result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
             if [ "$result" != "" ]; then
