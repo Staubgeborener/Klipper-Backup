@@ -186,7 +186,7 @@ service_exists() {
 }
 
 checkinotify() {
-    local_version=$(inotifywait -h | grep -oP '\d+\.\d+\.\d+\.\d+' >/dev/null 2>&1)
+    local_version=$(inotifywait -h >/dev/null 2>&1 | grep -oP '\d+\.\d+\.\d+\.\d+')
     # Get the latest release information from the GitHub repository
     latest_release=$(curl -s "https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest")
     # Extract the latest release version number
