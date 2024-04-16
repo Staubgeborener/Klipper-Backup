@@ -119,7 +119,7 @@ configure() {
                 sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
                 ghtoken_username=$result
             else
-                tput cup $(($pos2 - 1)) 0
+                tput cup $(($pos2 - 2)) 0
                 tput ed
                 pos2=$(getcursor)
                 echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
