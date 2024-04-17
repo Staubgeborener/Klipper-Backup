@@ -13,6 +13,16 @@ fi
 
 source $parent_path/utils/utils.func
 
+# Check if .env is v1 version
+if [[ ! -v backupPaths ]]; then
+    echo ".env file is not using version 2 config, upgrading to V2"
+    if bash $parent_path/utils/v1convert.sh; then
+        echo "Upgrade complete restarting script.sh"
+        sleep 2.5
+        exec "$parent_path/script.sh" "$@"
+    fi
+fi
+
 unique_id=$(getUniqueid)
 
 set -e
@@ -292,7 +302,6 @@ install_filewatch_service() {
         pos1=$(getcursor)
         if ! checkinotify >/dev/null 2>&1; then # Checks if the version of inotify installed matches the latest release
             removeOldInotify
-            check_dependencies "libinotifytools0-dev"
             echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
             sudo rm -rf inotify-tools/                              # remove folder incase it for some reason still exists
             sudo rm -f /usr/bin/fsnotifywait /usr/bin/fsnotifywatch # remove symbolic links to keep error about file exists from occurring
