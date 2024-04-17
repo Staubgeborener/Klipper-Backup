@@ -13,16 +13,6 @@ fi
 
 source $parent_path/utils/utils.func
 
-# Check if .env is v1 version
-if [[ ! -v backupPaths ]]; then
-    echo ".env file is not using version 2 config, upgrading to V2"
-    if bash $parent_path/utils/v1convert.sh; then
-        echo "Upgrade complete restarting script.sh"
-        sleep 2.5
-        exec "$parent_path/script.sh" "$@"
-    fi
-fi
-
 unique_id=$(getUniqueid)
 
 set -e
