@@ -290,6 +290,7 @@ install_filewatch_service() {
         tput cup $(($questionline - 2)) 0
         tput ed
         pos1=$(getcursor)
+        set +e
         if ! checkinotify >/dev/null 2>&1; then # Checks if the version of inotify installed matches the latest release
             removeOldInotify
             echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
@@ -315,6 +316,7 @@ install_filewatch_service() {
             tput cup $(($pos1 - 1)) 0
             tput ed
             echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
+            set -e
         fi
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
