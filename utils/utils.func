@@ -227,21 +227,21 @@ check_dependencies() {
     done
 }
 
-
 removeOldInotify() {
-  if command -v "inotifywait" &>/dev/null; then
-            # Check the package manager and attempt a silent install
-            if command -v apt-get &>/dev/null; then
-                sudo apt remove -y inotify-tools >/dev/null 2>&1
-            elif command -v dnf &>/dev/null; then
-                sudo dnf remove -y inotify-tools >/dev/null 2>&1
-            elif command -v pacman &>/dev/null; then
-                sudo pacman -Rs --noconfirm inotify-tools >/dev/null 2>&1
-            elif command -v apk &>/dev/null; then
-                sudo apk remove inotify-tools >/dev/null 2>&1
-            else
-                echo "Unsupported package manager. Please remove inotify-tools manually."
-                return 1
-            fi
+    oldInotify=("inotifywait" "libinotifytools0" "libinotifytools0-dev")
+    for pkg in "${oldInotify[@]}"; do
+        # Check the package manager and attempt a silent install
+        if command -v apt-get &>/dev/null; then
+            sudo apt remove -y $pkg >/dev/null 2>&1
+        elif command -v dnf &>/dev/null; then
+            sudo dnf remove -y $pkg >/dev/null 2>&1
+        elif command -v pacman &>/dev/null; then
+            sudo pacman -Rs --noconfirm $pkg >/dev/null 2>&1
+        elif command -v apk &>/dev/null; then
+            sudo apk remove $pkg >/dev/null 2>&1
+        else
+            echo "Unsupported package manager. Please remove inotify-tools manually."
+            return 1
         fi
+    done
 }
