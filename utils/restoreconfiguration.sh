@@ -15,4 +15,4 @@ for path in "${backupPaths[@]}"; do
 done
 newbackupPaths+=")"
 
-echo "${newbackupPaths[@]}" > restore.config
+echo -e "${newbackupPaths[@]}" > restore.config
