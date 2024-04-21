@@ -53,6 +53,7 @@ if [ ! -d ".git" ]; then
     echo "[init]
     defaultBranch = "$branch_name"" >>.git/config #Add desired branch name to config before init
     git init
+    git config pull.rebase false # configure default reconciliation when pulling 
 # Check if the current checked out branch matches the branch name given in .env if not branch listed in .env
 elif [[ $(git symbolic-ref --short -q HEAD) != "$branch_name" ]]; then
     echo -e "Branch: $branch_name in .env does not match the currently checked out branch of: $(git symbolic-ref --short -q HEAD)."
