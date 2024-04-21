@@ -9,4 +9,10 @@ scriptsh_parent_path=$(
 source "$scriptsh_parent_path"/utils/utils.func
 source "$scriptsh_parent_path"/.env
 
-echo "${backupPaths[@]}" > restore.config
+newbackupPaths="backupPaths=( \\ \n"
+for path in "${backupPaths[@]}"; do
+    newbackupPaths+=" \"$path\" \\ \n"
+done
+newbackupPaths+=")"
+
+echo "${newbackupPaths[@]}" > restore.config
