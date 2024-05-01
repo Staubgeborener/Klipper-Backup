@@ -4,7 +4,7 @@
 This documentation provides a complete step-by-step guide to set up [klipper-backup 💾](https://github.com/Staubgeborener/klipper-backup). This guide is specified for the implementation on a Unix system.
 
 ## Getting started
-To get started with Klipper-Backup, please jump to [Getting Started Guide](installation.md) to see detailed instructions.
+To get started with Klipper-Backup, please jump to the [installation section](installation.md) to see detailed instructions.
 
 ## Features
 - The script does the most complex work in the background automatically
