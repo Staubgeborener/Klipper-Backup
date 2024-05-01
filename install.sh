@@ -28,7 +28,7 @@ main() {
     install_filewatch_service
     install_backup_service
     install_cron
-    echo -e "${G}●${NC} Installation Complete!\nFor help or further information, read the docs: https://staubgeborener.github.io/klipper-backup/"
+    echo -e "${G}●${NC} Installation Complete!\n  For help or further information, read the docs: https://staubgeborener.github.io/klipper-backup/"
 }
 
 dependencies() {
