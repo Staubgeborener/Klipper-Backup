@@ -19,18 +19,13 @@ Now you need your [GitHub token](installation.md#create-github-token).
         When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}  
 
 Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here (**note the pattern!** which is explained inside the `.env` file) are considered in the backup.
-```ini
-backupPaths=( \
-"printer_data/config/*" \
-)
-```
 
 Basically, you can break it down to the following three things:
 
 Back up a whole directories instead of single files:
 ```ini
 backupPaths=( \
-"printer_data/config/printer.cfg" \
+"printer_data/config/*" \
 )
 ```
 
