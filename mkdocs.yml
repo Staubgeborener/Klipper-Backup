@@ -90,10 +90,8 @@ markdown_extensions:
       combine_header_slug: true
 nav:
   - Home: index.md
-  - Installation:
-      - Installation: installation.md
-  - Configuration:
-      - Configuration: configuration.md
+  - Installation: installation.md
+  - Configuration: configuration.md
       - Updates: updating.md
       - Automated Backups: automation.md
       - Manual Backups: manual.md
