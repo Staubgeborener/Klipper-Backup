@@ -43,7 +43,7 @@ The installation script guides you through the essential steps. Have your [GitHu
 cd ~ && ./klipper-backup/install.sh
 ```
 
-    !!! warning "Important Note"
-        You can run the `install.sh` script at any time to install any features!
+!!! info
+    You can run the `install.sh` script at any time to install any features!
 
 [Now edit your `.env` file](configuration.md).
