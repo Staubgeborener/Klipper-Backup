@@ -29,7 +29,9 @@ Basically, you can break it down to the following three things:
 
 Back up a whole directories instead of single files:
 ```ini
-path_klipperdata=printer_data/config/*
+backupPaths=( \
+"printer_data/config/printer.cfg" \
+)
 ```
 
 Back up a single file instead a whole directory:
