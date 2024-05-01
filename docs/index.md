@@ -5,7 +5,6 @@ This documentation provides a complete step-by-step guide to set up [klipper-bac
 
 ## Getting started
 To get started with Klipper-Backup, please jump to [Getting Started Guide](installation.md) to see detailed instructions.
-However, there is also a [Quickstart](quickstart.md) if you want to get the script running as quickly as possible and are not interested about background information.
 
 ## Features
 - The script does the most complex work in the background automatically

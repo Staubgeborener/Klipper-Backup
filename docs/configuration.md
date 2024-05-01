@@ -1,5 +1,8 @@
+    !!! warning "Important Note"
+        This section shows how to customize klipper-backup according to your needs. certain things like adding the token are already queried by the installation script and automatically inserted if necessary!
+
 ## .env
-Now you need your [GitHub token](installation.md#create-github-token).
+Now you need your [GitHub token](installation.md#create-github-token). 
 
 1. Open the `.env` file inside your repository (for example with `vi`, `vim` or `nano`)
 2. Copy the new token into the `.env` file at `github_token`
@@ -15,22 +18,35 @@ Now you need your [GitHub token](installation.md#create-github-token).
     !!! warning "Important Note"
         When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}  
 
-Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here (**note the pattern!** It must start with `path_` followed by the path) are considered in the backup. I am using the default paths. You can also comment out content inside the `.env` file with `#`, for example this here will use `path_klipperdata` but ignores `path_macroscfg`:
+Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here (**note the pattern!** which is explained inside the `.env` file) are considered in the backup.
 ```ini
-path_klipperdata=printer_data/config/*
-#path_macroscfg=printer_data/macros/*
+backupPaths=( \
+"printer_data/config/*" \
+)
 ```
 
-For example: Since I like to sort the files in appropriate folders, I have adjusted the parameter `backup_folder` with `klipper`. In this case, all klipper files are stored inside a folder which is called `klipper`.
+Basically, you can break it down to the following three things:
 
-It's also possible to back up whole directories instead of single files. To do so, the part in the `.env` file has to look like this:
+Back up a whole directories instead of single files:
 ```ini
 path_klipperdata=printer_data/config/*
 ```
 
-To back up a single file, use this syntax:
+Back up a single file instead a whole directory:
 ```ini
-path_singlefile=printer_data/config/singlefile.cfg
+backupPaths=( \
+"printer_data/config/printer.cfg" \
+)
+```
+
+Back up directories and single files whatever you feel like:
+```ini
+backupPaths=( \
+"printer_data/config/my-files/*" \
+"printer_data/config/my-other-files/*" \
+"printer_data/config/single-file_a.cfg" \
+"printer_data/config/another-directory/single-file_b.cfg" \
+)
 ```
 
 ## .gitignore (do not upload certain files)
@@ -67,4 +83,5 @@ A small `nano` YouTube tutorial can be found [here](https://youtu.be/mE2YghYpBBE
 !!! warning "Important Note"
     In case you get an error message like `-sh: nano: not found` you should install `nano`: `sudo apt install nano`
 
-Next: [The update section](updating.md)
+If you have installed klipper-backup with the `install.sh` script, you should be finished with everything at this point. **Reminder**: You can install features at anytime automatically by running `install.sh` again, so there is no need to do it manually!
+In case you want to do it manually for some reason: Next: [The update section](updating.md)
