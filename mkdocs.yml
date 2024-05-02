@@ -91,8 +91,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Installation: installation.md
-  - Configuration:
-      - Configuration: configuration.md
-      - Updates: updating.md
-      - Automated Backups: automation.md
-      - Manual Backups: manual.md
+  - Configuration: configuration.md
+  - Updates: updating.md
+  - Automated Backups: automation.md
+  - Manual Backups: manual.md
