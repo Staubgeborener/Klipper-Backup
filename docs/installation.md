@@ -32,16 +32,13 @@ The most important part in the next window is here to give the repository a name
 
 Copy the new token, you will need this later.
 
-## Initialize klipper-backup
+## Download Klipper-Backup
 ```shell
-cd ~ && git clone https://github.com/Staubgeborener/klipper-backup.git && chmod +x ./klipper-backup/script.sh ./klipper-backup/install.sh
-```
+curl -fsSL https://raw.githubusercontent.com/Staubgeborener/klipper-backup/download/get-klipper-backup.sh | bash```
 
 ## Run installation
+After the download you can start the installation manually with `~/klipper-backup/install.sh`.
 The installation script guides you through the essential steps. Have your [GitHub token](installation.md#create-github-token) ready for this. You can decide during the installation whether you want to install some features like [backup on boot](automation.md#backup-on-boot), [backup on file changes](automation.md#backup-on-file-changes), or even add the [moonraker entry](updating.md#moonraker-update-manager), etc (this can also be done afterwards).
-```shell
-cd ~ && ./klipper-backup/install.sh
-```
 
 !!! info
     You can run the `install.sh` script at any time to install any features!
