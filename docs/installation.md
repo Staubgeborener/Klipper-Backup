@@ -34,7 +34,8 @@ Copy the new token, you will need this later.
 
 ## Download Klipper-Backup
 ```shell
-curl -fsSL https://raw.githubusercontent.com/Staubgeborener/klipper-backup/download/get-klipper-backup.sh | bash```
+curl -fsSL https://raw.githubusercontent.com/Staubgeborener/klipper-backup/download/get-klipper-backup.sh | bash
+```
 
 ## Run installation
 After the download you can start the installation manually with `~/klipper-backup/install.sh`.
