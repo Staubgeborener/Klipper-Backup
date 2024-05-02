@@ -14,8 +14,13 @@ echo -e "${C}$(
 EOF
 )${NC}"
 echo ""
-echo "========================================================================"
+echo "========================================================================="
 echo ""
+
+if ! command -v git &>/dev/null; then
+    echo -e "\n${R}●${NC} Git is not installed!"
+    exit 1
+fi
 
 if [ -d ~/klipper-backup ]; then
     echo -e "\n${R}●${NC} Klipper-Backup directory already exists. You can run it with ~/klipper-backup/install.sh"
