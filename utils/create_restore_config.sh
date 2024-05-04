@@ -25,7 +25,7 @@ if [ -d ""$HOME"/printer_data/config/.theme" ]; then
         echo -e ".theme folder is a git repo"
         echo -e "Extracting remote url"
         remote_url=$(git -C "$HOME"/printer_data/config/.theme remote get-url origin)
-        echo -e $remote_url >>$restore_config
+        echo -e "theme_url=$remote_url" >>$restore_config
     else
         echo -e ".theme is not a git repo"
     fi
