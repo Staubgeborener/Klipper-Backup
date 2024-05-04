@@ -20,9 +20,9 @@ set -e
 main() {
     clear
     sudo -v
+    dependencies
     logo
     install_repo
-    dependencies
     configure
     patch_klipper-backup_update_manager
     install_filewatch_service
