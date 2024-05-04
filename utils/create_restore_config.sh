@@ -25,7 +25,7 @@ if [ -d ""$HOME"/printer_data/config/.theme" ]; then
         echo -e ".theme folder is a git repo"
         loading_wheel "Extracting remote url" &
         loading_pid=$!
-        remote_url = $(git -C "$HOME"/printer_data/config/.theme remote get-url origin)
+        remote_url=$(git -C "$HOME"/printer_data/config/.theme remote get-url origin)
         echo -e $remote_url >>$restore_config
         kill $loading_pid
     else
