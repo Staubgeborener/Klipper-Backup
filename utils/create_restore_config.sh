@@ -15,4 +15,12 @@ for path in "${backupPaths[@]}"; do
 done
 newbackupPaths+=")"
 
-echo -e "${newbackupPaths[@]}" > "$HOME"/printer_data/config/.restore.config
+echo -e "${newbackupPaths[@]}" >"$HOME"/printer_data/config/.restore.config
+
+if [ -d '"$HOME"/printer_data/config/.theme"' ]; then
+    if [ "$(git remote get-url origin)" ]; then
+        echo ".theme folder is a git repo"
+    else
+        echo ".theme is not a git repo"
+    fi
+fi
