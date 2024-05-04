@@ -105,7 +105,7 @@ while IFS= read -r path; do
             elif [[ $(basename "$file") =~ ^printer-[0-9]+_[0-9]+\.cfg$ ]]; then
                 echo "Skipping file: $file"
             else
-                rsync -Rr --exclude=".git" "$file" "$backup_path/"
+                rsync -Rr "$file" "$backup_path/"
             fi
         done
     fi
