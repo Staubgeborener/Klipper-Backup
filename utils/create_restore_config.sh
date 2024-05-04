@@ -23,11 +23,9 @@ echo -e "${newbackupPaths[@]}" >>$restore_config
 if [ -d ""$HOME"/printer_data/config/.theme" ]; then
     if [ "$(git -C "$HOME"/printer_data/config/.theme remote get-url origin 2>/dev/null)" ]; then
         echo -e ".theme folder is a git repo"
-        loading_wheel "Extracting remote url" &
-        loading_pid=$!
+        echo -e "Extracting remote url"
         remote_url=$(git -C "$HOME"/printer_data/config/.theme remote get-url origin)
         echo -e $remote_url >>$restore_config
-        kill $loading_pid
     else
         echo -e ".theme is not a git repo"
     fi
