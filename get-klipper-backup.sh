@@ -1,7 +1,7 @@
-G=$'\e[1;92m' # Green
+G=$'\e[1;92m' # Green ${G}
 R=$'\e[1;91m' # Red ${R}
 C=$'\e[96m'   # Cyan ${C}
-NC=$'\e[0m'   # No Color
+NC=$'\e[0m'   # No Color ${NC}
 
 echo -e "${C}$(
     cat <<"EOF"
@@ -31,6 +31,5 @@ else
         echo -e "\n${R}●${NC} Error when cloning the repository. Maybe Klipper-Backup already exists. You can run it with ~/klipper-backup/install.sh"
         exit 1
     fi
-
     echo -e "\n${G}●${NC} Klipper backup was downloaded successfully! You can now start the installation: ~/klipper-backup/install.sh"
 fi
