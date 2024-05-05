@@ -1,0 +1,12 @@
+[Unit]
+Description=Klipper Backup Filewatch Service
+After=
+Wants=
+
+[Service]
+User=
+Type=simple
+ExecStart=/usr/bin/env bash -c '"$HOME/klipper-backup/utils/filewatch.sh"'
+
+[Install]
+WantedBy=default.target

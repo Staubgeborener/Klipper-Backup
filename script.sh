@@ -11,10 +11,17 @@ parent_path=$(
 
 # Initialize variables from .env file
 source "$parent_path"/.env
+source "$parent_path"/utils/utils.func
+
+loading_wheel "${Y}●${NC} Checking for installed dependencies" &
+loading_pid=$!
+check_dependencies "jq" "curl" "rsync"
+kill $loading_pid
+echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
 
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
-empty_commit=${empty_commit:-"yes"}
+allow_empty_commits=${allow_empty_commits:-true}
 git_protocol=${git_protocol:-"https"}
 git_host=${git_host:-"github.com"}
 full_git_url=$git_protocol"://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
@@ -22,6 +29,16 @@ exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "
 
 # Check for updates
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "NEW klipper-backup version available!\n"
+
+# Check if .env is v1 version
+if [[ ! -v backupPaths ]]; then
+    echo ".env file is not using version 2 config, upgrading to V2"
+    if bash $parent_path/utils/v1convert.sh; then
+        echo "Upgrade complete restarting script.sh"
+        sleep 2.5
+        exec "$parent_path/script.sh" "$@"
+    fi
+fi
 
 # Check if backup folder exists, create one if it does not
 if [ ! -d "$backup_path" ]; then
@@ -84,32 +101,33 @@ if git ls-remote --exit-code --heads origin $branch_name >/dev/null 2>&1; then
 fi
 
 cd "$HOME"
-while IFS= read -r path; do
-    # Check if path is a directory or not a file (needed for /* checking as /* treats the path as not a directory)
-    if [[ -d "$HOME/$path" || ! -f "$HOME/$path" ]]; then
-        # Check if path does not end in /* or /
-        if [[ ! "$path" =~ /\*$ && ! "$path" =~ /$ ]]; then
-            path="$path/*"
-        elif [[ ! "$path" =~ \$ && ! "$path" =~ /\*$ ]]; then
-            path="$path*"
+# Iterate through backupPaths array and copy files to the backup folder while ignoring symbolic links
+for path in "${backupPaths[@]}"; do
+    fullPath="$HOME/$path"
+    if [[ -d "$fullPath" && ! -f "$fullPath" ]]; then
+        # Check if the directory path ends with only a '/'
+        if [[ "$path" =~ /$ ]]; then
+            # If it ends with '/', replace it with '/*'
+            backupPaths[$i]="$path*"
+        elif [[ -d "$path" ]]; then
+            # If it's a directory without '/', add '/*' at the end
+            backupPaths[$i]="$path/*"
         fi
     fi
-    # Check if path contains files
-    if compgen -G "$HOME/$path" >/dev/null; then
+
+    if compgen -G "$fullPath" >/dev/null; then
         # Iterate over every file in the path
         for file in $path; do
-            # Check if it's a symbolic link
+            # Skip if file is symbolic link
             if [ -h "$file" ]; then
                 echo "Skipping symbolic link: $file"
-            # Check if file is an extra backup of printer.cfg moonraker/klipper seems to like to make 4-5 of these sometimes no need to back them all up as well.
-            elif [[ $(basename "$file") =~ ^printer-[0-9]+_[0-9]+\.cfg$ ]]; then
-                echo "Skipping file: $file"
             else
-                rsync -Rr "$file" "$backup_path/"
+                file=$(readlink -e "$file") # Get absolute path before copy (Allows usage of .. in filepath eg. ../../etc/fstab resovles to /etc/fstab )
+                rsync -Rr "${file##"$HOME"/}" "$backup_path"
             fi
         done
     fi
-done < <(grep -v '^#' "$parent_path/.env" | grep 'path_' | sed 's/^.*=//')
+done
 
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
@@ -138,7 +156,7 @@ git rm -r --cached . >/dev/null 2>&1
 git add .
 git commit -m "$commit_message"
 # Check if HEAD still matches remote (Means there are no updates to push) and create a empty commit just informing that there are no new updates to push
-if [[ "$empty_commit" = "yes" && $(git rev-parse HEAD) == $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
+if $allow_empty_commits && [[ $(git rev-parse HEAD) == $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
     git commit --allow-empty -m "$commit_message - No new changes pushed"
 fi
 git push -u origin "$branch_name"
