@@ -32,8 +32,5 @@ else
         exit 1
     fi
 
-    # !!! REMOVE THIS LINE LATER !!!
-    git -C ~/klipper-backup checkout installer-beta
-
     echo -e "\n${G}●${NC} Klipper backup was downloaded successfully! You can now start the installation: ~/klipper-backup/install.sh"
 fi
