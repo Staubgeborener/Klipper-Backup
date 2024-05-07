@@ -38,7 +38,10 @@ curl -fsSL https://raw.githubusercontent.com/Staubgeborener/klipper-backup/downl
 ```
 
 ## Run installation
-Start the installation: `~/klipper-backup/install.sh`
+Start the installation: 
+```shell
+~/klipper-backup/install.sh
+```
 
 The installation script guides you through the essential steps. Have your [GitHub token](installation.md#create-github-token) ready for this. You can decide during the installation whether you want to install some features like [backup on boot](automation.md#backup-on-boot), [backup on file changes](automation.md#backup-on-file-changes), or even add the [moonraker entry](updating.md#moonraker-update-manager), etc (this can also be done afterwards).
 
