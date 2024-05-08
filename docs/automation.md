@@ -1,4 +1,4 @@
-There are a couple different methods for automating backups you can choose to use one/both or none its up to you.
+There are a couple different methods for automating backups. You can choose to use one, all of them or none its up to you.
 
 ## Backup on boot
 1. Create the service file in systemd
