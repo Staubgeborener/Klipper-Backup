@@ -6,6 +6,11 @@ This documentation provides a complete step-by-step guide to set up [klipper-bac
 ## Getting started
 To get started with Klipper-Backup, please jump to the [installation section](installation.md) to see detailed instructions.
 
+```shell
+curl -fsSL get.klipperbackup.xyz | bash
+~/klipper-backup/install.sh
+```
+
 ## Features
 - The script does the most complex work in the background automatically
 - Works perfectly with [gcode macros](manual.md/#klipper-macro)
