@@ -19,7 +19,7 @@ primary_branch: main
 If the script is executed (e.g. with `./script.sh`) and a new update is available, you will be notified with the following message
 > NEW klipper-backup version available!
 
-To pull the update navigate to the klipper-backup folder and run `git pull`:
+To pull the update navigate to the Klipper-Backup folder and run `git pull`:
 ```shell
 cd ~/klipper-backup && git pull
 ```

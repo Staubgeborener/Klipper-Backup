@@ -25,9 +25,9 @@ The most important part in the next window is here to give the repository a name
 
 ## Create GitHub token
 1. In GitHub, click on the profile in the upper right corner
-2. click `Settings`
-3. click `Developer settings`
-4. click `Personal access tokens` (you can choose a classic token or a fine-grained token, doesn't really matter)
+2. Click `Settings`
+3. Click `Developer settings`
+4. Click `Personal access tokens` (you can choose a classic token or a fine-grained token, doesn't really matter)
 5. `Generate new token`
 
 Copy the new token, you will need this later.

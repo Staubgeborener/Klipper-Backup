@@ -1,5 +1,5 @@
 !!! note
-    This section shows how to customize klipper-backup according to your needs. Certain things like adding the token are already queried by the installation script and automatically inserted if necessary!
+    This section shows how to customize Klipper-Backup according to your needs. Certain things like adding the token are already queried by the installation script and automatically inserted if necessary!
 
 ## .env
 Now you need your [GitHub token](installation.md#create-github-token). 
@@ -80,6 +80,6 @@ A small `nano` YouTube tutorial can be found [here](https://youtu.be/mE2YghYpBBE
 !!! warning "Important Note"
     In case you get an error message like `-sh: nano: not found` you should install `nano`: `sudo apt install nano`
 
-If you have installed klipper-backup with the `install.sh` script, you should be finished with everything at this point. **Reminder**: You can install features at anytime automatically by running `install.sh` again, so there is no need to do it manually!
+If you have installed Klipper-Backup with the `install.sh` script, you should be finished with everything at this point. **Reminder**: You can install features at anytime automatically by running `install.sh` again, so there is no need to do it manually!
 
 In case you want to do it manually for some reason: Next: [The update section](updating.md)
