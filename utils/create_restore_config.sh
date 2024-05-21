@@ -33,6 +33,9 @@ if [ -d ""$HOME"/printer_data/config/.theme" ]; then
         echo -e "Extracting remote url"
         remote_url=$(git -C "$HOME"/printer_data/config/.theme remote get-url origin)
         echo -e "theme_url=$remote_url" >>$restore_config
+    if [ $(git -C "$HOME"/printer_data/config/.theme git status --porcelain | grep -q '^??') ] {
+      echo $0
+    }
     else
         echo -e ".theme is not a git repo"
     fi
