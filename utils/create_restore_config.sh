@@ -33,7 +33,7 @@ if [ -d ""$HOME"/printer_data/config/.theme" ]; then
         echo -e "Extracting remote url"
         remote_url=$(git -C "$HOME"/printer_data/config/.theme remote get-url origin)
         echo -e "theme_url=$remote_url" >>$restore_config
-        if [ $(git -C "$HOME"/printer_data/config/.theme git status --porcelain | grep -q '^??') ]; then
+        if [ $(git -C "$HOME"/printer_data/config/.theme status --porcelain | grep -q '^??') ]; then
             echo $0
         fi
     else
