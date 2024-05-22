@@ -51,12 +51,26 @@ crontab -e
 This tells cron to run the backup script every 4 hours. You can find other cron examples here: [https://crontab.guru/examples.html](https://crontab.guru/examples.html){:target="_blank"}
 
 ## Backup on file changes
-!!! warning "Important Info"
-    The following service relies on the inotify-tools package. 
-    
-    To install the package run ```sudo apt-get install inotify-tools``` in your terminal. 
+The following service relies on the inotify-tools package. To install the package run ```sudo apt-get install inotify-tools``` in your terminal. 
 
-    Please check with `inotifywait -h` if you are using the latest release. If this is not the case or if you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow [these instructions](https://gist.github.com/Staubgeborener/0455c557e14bc20dd26713f2c8256906){:target="_blank"}.
+Please check with `inotifywait -h` if you are using the latest release. If this is not the case or if you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow these instructions:
+
+??? example "Expand to show alternate inotify installation"
+```shell
+    git clone https://github.com/inotify-tools/inotify-tools.git
+    
+    sudo apt-get install autoconf autotools-dev automake libtool
+    
+    cd inotify-tools/
+    
+    ./autogen.sh
+    ./configure --prefix=/usr
+    make
+    sudo make install
+    
+    cd ..
+    rm -rf inotify-tools
+```
 
 Latest release `inotify-tools`: {% include "inotify_version" %} ([source](https://github.com/inotify-tools/inotify-tools/releases/latest){:target="_blank"})
 
