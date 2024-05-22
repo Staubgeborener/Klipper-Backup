@@ -53,7 +53,7 @@ This tells cron to run the backup script every 4 hours. You can find other cron 
 ## Backup on file changes
 The following service relies on the inotify-tools package. To install the package run ```sudo apt-get install inotify-tools``` in your terminal. 
 
-Please check with `inotifywait -h` if you are using the latest release. If this is not the case or if you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow these instructions:
+Please check with `inotifywait -h` if you are using the latest release {% include "inotify_version" %} ([source](https://github.com/inotify-tools/inotify-tools/releases/latest){:target="_blank"}). If this is not the case or if you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow these instructions:
 
 ??? example "Expand to show alternate inotify installation"
     ```shell
@@ -71,8 +71,6 @@ Please check with `inotifywait -h` if you are using the latest release. If this 
         cd ..
         rm -rf inotify-tools
     ```
-
-Latest release `inotify-tools`: {% include "inotify_version" %} ([source](https://github.com/inotify-tools/inotify-tools/releases/latest){:target="_blank"})
 
 2. Create the service file in systemd
 ```shell 
