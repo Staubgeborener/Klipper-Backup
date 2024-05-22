@@ -57,19 +57,19 @@ Please check with `inotifywait -h` if you are using the latest release {% includ
 
 ??? example "Expand to show alternate inotify installation"
     ```shell
-        git clone https://github.com/inotify-tools/inotify-tools.git
-        
-        sudo apt-get install autoconf autotools-dev automake libtool
-        
-        cd inotify-tools/
-        
-        ./autogen.sh
-        ./configure --prefix=/usr
-        make
-        sudo make install
-       
-        cd ..
-        rm -rf inotify-tools
+    git clone https://github.com/inotify-tools/inotify-tools.git
+    
+    sudo apt-get install autoconf autotools-dev automake libtool
+    
+    cd inotify-tools/
+    
+    ./autogen.sh
+    ./configure --prefix=/usr
+    make
+    sudo make install
+    
+    cd ..
+    rm -rf inotify-tools
     ```
 
 2. Create the service file in systemd
