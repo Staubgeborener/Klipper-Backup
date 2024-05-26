@@ -145,6 +145,12 @@ done
 
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
+if [ "$(git -C $theme_path remote get-url origin 2>/dev/null)" ]; then
+    url=$(git -C $theme_path remote get-url origin)
+    git -C $backup_path submodule add -f $url printer_data/config/.theme
+    git add printer_data/config/.theme
+fi
+
 # utilize gits native exclusion file .gitignore to add files that should not be uploaded to remote.
 # Loop through exclude array and add each element to the end of .gitignore
 for i in ${exclude[@]}; do
@@ -167,11 +173,6 @@ if ! [ -f "README.md" ]; then
 fi
 # Untrack all files so that any new excluded files are correctly ignored and deleted from remote
 git rm -r --cached . >/dev/null 2>&1
-
-if [ "$(git -C $theme_path remote get-url origin 2>/dev/null)" ]; then
-    url=$(git -C $theme_path remote get-url origin)
-    git -C $backup_path submodule add -f $url printer_data/config/.theme
-fi
 
 git add .
 git commit -m "$commit_message"
