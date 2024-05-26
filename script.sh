@@ -21,7 +21,8 @@ echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}
 
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
-backup_restore_data="$HOME/printer_data/klipper-backup-restore"
+backup_restore_data="$HOME"/printer_data/klipper-backup-restore
+theme_path="$HOME"/printer_data/config/.theme
 allow_empty_commits=${allow_empty_commits:-true}
 git_protocol=${git_protocol:-"https"}
 git_host=${git_host:-"github.com"}
@@ -143,19 +144,9 @@ done
 
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
-# Path to check for submodules
-CHECK_PATH="$backup_path/printer_data/config"
-
-# Check for the submodule
-if git -C $CHECK_PATH ls-tree HEAD | grep -q 'commit'; then
-    echo "Submodule detected at $CHECK_PATH"
-    url=$(grep "^theme_url=" $backup_path/printer_data/klipper-backup-restore/restore.config | cut -d'=' -f2-)
-    if ! git -C $backup_path submodule add $url printer_data/config/.theme; then
-        git -C $backup_path submodule set-url printer_data/config/.theme $url
-    fi
-else
-    echo "No submodule detected at $CHECK_PATH"
-    # Perform an alternative action here
+if [ "$(git -C $theme_path remote get-url origin 2>/dev/null)" ]; then
+    remote_url=$(git -C $theme_path remote get-url origin)
+    git -C $backup_path submodule add $url printer_data/config/.theme
 fi
 
 # utilize gits native exclusion file .gitignore to add files that should not be uploaded to remote.
