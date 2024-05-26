@@ -132,6 +132,8 @@ for path in "${backupPaths[@]}"; do
             # Skip if file is symbolic link
             if [ -h "$file" ]; then
                 echo "Skipping symbolic link: $file"
+            elif [ $file | grep "^.theme" ]
+                echo "Skipping .theme: $file"
             else
                 file=$(readlink -e "$file") # Get absolute path before copy (Allows usage of .. in filepath eg. ../../etc/fstab resovles to /etc/fstab )
                 rsync -Rr "${file##"$HOME"/}" "$backup_path"
