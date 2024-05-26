@@ -148,6 +148,9 @@ CHECK_PATH="$backup_path/printer_data/config"
 if git -C $CHECK_PATH ls-tree HEAD | grep -q 'commit'; then
   url=$(grep "^theme_url=" $backup_path/printer_data/klipper-backup-restore/restore.config | cut -d'=' -f2-)
   git submodule add $url printer_data/config/.theme
+else
+  echo "No submodule detected at $CHECK_PATH"
+  # Perform an alternative action here
 fi
 
 # utilize gits native exclusion file .gitignore to add files that should not be uploaded to remote.
