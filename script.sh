@@ -109,7 +109,6 @@ bash "$parent_path"/utils/create_restore_data.sh
 # Copy folder to backup path to be pushed to repo
 rsync -Rr "${backup_restore_data##"$HOME"/}" "$backup_path"
 # Delete restore folder so next backup data is fresh
-rm -rf $backup_restore_data
 git -C $backup_path rm --cached -r printer_data/config/.theme
 
 # Iterate through backupPaths array and copy files to the backup folder while ignoring symbolic links
