@@ -145,7 +145,7 @@ done
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
 if [ "$(git -C $theme_path remote get-url origin 2>/dev/null)" ]; then
-    remote_url=$(git -C $theme_path remote get-url origin)
+    url=$(git -C $theme_path remote get-url origin)
     git -C $backup_path submodule add $url ./printer_data/config/.theme
 fi
 
