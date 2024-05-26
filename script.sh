@@ -105,7 +105,7 @@ fi
 cd "$HOME"
 
 # Create restore files for restoring from repo
-bash ./"$parent_path"/utils/create_restore_data.sh
+bash "$parent_path"/utils/create_restore_data.sh
 # Copy folder to backup path to be pushed to repo
 rsync -Rr "${backup_restore_data##"$HOME"/}" "$backup_path"
 # Delete restore folder so next backup data is fresh
@@ -140,6 +140,15 @@ for path in "${backupPaths[@]}"; do
 done
 
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
+
+# Path to check for submodules
+CHECK_PATH="$backup_path/printer_data/config"
+
+# Check for the submodule
+if git -C $CHECK_PATH ls-tree HEAD | grep -q 'commit'; then
+  url=$(grep "^theme_url=" config.txt | cut -d'=' -f2-)
+  git submodule add $url printer_data/config/.theme
+fi
 
 # utilize gits native exclusion file .gitignore to add files that should not be uploaded to remote.
 # Loop through exclude array and add each element to the end of .gitignore
