@@ -109,7 +109,7 @@ bash "$parent_path"/utils/create_restore_data.sh
 # Copy folder to backup path to be pushed to repo
 rsync -Rr "${backup_restore_data##"$HOME"/}" "$backup_path"
 # Delete restore folder so next backup data is fresh
-git -C $backup_path rm --cached -r printer_data/config/.theme
+rm -rf $backup_restore_data
 
 # Iterate through backupPaths array and copy files to the backup folder while ignoring symbolic links
 for path in "${backupPaths[@]}"; do
@@ -131,7 +131,7 @@ for path in "${backupPaths[@]}"; do
             # Skip if file is symbolic link
             if [ -h "$file" ]; then
                 echo "Skipping symbolic link: $file"
-            elif [[ $file =~ '^.theme' ]]; then
+            elif [[ $file =~ '.theme' ]]; then
                 echo "Skipping .theme: $file"
             else
                 file=$(readlink -e "$file") # Get absolute path before copy (Allows usage of .. in filepath eg. ../../etc/fstab resovles to /etc/fstab )
