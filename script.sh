@@ -148,7 +148,9 @@ CHECK_PATH="$backup_path/printer_data/config"
 if git -C $CHECK_PATH ls-tree HEAD | grep -q 'commit'; then
     echo "Submodule detected at $CHECK_PATH"
     url=$(grep "^theme_url=" $backup_path/printer_data/klipper-backup-restore/restore.config | cut -d'=' -f2-)
-    git -C $backup_path submodule add $url printer_data/config/.theme
+    if ! git -C $backup_path submodule add $url printer_data/config/.theme; then
+        git -C $backup_path submodule set-url printer_data/config/.theme $url
+    fi
 else
     echo "No submodule detected at $CHECK_PATH"
     # Perform an alternative action here
