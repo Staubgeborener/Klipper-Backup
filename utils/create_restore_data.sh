@@ -31,8 +31,6 @@ newbackupPaths+=")"
 
 echo -e "${newbackupPaths[@]}" >>$restore_config
 
-# look at ways to determine if files are dirty from changes made after installing theme, and look at how we might back those up,
-# maybe creating a stash and backing up the stash files only so then you fresh clone on a restore and then patch the stashed changes back in
 if [ -d "$theme_path" ]; then
     cd $theme_path
     if [ "$(git remote get-url origin 2>/dev/null)" ]; then
@@ -40,8 +38,8 @@ if [ -d "$theme_path" ]; then
         echo -e "Extracting remote url"
         remote_url=$(git remote get-url origin)
         echo -e "theme_url=$remote_url" >>$restore_config
-        if [[ $(git status --porcelain | grep '^??') ]]; then
-            echo ".theme folder has untracked changes. Backing up changes to .patch file"
+        if [[ $(git status --porcelain | grep '^??') || $(git status --porcelain | grep '^A')]]; then
+            echo ".theme folder has untracked/added changes. Backing up changes to .patch file"
             git add .
             git stash save ".theme changes"
             git stash show -p >$restore_folder/theme_changes.patch
