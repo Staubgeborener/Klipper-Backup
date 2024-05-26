@@ -21,6 +21,7 @@ echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}
 
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
+backup_restore_data="$HOME/printer_data/klipper-backup-restore"
 allow_empty_commits=${allow_empty_commits:-true}
 git_protocol=${git_protocol:-"https"}
 git_host=${git_host:-"github.com"}
@@ -102,6 +103,14 @@ if git ls-remote --exit-code --heads origin $branch_name >/dev/null 2>&1; then
 fi
 
 cd "$HOME"
+
+# Create restore files for restoring from repo
+bash ./"$parent_path"/utils/create_restore_data.sh
+# Copy folder to backup path to be pushed to repo
+rsync -Rr "${backup_restore_data##"$HOME"/}" "$backup_path"
+# Delete restore folder so next backup data is fresh
+rm -rf $backup_restore_data
+
 # Iterate through backupPaths array and copy files to the backup folder while ignoring symbolic links
 for path in "${backupPaths[@]}"; do
     fullPath="$HOME/$path"

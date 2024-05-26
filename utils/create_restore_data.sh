@@ -8,7 +8,7 @@ scriptsh_parent_path=$(
 
 source "$scriptsh_parent_path"/utils/utils.func
 source "$scriptsh_parent_path"/.env
-restore_folder="$HOME"/printer_data/config/klipper-backup-restore
+restore_folder="$HOME"/printer_data/klipper-backup-restore
 restore_config="$restore_folder"/restore.config
 theme_path="$HOME"/printer_data/config/.theme
 
@@ -43,8 +43,3 @@ if [ -d "$theme_path" ]; then
         echo -e ".theme is not a git repo"
     fi
 fi
-
-
-#Note:
-  # use this when creating the restore script to add .theme changes back:
-  # git apply $HOME/printer_data/config/klipper-backup-restore/theme_changes.patch
