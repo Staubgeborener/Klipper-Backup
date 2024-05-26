@@ -54,7 +54,7 @@ if [ ! -d ".git" ]; then
     echo "[init]
     defaultBranch = "$branch_name"" >>.git/config #Add desired branch name to config before init
     git init
-    git config pull.rebase false # configure default reconciliation when pulling 
+    git config pull.rebase false # configure default reconciliation when pulling
 # Check if the current checked out branch matches the branch name given in .env if not branch listed in .env
 elif [[ $(git symbolic-ref --short -q HEAD) != "$branch_name" ]]; then
     echo -e "Branch: $branch_name in .env does not match the currently checked out branch of: $(git symbolic-ref --short -q HEAD)."
@@ -146,11 +146,12 @@ CHECK_PATH="$backup_path/printer_data/config"
 
 # Check for the submodule
 if git -C $CHECK_PATH ls-tree HEAD | grep -q 'commit'; then
-  url=$(grep "^theme_url=" $backup_path/printer_data/klipper-backup-restore/restore.config | cut -d'=' -f2-)
-  git submodule add $url printer_data/config/.theme
+    echo "Submodule detected at $CHECK_PATH"
+    url=$(grep "^theme_url=" $backup_path/printer_data/klipper-backup-restore/restore.config | cut -d'=' -f2-)
+    git submodule add $url printer_data/config/.theme
 else
-  echo "No submodule detected at $CHECK_PATH"
-  # Perform an alternative action here
+    echo "No submodule detected at $CHECK_PATH"
+    # Perform an alternative action here
 fi
 
 # utilize gits native exclusion file .gitignore to add files that should not be uploaded to remote.
