@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-#  Just some todo thoughts
-#  Should the script act independent of .env and always prompt for the token and repo you want to restore from,
-# leaning toward yes as it allows one to run restore without having to first run install.sh
-
-#
 scriptsh_parent_path=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     cd ..
