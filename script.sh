@@ -146,7 +146,9 @@ cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
 if [ "$(git -C $theme_path remote get-url origin 2>/dev/null)" ]; then
     url=$(git -C $theme_path remote get-url origin)
-    git -C $backup_path submodule add $url printer_data/config/.theme
+    if ! git -C $backup_path submodule add $url printer_data/config/.theme; then
+        git -C $backup_path submodule update --init --recursive
+    fi
 fi
 
 # utilize gits native exclusion file .gitignore to add files that should not be uploaded to remote.
