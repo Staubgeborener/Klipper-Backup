@@ -20,7 +20,10 @@ rm -f $restore_config
 
 newbackupPaths="backupPaths=( \\ \n"
 for path in "${backupPaths[@]}"; do
-    newbackupPaths+=" \"$path\" \\ \n"
+    trimmedPath=$(echo "$path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+    if [[ -n "$trimmedPath" ]]; then
+        newbackupPaths+=" \"$trimmedPath\" \\"$'\n'
+    fi
 done
 newbackupPaths+=")"
 
