@@ -187,7 +187,7 @@ copyBackupPaths() {
         echo $path
         for file in $path; do
             echo $file
-            rsync -r "$tempfolder/$file" "$HOME/$path"
+            rsync -r "$tempfolder/$file" "$HOME/$file"
         done
     done
 }
