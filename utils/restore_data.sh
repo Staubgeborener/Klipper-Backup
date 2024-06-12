@@ -4,6 +4,7 @@
 # pull contents of branch to a temp folder, extract paths from restore.config
 # shut down instances of klipper, moonraker etc..
 # copy files from temp folder to the respective paths, along with repatching .theme git repo (if applicable)
+# cleanup including using sed to remove theme_url from the generated .env
 
 # Note:
 # use this when creating the restore script to add .theme changes back:
@@ -24,8 +25,8 @@ scriptsh_parent_path=$(
 source "$scriptsh_parent_path"/utils/utils.func
 envpath="$scriptsh_parent_path"/.env
 tempfolder="/tmp/klipper-backup-restore-tmp"
-# restore_folder="$HOME"/printer_data/klipper-backup-restore
-# restore_config="$restore_folder"/restore.config
+restore_folder="$HOME"/klipper-backup-restore
+restore_config="$restore_folder"/restore.config
 # theme_path="$HOME"/printer_data/config/.theme
 
 main() {
@@ -77,7 +78,7 @@ configure() {
         ghtoken=$(ask_token "Enter your GitHub token associated with the backup you want to restore")
         result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
         if [ "$result" != "" ]; then
-            sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
+            sed -i "s/^github_token=.*/github_token=$ghtoken/" $restore_config
             ghtoken_username=$result
         else
             tput cup $(($pos2 - 2)) 0
@@ -94,7 +95,7 @@ configure() {
         menu
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
+            sed -i "s/^github_username=.*/github_username=$ghuser/" $restore_config
             tput cup $pos2 0
             tput ed
         else
@@ -110,7 +111,7 @@ configure() {
         menu
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
+            sed -i "s/^github_repository=.*/github_repository=$ghrepo/" $restore_config
             tput cup $pos2 0
             tput ed
         else
@@ -126,7 +127,7 @@ configure() {
         menu
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
+            sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" $restore_config
             tput cup $pos2 0
             tput ed
         else
@@ -170,12 +171,12 @@ tempfolder() {
 }
 
 extractRestoreConfig() {
-  source "$tempfolder"/klipper-backup-restore/restore.config
 
-  # echo ${backupPaths[@]}
-  # echo $commit_username
-  # echo $commit_email
-  # echo $theme_url
+    cat $restore_config
+    # echo ${backupPaths[@]}
+    # echo $commit_username
+    # echo $commit_email
+    # echo $theme_url
 }
 
 main
