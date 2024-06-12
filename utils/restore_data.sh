@@ -38,9 +38,9 @@ main() {
     configure
     tempfolder
     copyRestoreConfig
-
+    copyBackupPaths
     sed -i "s/^theme_url.*//" $envpath
-    sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath 
+    sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
 }
 
 logo() {
@@ -181,6 +181,10 @@ copyRestoreConfig() {
     cp $temprestore $envpath
 }
 
-
+copyBackupPaths() {
+    for path in "${backupPaths[@]}"; do
+      echo -e $path
+    done
+}
 
 main
