@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+## WANT TO CHANGE:
+# Instead of individually grabbing values from .env use sed to clear token, username, repository and branch and then copy the entire contents to restore folder.
+# Then on restore you fill back in those 4 fields while restoring the backup and copy that back over to klipper-backup folder as .env
 scriptsh_parent_path=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     cd ..
@@ -17,20 +20,26 @@ if [[ ! -d $restore_folder ]]; then
 fi
 
 rm -f $restore_config
+cp "$scriptsh_parent_path"/.env "$restore_config"
 
-newbackupPaths="backupPaths=( \\ \n"
-for path in "${backupPaths[@]}"; do
-    trimmedPath=$(echo "$path" | sed 's/^[ \t]*//;s/[ \t]*$//')
-    if [[ -n "$trimmedPath" ]]; then
-        newbackupPaths+=" \"$trimmedPath\" \\"$'\n'
-    fi
-done
-newbackupPaths+=")"
+sed -i "s/^github_token=.*/github_token=/" $restore_config
+sed -i "s/^github_username=.*/github_username=/" $restore_config
+sed -i "s/^github_repository=.*/github_repository=/" $restore_config
+sed -i "s/^branch_name=.*/branch_name=/" $restore_config
 
-echo -e "${newbackupPaths[@]}" >>$restore_config
+# newbackupPaths="backupPaths=( \\ \n"
+# for path in "${backupPaths[@]}"; do
+#     trimmedPath=$(echo "$path" | sed 's/^[ \t]*//;s/[ \t]*$//')
+#     if [[ -n "$trimmedPath" ]]; then
+#         newbackupPaths+=" \"$trimmedPath\" \\"$'\n'
+#     fi
+# done
+# newbackupPaths+=")"
 
-echo -e "commit_username=${commit_username}" >>$restore_config
-echo -e "commit_email=${commit_email}" >>$restore_config
+# echo -e "${newbackupPaths[@]}" >>$restore_config
+
+# echo -e "commit_username=${commit_username}" >>$restore_config
+# echo -e "commit_email=${commit_email}" >>$restore_config
 
 if [ -d "$theme_path" ]; then
     cd $theme_path

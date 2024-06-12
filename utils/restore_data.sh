@@ -172,10 +172,10 @@ tempfolder() {
 extractRestoreConfig() {
   source "$tempfolder"/klipper-backup-restore/restore.config
 
-  echo ${backupPaths[@]}
-  echo $commit_username
-  echo $commit_email
-  echo $theme_url
+  # echo ${backupPaths[@]}
+  # echo $commit_username
+  # echo $commit_email
+  # echo $theme_url
 }
 
 main
