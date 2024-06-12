@@ -182,8 +182,9 @@ copyRestoreConfig() {
 }
 
 copyBackupPaths() {
+  source $temprestore
     for path in "${backupPaths[@]}"; do
-      echo -e $path
+      echo $path
     done
 }
 
