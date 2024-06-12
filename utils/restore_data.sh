@@ -79,7 +79,7 @@ configure() {
         ghtoken=$(ask_token "Enter your GitHub token associated with the backup you want to restore")
         result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
         if [ "$result" != "" ]; then
-            sed -i "s/^github_token=.*/github_token=$ghtoken/" $temprestore
+            # sed -i "s/^github_token=.*/github_token=$ghtoken/" $temprestore
             ghtoken_username=$result
         else
             tput cup $(($pos2 - 2)) 0
@@ -96,7 +96,7 @@ configure() {
         menu
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            sed -i "s/^github_username=.*/github_username=$ghuser/" $temprestore
+            # sed -i "s/^github_username=.*/github_username=$ghuser/" $temprestore
             tput cup $pos2 0
             tput ed
         else
@@ -112,7 +112,7 @@ configure() {
         menu
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            sed -i "s/^github_repository=.*/github_repository=$ghrepo/" $temprestore
+            # sed -i "s/^github_repository=.*/github_repository=$ghrepo/" $temprestore
             tput cup $pos2 0
             tput ed
         else
@@ -128,7 +128,7 @@ configure() {
         menu
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" $temprestore
+            # sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" $temprestore
             tput cup $pos2 0
             tput ed
         else
@@ -175,6 +175,10 @@ tempfolder() {
 }
 
 copyRestoreConfig() {
+    sed -i "s/^github_token=.*/github_token=$ghtoken/" $temprestore
+    sed -i "s/^github_username=.*/github_username=$ghuser/" $temprestore
+    sed -i "s/^github_repository=.*/github_repository=$ghrepo/" $temprestore
+    sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" $temprestore
     cp $temprestore $envpath
 }
 

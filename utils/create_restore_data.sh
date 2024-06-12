@@ -20,26 +20,13 @@ if [[ ! -d $restore_folder ]]; then
 fi
 
 rm -f $restore_config
+
 cp "$scriptsh_parent_path"/.env "$restore_config"
 
 sed -i "s/^github_token=.*/github_token=/" $restore_config
 sed -i "s/^github_username=.*/github_username=/" $restore_config
 sed -i "s/^github_repository=.*/github_repository=/" $restore_config
 sed -i "s/^branch_name=.*/branch_name=/" $restore_config
-
-# newbackupPaths="backupPaths=( \\ \n"
-# for path in "${backupPaths[@]}"; do
-#     trimmedPath=$(echo "$path" | sed 's/^[ \t]*//;s/[ \t]*$//')
-#     if [[ -n "$trimmedPath" ]]; then
-#         newbackupPaths+=" \"$trimmedPath\" \\"$'\n'
-#     fi
-# done
-# newbackupPaths+=")"
-
-# echo -e "${newbackupPaths[@]}" >>$restore_config
-
-# echo -e "commit_username=${commit_username}" >>$restore_config
-# echo -e "commit_email=${commit_email}" >>$restore_config
 
 if [ -d "$theme_path" ]; then
     cd $theme_path
