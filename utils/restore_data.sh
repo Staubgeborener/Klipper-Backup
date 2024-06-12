@@ -40,6 +40,7 @@ main() {
     copyRestoreConfig
 
     sed -i "s/^theme_url.*//" $envpath
+    sed -i 's/\s*$//g' $envpath 
 }
 
 logo() {
