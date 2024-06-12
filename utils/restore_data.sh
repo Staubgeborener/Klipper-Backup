@@ -184,6 +184,7 @@ copyRestoreConfig() {
 copyBackupPaths() {
   source $temprestore
     for path in "${backupPaths[@]}"; do
+      echo $path
       cp "$tempfolder/$path" "$HOME/$path"
     done
 }
