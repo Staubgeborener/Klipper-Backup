@@ -25,6 +25,7 @@ scriptsh_parent_path=$(
 source "$scriptsh_parent_path"/utils/utils.func
 envpath="$scriptsh_parent_path"/.env
 tempfolder="/tmp/klipper-backup-restore-tmp"
+temprestore="$tempfolder/klipper-backup-restore/restore.config"
 restore_folder="$HOME"/klipper-backup-restore
 restore_config="$restore_folder"/restore.config
 # theme_path="$HOME"/printer_data/config/.theme
@@ -36,7 +37,7 @@ main() {
     logo
     configure
     tempfolder
-    extractRestoreConfig
+    copyRestoreConfig
 }
 
 logo() {
@@ -173,13 +174,8 @@ tempfolder() {
     git pull origin "$repobranch"
 }
 
-extractRestoreConfig() {
-    echo " "
-    cat $restore_config
-    # echo ${backupPaths[@]}
-    # echo $commit_username
-    # echo $commit_email
-    # echo $theme_url
+copyRestoreConfig() {
+    cp $temprestore $envpath
 }
 
 main
