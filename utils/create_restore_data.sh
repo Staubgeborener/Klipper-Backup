@@ -29,6 +29,9 @@ newbackupPaths+=")"
 
 echo -e "${newbackupPaths[@]}" >>$restore_config
 
+echo -e "commit_username=${commit_username}" >>$restore_config
+echo -e "commit_email=${commit_email}" >>$restore_config
+
 if [ -d "$theme_path" ]; then
     cd $theme_path
     if [ "$(git remote get-url origin 2>/dev/null)" ]; then
