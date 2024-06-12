@@ -59,3 +59,7 @@ dependencies() {
     echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
     sleep 1
 }
+
+
+
+main
