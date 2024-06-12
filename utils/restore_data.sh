@@ -185,7 +185,7 @@ copyBackupPaths() {
   source $temprestore
     for path in "${backupPaths[@]}"; do
       echo $path
-      rsync -Rr "${$tempfolder/$path##"$tempfolder"/}" "$HOME/$path"
+      rsync -r "${$tempfolder/$path##"$tempfolder"/}" "$HOME/$path"
     done
 }
 
