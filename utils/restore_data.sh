@@ -64,101 +64,90 @@ dependencies() {
 configure() {
     ghtoken_username=""
     questionline=$(getcursor)
-    if grep -q "github_token=ghp_xxxxxxxxxxxxxxxx" "$parent_path"/.env; then # Check if the github token still matches the value when initially copied from .env.example
-        message="Do you want to proceed with configuring the Klipper-Backup .env?"
-    else
-        message="Do you want to proceed with reconfiguring the Klipper-Backup .env?"
-    fi
-    if ask_yn "$message"; then
-        tput cup $(($questionline - 1)) 0
-        clearUp
-        pos1=$(getcursor)
-        pos2=$(getcursor)
 
-        getToken() {
-            echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens (Ensure you set access to the backup repository and have push/pull & commit permissions for the token) \n"
-            ghtoken=$(ask_token "Enter your GitHub token")
-            result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
-            if [ "$result" != "" ]; then
-                sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
-                ghtoken_username=$result
-            else
-                tput cup $(($pos2 - 2)) 0
-                tput ed
-                pos2=$(getcursor)
-                echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
-                getToken
-            fi
-        }
-        getUser() {
+    tput cup $(($questionline - 1)) 0
+    clearUp
+    pos1=$(getcursor)
+    pos2=$(getcursor)
+
+    getToken() {
+        echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens (Ensure you set access to the backup repository and have push/pull & commit permissions for the token) \n"
+        ghtoken=$(ask_token "Enter your GitHub token")
+        result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
+        if [ "$result" != "" ]; then
+            sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
+            ghtoken_username=$result
+        else
+            tput cup $(($pos2 - 2)) 0
+            tput ed
             pos2=$(getcursor)
-            ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
-
-            menu
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
-                tput cup $pos2 0
-                tput ed
-            else
-                tput cup $(($pos2 - 1)) 0
-                tput ed
-                getUser
-            fi
-        }
-        getRepo() {
-            pos2=$(getcursor)
-            ghrepo=$(ask_textinput "Enter your repository name")
-
-            menu
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
-                tput cup $pos2 0
-                tput ed
-            else
-                tput cup $(($pos2 - 1)) 0
-                tput ed
-                getRepo
-            fi
-        }
-        getBranch() {
-            pos2=$(getcursor)
-            repobranch=$(ask_textinput "Enter your desired branch name" "main")
-
-            menu
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
-                tput cup $pos2 0
-                tput ed
-            else
-                tput cup $(($pos2 - 1)) 0
-                tput ed
-                getBranch
-            fi
-        }
-
-        while true; do
-            set +e
+            echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
             getToken
-            getUser
-            getRepo
-            getBranch
-            set -e
-            break
-        done
+        fi
+    }
+    getUser() {
+        pos2=$(getcursor)
+        ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
 
-        tput cup $(($questionline - 1)) 0
-        tput ed
-        echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
-        pos1=$(getcursor)
-    else
-        tput cup $(($questionline - 1)) 0
-        clearUp
-        echo -e "\r\033[K${M}●${NC} Configuration ${M}Skipped!${NC}\n"
-        pos1=$(getcursor)
-    fi
+        menu
+        exitstatus=$?
+        if [ $exitstatus = 0 ]; then
+            sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
+            tput cup $pos2 0
+            tput ed
+        else
+            tput cup $(($pos2 - 1)) 0
+            tput ed
+            getUser
+        fi
+    }
+    getRepo() {
+        pos2=$(getcursor)
+        ghrepo=$(ask_textinput "Enter your repository name")
+
+        menu
+        exitstatus=$?
+        if [ $exitstatus = 0 ]; then
+            sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
+            tput cup $pos2 0
+            tput ed
+        else
+            tput cup $(($pos2 - 1)) 0
+            tput ed
+            getRepo
+        fi
+    }
+    getBranch() {
+        pos2=$(getcursor)
+        repobranch=$(ask_textinput "Enter your desired branch name" "main")
+
+        menu
+        exitstatus=$?
+        if [ $exitstatus = 0 ]; then
+            sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
+            tput cup $pos2 0
+            tput ed
+        else
+            tput cup $(($pos2 - 1)) 0
+            tput ed
+            getBranch
+        fi
+    }
+
+    while true; do
+        set +e
+        getToken
+        getUser
+        getRepo
+        getBranch
+        set -e
+        break
+    done
+
+    tput cup $(($questionline - 1)) 0
+    tput ed
+    echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
+    pos1=$(getcursor)
 }
 
 main
