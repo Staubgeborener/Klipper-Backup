@@ -160,9 +160,9 @@ tempfolder() {
     cd $tempfolder
 
     git init
+    git config init.defaultBranch "$repobranch"
     git config pull.rebase false
     git remote add origin "$full_git_url"
-
     git pull origin "$repobranch"
 }
 
