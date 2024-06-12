@@ -72,8 +72,7 @@ configure() {
     pos2=$(getcursor)
 
     getToken() {
-        echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens (Ensure you set access to the backup repository and have push/pull & commit permissions for the token) \n"
-        ghtoken=$(ask_token "Enter your GitHub token")
+        ghtoken=$(ask_token "Enter your GitHub token associated with the backup you want to restore")
         result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
         if [ "$result" != "" ]; then
             sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
@@ -159,8 +158,10 @@ tempfolder() {
 
     cd $tempfolder
 
+    mkdir .git
+    echo "[init]
+    defaultBranch = "$repobranch"" >>.git/config #Add desired branch name to config before init
     git init
-    git config init.defaultBranch "$repobranch"
     git config pull.rebase false
     git remote add origin "$full_git_url"
     git pull origin "$repobranch"
