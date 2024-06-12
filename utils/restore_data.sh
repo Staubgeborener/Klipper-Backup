@@ -182,10 +182,12 @@ copyRestoreConfig() {
 }
 
 copyBackupPaths() {
-  source $temprestore
+    source $temprestore
     for path in "${backupPaths[@]}"; do
-      echo $path
-      cp -r "$tempfolder/$path" "$HOME/$path"
+        echo $path
+        for file in $path; do
+            echo $file
+        done
     done
 }
 
