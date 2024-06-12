@@ -1,6 +1,5 @@
 # Planning out script process:
-# Prompt for repository name, token, branch (optional)
-# Prompt for default main branch with last commit date, as well prompt if other branches exist (branch prompt skipped if branch supplied in initial steps)
+# Prompt for repository name, token, branch - Done!
 # pull contents of branch to a temp folder, extract paths from restore.config
 # shut down instances of klipper, moonraker etc..
 # copy files from temp folder to the respective paths, along with repatching .theme git repo (if applicable)
@@ -23,6 +22,7 @@ scriptsh_parent_path=$(
 
 source "$scriptsh_parent_path"/utils/utils.func
 envpath="$scriptsh_parent_path"/.env
+tempfolder="/tmp/klipper-backup-restore-tmp"
 # restore_folder="$HOME"/printer_data/klipper-backup-restore
 # restore_config="$restore_folder"/restore.config
 # theme_path="$HOME"/printer_data/config/.theme
@@ -33,6 +33,7 @@ main() {
     dependencies
     logo
     configure
+    tempfolder
 }
 
 logo() {
@@ -144,10 +145,25 @@ configure() {
         break
     done
 
-    tput cup $(($questionline - 1)) 0
-    tput ed
-    echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
-    pos1=$(getcursor)
+    # tput cup $(($questionline - 1)) 0
+    # tput ed
+    # echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
+    # pos1=$(getcursor)
+}
+
+tempfolder() {
+    mkdir $tempfolder
+    git_protocol=${git_protocol:-"https"}
+    git_host=${git_host:-"github.com"}
+    full_git_url=$git_protocol"://"$ghtoken"@"$git_host"/"$ghuser"/"$ghrepo".git"
+
+    cd $tempfolder
+
+    git init
+    git config pull.rebase false
+    git remote add origin "$full_git_url"
+
+    git pull origin "$repobranch"
 }
 
 main
