@@ -174,7 +174,7 @@ tempfolder() {
 }
 
 extractRestoreConfig() {
-    echo ""
+    echo " "
     cat $restore_config
     # echo ${backupPaths[@]}
     # echo $commit_username
