@@ -21,7 +21,7 @@ echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}
 
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
-backup_restore_data="$HOME"/printer_data/klipper-backup-restore
+backup_restore_data="$HOME"/klipper-backup-restore
 theme_path="$HOME"/printer_data/config/.theme
 allow_empty_commits=${allow_empty_commits:-true}
 git_protocol=${git_protocol:-"https"}
