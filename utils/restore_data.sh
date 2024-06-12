@@ -184,7 +184,7 @@ copyRestoreConfig() {
 copyBackupPaths() {
   source $temprestore
     for path in "${backupPaths[@]}"; do
-      cp "$tempfolder/$path" "$HOME/printer_data/$path"
+      cp "$tempfolder/$path" "$HOME/$path"
     done
 }
 
