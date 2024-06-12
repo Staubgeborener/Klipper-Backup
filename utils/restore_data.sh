@@ -39,6 +39,7 @@ main() {
     tempfolder
     copyRestoreConfig
     copyBackupPaths
+    copyTheme
     sed -i "s/^theme_url.*//" $envpath
     sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
 }
@@ -190,6 +191,10 @@ copyBackupPaths() {
             rsync -r "$tempfolder/$file" "$HOME/$file"
         done
     done
+}
+
+copyTheme() {
+
 }
 
 main
