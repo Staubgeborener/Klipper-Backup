@@ -8,7 +8,7 @@ scriptsh_parent_path=$(
 
 source "$scriptsh_parent_path"/utils/utils.func
 source "$scriptsh_parent_path"/.env
-restore_folder="$HOME"/printer_data/klipper-backup-restore
+restore_folder="$HOME"/klipper-backup-restore
 restore_config="$restore_folder"/restore.config
 theme_path="$HOME"/printer_data/config/.theme
 

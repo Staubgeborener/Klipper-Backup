@@ -1,5 +1,6 @@
 # Planning out script process:
 # Prompt for repository name, token, branch - Done!
+## Potential improvement, prompt for recent commit message which has backup date and time and ask to confirm if that is the backup they are wanting
 # pull contents of branch to a temp folder, extract paths from restore.config
 # shut down instances of klipper, moonraker etc..
 # copy files from temp folder to the respective paths, along with repatching .theme git repo (if applicable)
@@ -34,6 +35,7 @@ main() {
     logo
     configure
     tempfolder
+    extractRestoreConfig
 }
 
 logo() {
@@ -165,6 +167,15 @@ tempfolder() {
     git config pull.rebase false
     git remote add origin "$full_git_url"
     git pull origin "$repobranch"
+}
+
+extractRestoreConfig() {
+  source "$tempfolder"/klipper-backup-restore/restore.config
+
+  echo ${backupPaths[@]}
+  echo $commit_username
+  echo $commit_email
+  echo $theme_url
 }
 
 main
