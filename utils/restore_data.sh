@@ -154,6 +154,9 @@ configure() {
 }
 
 tempfolder() {
+    if [ -d "$tempfolder" ]; then
+        rm -rf $tempfolder
+    fi
     mkdir $tempfolder
     git_protocol=${git_protocol:-"https"}
     git_host=${git_host:-"github.com"}
