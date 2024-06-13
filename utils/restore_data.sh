@@ -39,7 +39,7 @@ main() {
     tempfolder
     copyRestoreConfig
     copyBackupPaths
-    copyTheme
+    # copyTheme
     sed -i "s/^theme_url.*//" $envpath
     sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
 }
