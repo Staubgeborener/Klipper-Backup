@@ -3,7 +3,7 @@
 ## Potential improvement, prompt for recent commit message which has backup date and time and ask to confirm if that is the backup they are wanting
 # pull contents of branch to a temp folder, extract paths from restore.config - Done!
 # shut down instances of klipper, moonraker etc.. - Done!
-# copy files from temp folder to the respective paths, along with repatching .theme git repo (if applicable)
+# copy files from temp folder to the respective paths, along with repatching .theme git repo (if applicable) - Done!
 # cleanup including using sed to remove theme_url from the generated .env - Done!
 
 # Note:
