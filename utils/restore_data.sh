@@ -4,7 +4,7 @@
 # pull contents of branch to a temp folder, extract paths from restore.config - Done!
 # shut down instances of klipper, moonraker etc.. - Done!
 # copy files from temp folder to the respective paths, along with repatching .theme git repo (if applicable)
-# cleanup including using sed to remove theme_url from the generated .env
+# cleanup including using sed to remove theme_url from the generated .env - Done!
 
 # Note:
 # use this when creating the restore script to add .theme changes back:
@@ -42,8 +42,7 @@ main() {
     sudo systemctl stop klipper.service moonraker.service
     restoreBackupFiles
     copyTheme
-    sed -i "s/^theme_url.*//" $envpath
-    sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
+    cleanup
 }
 
 logo() {
@@ -203,6 +202,12 @@ copyTheme() {
             git apply --whitespace=nowarn "$tempfolder"/klipper-backup-restore/theme_changes.patch
         fi
     fi
+}
+
+cleanup() {
+    sed -i "s/^theme_url.*//" $envpath
+    sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
+    sudo systemctl start klipper.service moonraker.service
 }
 
 main
