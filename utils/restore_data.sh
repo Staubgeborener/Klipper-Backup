@@ -200,7 +200,7 @@ copyTheme() {
         git clone $theme_url .theme
         if [ -f "$tempfolder/klipper-backup-restore/theme_changes.patch" ]; then
             cd .theme
-            git apply "$tempfolder"/klipper-backup-restore/theme_changes.patch
+            git apply --whitespace=nowarn "$tempfolder"/klipper-backup-restore/theme_changes.patch
         fi
     fi
 }
