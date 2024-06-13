@@ -456,6 +456,8 @@ install_cron() {
 
 if [ "$1" == "check_updates" ]; then
     check_updates
+else [ "$1" == "--restore"]; then
+    exec $parent_path/utils/restore_data.sh
 else
     main
 fi
