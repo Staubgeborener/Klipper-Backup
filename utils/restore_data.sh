@@ -193,8 +193,7 @@ copyBackupPaths() {
     done
 }
 
-copyTheme() {
-
-}
+# copyTheme() {
+# }
 
 main
