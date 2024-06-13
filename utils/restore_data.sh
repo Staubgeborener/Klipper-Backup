@@ -1,8 +1,8 @@
 # Planning out script process:
 # Prompt for repository name, token, branch - Done!
 ## Potential improvement, prompt for recent commit message which has backup date and time and ask to confirm if that is the backup they are wanting
-# pull contents of branch to a temp folder, extract paths from restore.config
-# shut down instances of klipper, moonraker etc..
+# pull contents of branch to a temp folder, extract paths from restore.config - Done!
+# shut down instances of klipper, moonraker etc.. - Done!
 # copy files from temp folder to the respective paths, along with repatching .theme git repo (if applicable)
 # cleanup including using sed to remove theme_url from the generated .env
 
@@ -38,8 +38,10 @@ main() {
     configure
     tempfolder
     copyRestoreConfig
-    copyBackupPaths
-    # copyTheme
+    source $temprestore
+    sudo systemctl stop klipper.service moonraker.service
+    restoreBackupFiles
+    copyTheme
     sed -i "s/^theme_url.*//" $envpath
     sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
 }
@@ -182,8 +184,7 @@ copyRestoreConfig() {
     cp $temprestore $envpath
 }
 
-copyBackupPaths() {
-    source $temprestore
+restoreBackupFiles() {
     for path in "${backupPaths[@]}"; do
         echo $path
         for file in $path; do
@@ -193,7 +194,15 @@ copyBackupPaths() {
     done
 }
 
-# copyTheme() {
-# }
+copyTheme() {
+    if [[ $theme_url ]]; then
+        cd "$HOME"/printer_data/config/
+        git clone $theme_url .theme
+        if [ -f "$tempfolder/klipper-backup-restore/theme_changes.patch" ]; then
+            cd .theme
+            git apply "$tempfolder"/klipper-backup-restore/theme_changes.patch
+        fi
+    fi
+}
 
 main
