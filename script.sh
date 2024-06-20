@@ -24,7 +24,8 @@ backup_path="$HOME/$backup_folder"
 allow_empty_commits=${allow_empty_commits:-true}
 git_protocol=${git_protocol:-"https"}
 git_host=${git_host:-"github.com"}
-full_git_url=$git_protocol"://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
+git_host_path_separator=${git_host_path_separator:-"/"}
+full_git_url=$git_protocol"://"$github_token"@"$git_host$git_host_path_separator$github_username"/"$github_repository".git"
 exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "*.csv" "*.zip"}
 
 # Check for updates
