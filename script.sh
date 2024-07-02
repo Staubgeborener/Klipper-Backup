@@ -26,7 +26,11 @@ theme_path="$HOME"/printer_data/config/.theme
 allow_empty_commits=${allow_empty_commits:-true}
 git_protocol=${git_protocol:-"https"}
 git_host=${git_host:-"github.com"}
-full_git_url=$git_protocol"://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
+if [[ $git_protocol == "ssh" ]]; then
+    full_git_url="git@"$git_host":"$github_username"/"$github_repository".git"
+else
+    full_git_url=$git_protocol"://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
+fi
 exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "*.csv" "*.zip"}
 
 # Check for updates
