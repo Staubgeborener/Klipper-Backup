@@ -50,6 +50,9 @@ crontab -e
 ```
 This tells cron to run the backup script every 4 hours. You can find other cron examples here: [https://crontab.guru/examples.html](https://crontab.guru/examples.html){:target="_blank"}
 
+!!! note
+    If you are running a distro that may not natively include cron on its base packages you can see the following [alternative method](alternative-methods.md/#timed-backups-using-systemd) for using systemd for time backups
+
 ## Backup on file changes
 The following service relies on the inotify-tools package. To install the package run ```sudo apt-get install inotify-tools``` in your terminal. 
 
