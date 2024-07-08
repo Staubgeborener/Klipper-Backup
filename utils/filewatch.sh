@@ -17,7 +17,16 @@ done
 
 watchlist=$(echo "$watchlist" | tr ' ' '\n' | sort -u | tr '\n' ' ')
 
-exclude_pattern=".swp|.tmp|printer-[0-9]*_[0-9]*.cfg|.bak|.bkp"
+# Convert exclude array to string delimitted by "|"
+excludeString=$(printf "|%s" "${exclude[@]}")
+excludeString="${excludeString:1}"
+excludeString=$(echo "$excludeString" | sed 's/\*\./\./g')
+
+if [ -z $extraFilewatchExclude ]; then
+exclude_pattern="$excludeString"
+else
+exclude_pattern="$excludeString|$extraFilewatchExclude"
+fi
 
 inotifywait -mrP -e close_write -e move -e delete --exclude "$exclude_pattern" $watchlist |
 while read -r path event file; do
