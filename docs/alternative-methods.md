@@ -3,7 +3,7 @@ This is a section for alternative methods for automating/manual backups
 ## Timed Backups using systemd
 For those with distros that may not include cron in the base packages you can use the following to setup timed backups instead
 
-1. Create a timer unit file at ```/etc/systemd/system/klipper-backup.time``` with the following:
+1. Create a timer unit file at ```/etc/systemd/system/klipper-backup.timer``` with the following:
 ```
 [Unit]
 Description=Run klipper backup script every 4 hours
