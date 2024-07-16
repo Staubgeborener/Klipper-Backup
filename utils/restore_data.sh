@@ -195,12 +195,14 @@ restoreBackupFiles() {
 }
 
 restoreMoonrakerDB() {
-  echo -e "Restore Moonraker Database"
-  bash "$HOME"/moonraker/scripts/restore-database.sh -i "$tempfolder"/database.backup
+    echo -e "Restore Moonraker Database"
+    if [ -f "$tempfolder/database.backup" ]; then
+        bash "$HOME"/moonraker/scripts/restore-database.sh -i "$tempfolder"/database.backup
+    fi
 }
 
 copyTheme() {
-  echo -e "Restore Theme"
+    echo -e "Restore Theme"
     if [[ $theme_url ]]; then
         cd "$HOME"/printer_data/config/
         git clone $theme_url .theme
