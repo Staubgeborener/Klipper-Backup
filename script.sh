@@ -152,7 +152,15 @@ cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
 if [ $moonraker_db_backups ]; then
     echo -e "Backup Moonraker DB"
-    bash "$HOME"/moonraker/scripts/backup-database.sh -o "$backup_path"/database.backup
+    MOONRAKER_URL="http://localhost:7125"
+    data='{ "filename": "moonraker-db-klipperbackup.db" }'
+    if curl -X POST "$MOONRAKER_URL/server/database/backup" \
+        -H "Content-Type: application/json" \
+        -d "$data" >/dev/null 2>&1; then
+        cp "$HOME"/printer_data/backup/database/moonraker-db-klipperbackup.db "$backup_path"/moonraker-db-klipperbackup.db
+    else
+        echo -e "Database Backup Failed - Is the printer printing?"
+    fi
 fi
 
 # utilize gits native exclusion file .gitignore to add files that should not be uploaded to remote.

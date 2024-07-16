@@ -196,8 +196,13 @@ restoreBackupFiles() {
 
 restoreMoonrakerDB() {
     echo -e "Restore Moonraker Database"
-    if [ -f "$tempfolder/database.backup" ]; then
-        bash "$HOME"/moonraker/scripts/restore-database.sh -i "$tempfolder"/database.backup
+    if [ -f "$tempfolder/moonraker-db-klipperbackup.db" ]; then
+        cp $tempfolder/moonraker-db-klipperbackup.db "$HOME/printer_data/backup/database/moonraker-db-klipperbackup.db" 
+        MOONRAKER_URL="http://localhost:7125"
+        data='{ "filename": "moonraker-db-klipperbackup.db" }'
+        curl -X POST "$MOONRAKER_URL/server/database/restore" \
+            -H "Content-Type: application/json" \
+            -d "$data" >/dev/null 2>&1
     fi
 }
 
