@@ -22,6 +22,7 @@ echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
 backup_restore_data="$HOME"/klipper-backup-restore
+moonraker_db_backups=${moonraker_db_backups:-false}
 theme_path="$HOME"/printer_data/config/.theme
 allow_empty_commits=${allow_empty_commits:-true}
 git_protocol=${git_protocol:-"https"}
@@ -148,6 +149,11 @@ for path in "${backupPaths[@]}"; do
 done
 
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
+
+if [ $moonraker_db_backups ]; then
+    echo -e "Backup Moonraker DB"
+    bash "$HOME"/moonraker/scripts/backup-database.sh -o "$backup_path"/database.backup
+fi
 
 # utilize gits native exclusion file .gitignore to add files that should not be uploaded to remote.
 # Loop through exclude array and add each element to the end of .gitignore

@@ -39,6 +39,7 @@ main() {
     source $temprestore
     sudo systemctl stop klipper.service moonraker.service
     restoreBackupFiles
+    restoreMoonrakerDB
     copyTheme
     cleanup
 }
@@ -174,6 +175,7 @@ tempfolder() {
 }
 
 copyRestoreConfig() {
+    echo -e "Restore config token, username, repo, branch name"
     sed -i "s/^github_token=.*/github_token=$ghtoken/" $temprestore
     sed -i "s/^github_username=.*/github_username=$ghuser/" $temprestore
     sed -i "s/^github_repository=.*/github_repository=$ghrepo/" $temprestore
@@ -182,6 +184,7 @@ copyRestoreConfig() {
 }
 
 restoreBackupFiles() {
+    echo -e "Restore Backupt Files"
     for path in "${backupPaths[@]}"; do
         echo $path
         for file in $path; do
@@ -191,7 +194,13 @@ restoreBackupFiles() {
     done
 }
 
+restoreMoonrakerDB() {
+  echo -e "Restore Moonraker Database"
+  bash "$HOME"/moonraker/scripts/restore-database.sh -i "$tempfolder"/database.backup
+}
+
 copyTheme() {
+  echo -e "Restore Theme"
     if [[ $theme_url ]]; then
         cd "$HOME"/printer_data/config/
         git clone $theme_url .theme
