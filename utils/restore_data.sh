@@ -184,7 +184,7 @@ copyRestoreConfig() {
 }
 
 restoreBackupFiles() {
-    echo -e "Restore Backupt Files"
+    echo -e "Restore Backup Files"
     for path in "${backupPaths[@]}"; do
         echo $path
         for file in $path; do
