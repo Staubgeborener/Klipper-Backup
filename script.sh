@@ -141,7 +141,7 @@ for path in "${backupPaths[@]}"; do
                 echo "Skipping .theme: $file"
             else
                 file=$(readlink -e "$file") # Get absolute path before copy (Allows usage of .. in filepath eg. ../../etc/fstab resovles to /etc/fstab )
-                echo $file
+                echo "Backing up: $file"
                 rsync -Rr "${file##"$HOME"/}" "$backup_path"
             fi
         done
