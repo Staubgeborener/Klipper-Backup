@@ -45,7 +45,7 @@ If you are using a different host ex.) gitea, bitbucket, devops, etc... you can 
 | -----------| ----------------------------------|---------------|------------------------------ |
 | `git_host` | `gitea`, `bitbucket`, `devops`, * | github.com    | `git_protocol="bitbucket.org"` |
 
-* *List is not complete, there are numerous other (unknown) supported hosters*
+<b>*</b> *List is not complete, there are numerous other (unknown) supported hosters*
 
     !!! warning "Important Note"
         When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}  
