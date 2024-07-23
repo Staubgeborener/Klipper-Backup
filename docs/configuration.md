@@ -36,14 +36,14 @@ You can use the values `http`, `https` or `ssh` here (default value: `https`). T
 
 | Parameter      | Possible values        | Default value | Example              |
 | -------------- | -----------------------|---------------|--------------------- |
-| `git_protocol` | `https`, `http`, `ssh` | `https`       | `git_protocol="http` |
+| `git_protocol` | `https`, `http`, `ssh` | `https`       | `git_protocol="http"` |
 
 #### 5. git_host=""
 If you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host=""` to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits.  
 
 | Parameter  | Possible values                   | Default value | Example                       |
 | -----------| ----------------------------------|---------------|------------------------------ |
-| `git_host` | `gitea`, `bitbucket`, `devops`, * | github.com    | `git_protocol="bitbucket.org` |
+| `git_host` | `gitea`, `bitbucket`, `devops`, * | github.com    | `git_protocol="bitbucket.org"` |
 
 * *List is not complete, there are numerous other (unknown) supported hosters*
 
