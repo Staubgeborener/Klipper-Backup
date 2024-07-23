@@ -27,9 +27,9 @@ You can change the commit email for the commit history here, if it is left empty
 #### 3. allow_empty_commits=""
 You can choose whether you want to push empty commits or not (this serves to permanently check whether the service is running correctly in the background), for example `allow_empty_commits="false"`. The value can be `true` or `false` (default value if nothing is defined: `true`).
 
-| Parameter                | Possible values | Default value | Example                      |
-| ------------------------ | --------------- |---------------|----------------------------- |
-| `allow_empty_commits=""` | `true`, `false` | `false`       | `allow_empty_commits="false` |
+| Parameter                | Possible values | Default value | Example                       |
+| ------------------------ | --------------- |---------------|------------------------------ |
+| `allow_empty_commits=""` | `true`, `false` | `true `       | `allow_empty_commits="false"` |
 
 #### 4. git_protocol=""
 You can use the values `http`, `https` or `ssh` here (default value: `https`). This enables, for example, the local use of git if `https` is not supported.
