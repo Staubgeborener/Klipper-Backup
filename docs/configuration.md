@@ -28,18 +28,15 @@ You can change the commit email for the commit history here, if it is left empty
 You can choose whether you want to push empty commits or not (this serves to permanently check whether the service is running correctly in the background), for example `allow_empty_commits="false"`. The value can be `true` or `false` (default value if nothing is defined: `true`).
 
 | Parameter                | Possible values | Default value | Example                      |
-| ------------------------ | --------------- |--------------------------------------------- |
-| `allow_empty_commits=""` | `true`          | `false`       | `allow_empty_commits="false` |
-|                          | `false`         |               |                              |
+| ------------------------ | --------------- |---------------|----------------------------- |
+| `allow_empty_commits=""` | `true`, `false` | `false`       | `allow_empty_commits="false` |
 
 #### 4. git_protocol=""
 You can use the values `http`, `https` or `ssh` here (default value: `https`). This enables, for example, the local use of git if `https` is not supported.
 
-| Parameter      | Possible values | Default value | Example              |
-| -------------- | ----------------|---------------|--------------------- |
-| `git_protocol` | `http`          | `https`       | `git_protocol="http` |
-|                | `https`         |               |                      |
-|                | `ssh `          |               |                      |
+| Parameter      | Possible values        | Default value | Example              |
+| -------------- | -----------------------|---------------|--------------------- |
+| `git_protocol` | `https`, `http`, `ssh` | `https`       | `git_protocol="http` |
 
 #### 5. git_host=""
 If you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host=""` to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits.  
@@ -47,6 +44,7 @@ If you are using a different host ex.) gitea, bitbucket, devops, etc... you can 
 | Parameter  | Possible values                   | Default value | Example                       |
 | -----------| ----------------------------------|---------------|------------------------------ |
 | `git_host` | `gitea`, `bitbucket`, `devops`, * | github.com    | `git_protocol="bitbucket.org` |
+
 * *List is not complete, there are numerous other (unknown) supported hosters*
 
     !!! warning "Important Note"
