@@ -273,6 +273,6 @@ function fix {
     fi
     rm -rf ~/config_backup
     kill $loading_pid
-    echo -e "\r\033[K${G}●{NC} Delete config_backup folder ${G}Done!${NC}\n"
+    echo -e "\r\033[K${G}●${NC} Delete config_backup folder ${G}Done!${NC}\n"
     exit
 }
