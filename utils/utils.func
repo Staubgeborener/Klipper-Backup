@@ -245,3 +245,34 @@ removeOldInotify() {
         fi
     done
 }
+
+function show_help {
+    echo "Usage: $(basename $0) [OPTION]..."
+    echo "Klipper-Backup is a script for manual or automated Klipper GitHub backups. It's Lightweight, pragmatic and comfortable."
+    echo "https://github.com/Staubgeborener/klipper-backup"
+    echo "https://klipperbackup.xyz"
+    echo
+    echo "Options:"
+    echo "  -h, --help                     display this help and exit"
+    echo "  -c, --commit_message [TEXT]    use your own commit message for the git push"
+    echo "  -f, --fix                      delete the config_backup folder. This can help to solve the vast majority of error messages"
+    echo
+    echo "Examples:"
+    echo "  $(basename $0) --help"
+    echo "  $(basename $0) --commit_message \"My own commit message\""
+    echo "  $(basename $0) --fix"
+}
+
+function fix {
+    loading_wheel "${Y} ^w^o${NC} Delete config_backup folder" &
+    loading_pid=$!
+    if [ ! -d "$HOME/$backup_folder" ]; then
+        echo -e "\r\033[K${R} config_backup folder does exist${NC}\n"
+        kill $loading_pid
+        exit
+    fi
+    rm -rf ~/config_backup
+    kill $loading_pid
+    echo -e "\r\033[K${G} ^w^o${NC} Delete config_backup folder ${G}Done!${NC}\n"
+    exit
+}
