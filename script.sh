@@ -31,6 +31,34 @@ else
 fi
 exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "*.csv" "*.zip"}
 
+# commit_message_used is required for checking the use of the commit_message parameter
+commit_message_used=false
+
+# Check parameters
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      show_help
+      exit 0
+      ;;
+    -f|--fix)
+      fix
+      shift
+      ;;
+    -c|--commit_message)
+      shift
+      commit_message="$@"
+      commit_message_used=true
+      break
+      ;;
+    *)
+      echo -e "\r\033[K${R}Unknown option: $1${NC}"
+      show_help
+      exit 1
+      ;;
+  esac
+done
+
 # Check for updates
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "NEW klipper-backup version available!\n"
 
@@ -144,9 +172,7 @@ for i in ${exclude[@]}; do
 done
 
 # Individual commit message, if no parameter is set, use the current timestamp as commit message
-if [ -n "$1" ]; then
-    commit_message="$@"
-else
+if ! $commit_message_used; then
     commit_message="New backup from $(date +"%x - %X")"
 fi
 
