@@ -5,7 +5,7 @@ Just start the script manually via the shell.
 ~/klipper-backup/script.sh
 ```
 
-The script automatically uses the current timestamp as the commit message and automatic determines the format for the timestamp based on the timezone (America: month/day/year, otherwise: day/month/year). If you want to customize this, you can call the script as follows `~/klipper-backup/script.sh "my commit message"`.
+The script automatically uses the current timestamp as the commit message and automatic determines the format for the timestamp based on the timezone (America: month/day/year, otherwise: day/month/year). If you want to customize this, you can call the script as follows `~/klipper-backup/script.sh --commit_message "my commit message"`.
 
 ## Klipper macro
 You can create a klipper macro `[gcode_macro update_git]` to run the backup manually in the Mainsail UI. This requires the [G-Code Shell Command Extension](https://github.com/th33xitus/kiauh/blob/master/docs/gcode_shell_command.md){:target="_blank"} which you can get very easily through [KIAUH](https://github.com/th33xitus/kiauh){:target="_blank"}.
