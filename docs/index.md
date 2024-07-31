@@ -21,8 +21,10 @@ curl -fsSL get.klipperbackup.xyz | bash
 
 ## Troubleshooting
 We have found that most errors can be traced back to incorrect use of git and that deleting a special klipper-backup related folder (config_backup) folder can solve the problem. So if you encounter strange error messages, please run the script with the `--fix` parameter:
-`~/klipper-backup/script.sh --fix`
+```shell
+~/klipper-backup/script.sh --fix`
 If there are still problems, simply open an [issue](https://github.com/Staubgeborener/klipper-backup/issues).
+```
 
 ## Media
 ![type:video](https://www.youtube.com/embed/47qV9BE2n_Y)
