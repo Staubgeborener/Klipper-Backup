@@ -246,7 +246,7 @@ removeOldInotify() {
     done
 }
 
-function show_help {
+show_help(){
     echo "Usage: $(basename $0) [OPTION]..."
     echo "Klipper-Backup is a script for manual or automated Klipper GitHub backups. It's Lightweight, pragmatic and comfortable."
     echo "https://github.com/Staubgeborener/klipper-backup"
@@ -263,7 +263,7 @@ function show_help {
     echo "  $(basename $0) --fix"
 }
 
-function fix {
+fix(){
     loading_wheel "${Y}●{NC} Delete config_backup folder" &
     loading_pid=$!
     if [ ! -d "$HOME/$backup_folder" ]; then
