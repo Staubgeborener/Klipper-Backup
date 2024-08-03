@@ -17,7 +17,7 @@ primary_branch: main
 ## Update via shell/console
 
 If the script is executed (e.g. with `./script.sh`) and a new update is available, you will be notified with the following message
-> NEW klipper-backup version available!
+> ● Update for Klipper-Backup available!
 
 The recommended update variant is to start the installation script, which installs the update on request:
 ```shell
