@@ -437,7 +437,7 @@ install_cron() {
             loading_pid=$!
             (
                 crontab -l 2>/dev/null
-                echo "0 */4 * * * $HOME/klipper-backup/script.sh \"Cron backup - \$(date +\"%x - %X\")\""
+                echo "0 */4 * * * $HOME/klipper-backup/script.sh -c \"Cron backup - \$(date +\"%x - %X\")\""
             ) | crontab -
             sleep .5
             kill $loading_pid
