@@ -47,6 +47,7 @@ If you are using a different host ex.) gitea, bitbucket, devops, etc... you can 
 
 <b>*</b> <em>List is not complete, there are numerous other (unknown) supported hosters</em>
 
+## Paths
 Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here (**note the pattern!** which is explained inside the `.env` file) are considered in the backup.
 
 Basically, you can break it down to the following three things:
