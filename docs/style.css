@@ -1,3 +1,17 @@
+.md-typeset__table tr {
+    background-color: transparent !important;
+}
+
+.md-typeset__table thead th {
+    background-color: #e0e0e0 !important;
+    color: #333333;
+}
+
+[data-md-color-scheme="slate"] .md-typeset__table thead th {
+    background-color: hsla(var(--md-hue),15%,30%,1) !important;
+    color: #ffffff;
+}
+
 th, td {
     border: 1px solid var(--md-typeset-table-color);
     border-spacing: 0;
@@ -18,19 +32,4 @@ th, td {
 .md-typeset__table table:not([class]) td,
 .md-typeset__table table:not([class]) th {
     padding: 9px;
-}
-
-.md-typeset__table thead th {
-    background-color: #e0e0e0;
-    color: #333333;
-}
-
-[data-md-color-scheme="slate"] .md-typeset__table thead th {
-    background-color: hsla(var(--md-hue),15%,30%,1);
-    color: #ffffff;
-}
-
-.md-typeset__table tr:nth-child(2n),
-.md-typeset__table tr:nth-child(odd) {
-    background-color: transparent;
 }
