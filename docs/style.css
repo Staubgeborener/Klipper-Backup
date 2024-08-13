@@ -1,15 +1,19 @@
-.md-typeset__table tr {
-    background-color: transparent !important;
-}
-
-.md-typeset__table thead th {
-    background-color: #e0e0e0 !important;
+table thead th {
+    background-color: #e0e0e0;
     color: #333333;
 }
 
-[data-md-color-scheme="slate"] .md-typeset__table thead th {
-    background-color: hsla(var(--md-hue),15%,30%,1) !important;
+[data-md-color-scheme="slate"] table thead th {
+    background-color: hsla(var(--md-hue),15%,30%,1);
     color: #ffffff;
+}
+
+table tbody tr {
+    background-color: #ffffff;
+}
+
+[data-md-color-scheme="slate"] table tbody tr {
+    background-color: #000000;
 }
 
 th, td {
@@ -20,16 +24,11 @@ th, td {
     border-top: none;
 }
 
-.md-typeset__table {
+table {
     line-height: 1;
 }
 
-.md-typeset__table table:not([class]) {
-    font-size: .74rem;
-    border-right: none;
-}
-
-.md-typeset__table table:not([class]) td,
-.md-typeset__table table:not([class]) th {
+table td,
+table th {
     padding: 9px;
 }
