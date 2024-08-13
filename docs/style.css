@@ -20,12 +20,17 @@ th, td {
     padding: 9px;
 }
 
-/* light mode alternating table bg colors */
-.md-typeset__table tr:nth-child(2n) {
-    background-color: #f8f8f8;
+.md-typeset__table thead th {
+    background-color: #e0e0e0;
+    color: #333333;
 }
 
-/* dark mode alternating table bg colors */
-[data-md-color-scheme="slate"] .md-typeset__table tr:nth-child(2n) {
-    background-color: hsla(var(--md-hue),25%,25%,1)
+[data-md-color-scheme="slate"] .md-typeset__table thead th {
+    background-color: hsla(var(--md-hue),15%,30%,1);
+    color: #ffffff;
+}
+
+.md-typeset__table tr:nth-child(2n),
+.md-typeset__table tr:nth-child(odd) {
+    background-color: transparent;
 }
