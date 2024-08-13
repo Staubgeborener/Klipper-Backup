@@ -34,5 +34,5 @@ while read -r path event file; do
         file=$(basename "$path")
     fi
     echo "Event Type: $event, Watched Path: $path, File Name: $file"
-    file="$file" /usr/bin/env bash -c "/usr/bin/env bash  $HOME/klipper-backup/script.sh \"\$file modified - \$(date +'%x - %X')\"" > /dev/null 2>&1
+    file="$file" /usr/bin/env bash -c "/usr/bin/env bash  $HOME/klipper-backup/script.sh -c \"\$file modified - \$(date +'%x - %X')\"" > /dev/null 2>&1
 done
