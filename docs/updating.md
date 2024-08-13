@@ -1,6 +1,5 @@
 ## Moonraker update manager
-To add this repository to moonraker's update manager for easy updating, you need to add the following into ```moonraker.conf```
-commits.  
+To add this repository to moonraker's update manager for easy updating, you need to add the following section into ```moonraker.conf```.  
     
 !!! warning "Important Note"
     This is just for these repositories updates, not updates of your config backups. Those do not get added to moonraker.
