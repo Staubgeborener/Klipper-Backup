@@ -14,8 +14,9 @@ managed_services: moonraker
 primary_branch: main
 ```
 
-## Update via shell/console
+Nor you can simply use the Moonraker API which is supplied with Mainsail or Fluidd, for example, to update the Klipper-Backup. Simple one-click update in the browser UI, as easy as it sounds.
 
+## Update via shell/console
 If the script is executed (e.g. with `./script.sh`) and a new update is available, you will be notified with the following message
 > ● Update for Klipper-Backup available!
 
@@ -28,9 +29,6 @@ Otherwise you can `git pull` the latest Klipper-Backup version:
 ```shell
 cd ~/klipper-backup && git pull
 ```
-
-## Update via Moonraker API
-Simply use the Moonraker API which is supplied with Mainsail or Fluidd, for example, to update the Klipper-Backup. Simple one-click update in the browser UI, as easy as it sounds.
 
 !!! warning "Important Note" 
     Editing most files (with the exception of .env) inside of the `klipper-backup` folder, can lead to a ['dirty' repository](https://docs.mainsail.xyz/setup/updates/update-manager#dirty){:target="_blank"}, which will cause moonraker or the local git repository to be unable to pull updates until resolved. For Pull requests see [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or you are welcome to open a [feature request](https://github.com/Staubgeborener/klipper-backup/issues){:target="_blank"}.
