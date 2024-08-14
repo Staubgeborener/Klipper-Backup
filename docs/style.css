@@ -8,14 +8,6 @@ table thead th {
     color: #ffffff;
 }
 
-table tbody tr {
-    background-color: #ffffff;
-}
-
-[data-md-color-scheme="slate"] table tbody tr {
-    background-color: #000000;
-}
-
 th, td {
     border: 1px solid var(--md-typeset-table-color);
     border-spacing: 0;
