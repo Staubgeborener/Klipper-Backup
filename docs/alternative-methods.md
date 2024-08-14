@@ -44,7 +44,7 @@ ExecStart=/bin/bash -c 'bash $HOME/klipper-backup/script.sh -c "New Backup on ti
 [Install]
 WantedBy=default.target
 ```
-3. Run `systemctl daemon-reload` once both files have been created.
-4. Enable the systemd timer `systemctl enable --now klipper-backup.timer`. The timer will run the service file every 4 hours. 
+3. Run `sudo systemctl daemon-reload` once both files have been created.
+4. Enable the systemd timer `sudo systemctl enable --now klipper-backup.timer`. The timer will run the service file every 4 hours. 
 !!! note
     if you would like to edit the time between backups you can edit line 5 `OnUnitActiveSec=` to your specified time.
