@@ -30,7 +30,7 @@ You can choose whether you want to push empty commits or not (this serves to per
 
 | Parameter                | Possible values | Default value | Example                       |
 | ------------------------ | --------------- |---------------|------------------------------ |
-| `allow_empty_commits=""` | `true`, `false` | `true `       | `allow_empty_commits="false"` |
+| `allow_empty_commits` | `true`, `false` | `true `       | `allow_empty_commits="false"` |
 
 ### 4. git_protocol
 You can use the values `http`, `https` or `ssh` here (default value: `https`). This enables, for example, the local use of git if `https` is not supported.
@@ -40,7 +40,7 @@ You can use the values `http`, `https` or `ssh` here (default value: `https`). T
 | `git_protocol` | `https`, `http`, `ssh` | `https`       | `git_protocol="http"` |
 
 ### 5. git_host
-If you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host=""` to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits. When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}  
+If you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host` with the corresponding entity to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits. When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}  
 
 | Parameter  | Possible values                   | Default value | Example                       |
 | -----------| ----------------------------------|---------------|------------------------------ |
