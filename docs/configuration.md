@@ -26,7 +26,7 @@ You can change the commit email for the commit history here, if it is left empty
 | `commit_email` | *anything*      | `whoami@hostname --long-unique_id` output | `commit_email="backup@hostname"` |
 
 ### 3. allow_empty_commits
-You can choose whether you want to push empty commits or not (this serves to permanently check whether the service is running correctly in the background), for example `allow_empty_commits="false"`. The value can be `true` or `false` (default value if nothing is defined: `true`).
+You can choose whether you want to push empty commits or not (this serves to permanently check whether the service is running correctly in the background). The value can be `true` or `false` (default value if nothing is defined: `true`).
 
 | Parameter                | Possible values | Default value | Example                       |
 | ------------------------ | --------------- |---------------|------------------------------ |
@@ -42,9 +42,9 @@ You can use the values `http`, `https` or `ssh` here (default value: `https`). T
 ### 5. git_host
 If you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host` with the corresponding entity to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits. When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}  
 
-| Parameter  | Possible values                   | Default value | Example                       |
-| -----------| ----------------------------------|---------------|------------------------------ |
-| `git_host` | `gitea`, `bitbucket`, `devops`, * | github.com    | `git_protocol="bitbucket.org"` |
+| Parameter  | Possible values                   | Default value   | Example                       |
+| -----------| ----------------------------------|-----------------|------------------------------ |
+| `git_host` | `gitea`, `bitbucket`, `devops`, * | `github.com`    | `git_protocol="bitbucket.org"` |
 
 <b>*</b> <em>List is not complete, there are numerous other (unknown) supported hosters</em>
 
