@@ -1,6 +1,9 @@
 !!! note
     This section shows how to customize Klipper-Backup according to your needs. Certain things like adding the token are already queried by the installation script and automatically inserted if necessary!
 
+!!! warning
+    Only edit the content of the `.env` file with the following parameters, never edit `script.sh` manually!
+
 ## Minimalistic .env overview (mandatory parameters!)
 Now you need your [GitHub token](installation.md#create-github-token). This should already be done by the [installation script](installation.md/#run-installation).
 The following steps are for implementing the token, username and repository name. These three parameters are mandatory.
