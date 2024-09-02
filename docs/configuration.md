@@ -26,7 +26,7 @@ You can change the commit email for the commit history here, if it is left empty
 
 | Parameter      | Possible values | Default value                             | Example                          |
 | -------------- | --------------- |------------------------------------------ | -------------------------------- |
-| `commit_email` | *anything*      | `whoami@hostname --long-unique_id` output | `commit_email="backup@hostname"` |
+| `commit_email` | *anything*      | `whoami@hostname --short-unique_id` output | `commit_email="backup@hostname"` |
 
 ### 3. allow_empty_commits
 You can choose whether you want to push empty commits or not (this serves to permanently check whether the service is running correctly in the background). The value can be `true` or `false` (default value if nothing is defined: `true`).
