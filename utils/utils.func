@@ -1,3 +1,10 @@
+R=$'\e[1;91m' # Red ${R}
+G=$'\e[1;92m' # Green ${G}
+Y=$'\e[1;93m' # Yellow ${Y}
+M=$'\e[1;95m' # Magenta ${M}
+C=$'\e[96m'   # Cyan ${C}
+NC=$'\e[0m'   # No Color ${NC}
+
 # Create unique id for git email
 getUniqueid() {
     echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | dd bs=7 count=1 2>/dev/null)
@@ -42,13 +49,6 @@ run_command() {
 clearUp() {
     echo -e "\r\033[K\033[1A"
 }
-
-R=$'\e[1;91m' # Red ${R}
-G=$'\e[1;92m' # Green ${G}
-Y=$'\e[1;93m' # Yellow ${Y}
-M=$'\e[1;95m' # Magenta ${M}
-C=$'\e[96m'   # Cyan ${C}
-NC=$'\e[0m'   # No Color ${NC}
 
 logo() {
     clear
@@ -267,12 +267,20 @@ fix(){
     loading_wheel "${Y}●{NC} Delete config_backup folder" &
     loading_pid=$!
     if [ ! -d "$HOME/$backup_folder" ]; then
-        echo -e "\r\033[K${R} config_backup folder does exist${NC}\n"
-        kill $loading_pid
-        exit
+        echo -e "\r\033[K${R}config_backup folder does exist${NC}\n"
+    else
+        rm -rf $HOME/$backup_folder
+        echo -e "\r\033[K${G}●${NC} Delete config_backup folder ${G}Done!${NC}\n"
     fi
-    rm -rf ~/config_backup
     kill $loading_pid
-    echo -e "\r\033[K${G}●${NC} Delete config_backup folder ${G}Done!${NC}\n"
     exit
+
+}
+
+begin_debug_line(){
+    echo "--------DEBUG:--------"
+}
+
+end_debug_line(){
+    echo "----------------------"
 }

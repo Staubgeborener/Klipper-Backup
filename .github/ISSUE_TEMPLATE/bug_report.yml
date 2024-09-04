@@ -38,6 +38,14 @@ body:
     validations:
       required: true
   - type: textarea
+    id: debug-output
+    attributes:
+      label: Debug
+      description: >-
+        Insert here the output of `~/klipper-backup/script.sh --debug`
+    validations:
+      required: true
+  - type: textarea
     id: additional-info
     attributes:
       label: Additional information
