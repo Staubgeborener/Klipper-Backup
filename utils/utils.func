@@ -7,7 +7,7 @@ NC=$'\e[0m'   # No Color ${NC}
 
 # Create unique id for git email
 getUniqueid() {
-    echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | dd bs=7 count=1 2>/dev/null)
+    echo $(date +%s%N | md5sum | head -c 7)
 }
 
 wantsafter() {
@@ -256,11 +256,13 @@ show_help(){
     echo "  -h, --help                     display this help and exit"
     echo "  -c, --commit_message [TEXT]    use your own commit message for the git push"
     echo "  -f, --fix                      delete the config_backup folder. This can help to solve the vast majority of error messages"
+    echo "  -d, --debug                    debugging output"
     echo
     echo "Examples:"
     echo "  $(basename $0) --help"
     echo "  $(basename $0) --commit_message \"My own commit message\""
     echo "  $(basename $0) --fix"
+    echo "  $(basename $0) --debug"
 }
 
 fix(){
@@ -278,9 +280,9 @@ fix(){
 }
 
 begin_debug_line(){
-    echo "--------DEBUG:--------"
+    echo -e "\n------------DEBUG:------------"
 }
 
 end_debug_line(){
-    echo "----------------------"
+    echo -e "------------------------------\n"
 }
