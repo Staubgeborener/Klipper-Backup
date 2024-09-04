@@ -8,6 +8,7 @@ If `script.sh` is executed in the terminal, Command-Line Arguments are available
 | `-h`, `--help`           | Display the help page and exit                                                              | `script.sh --help` or `script.sh -h`                                                   |
 | `-c`, `--commit_message` | Use your own commit message for the git push                                                | `script.sh --commit_message "my commit message"` or `script.sh -c "my commit message"` |
 | `-f`, `--fix`            | Delete the config_backup folder. This can help to solve the vast majority of error messages | `script.sh --fix` or `script.sh -f`                                                    |
+| `-d`, `--debug`          | Output debugging information                                                                | `script.sh --debug` or `script.sh -d`                                                  |
 
 ## Timed Backups using systemd
 For those with distros that may not include cron in the base packages you can use the following to setup timed backups instead
