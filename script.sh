@@ -125,7 +125,7 @@ fi
 
 # Check if .git exists else init git repo
 if [ ! -d ".git" ]; then
-    mkdir .agit
+    mkdir .git
     echo "[init]
     defaultBranch = "$branch_name"" >>.git/config #Add desired branch name to config before init
     git init
