@@ -10,15 +10,17 @@ To get started with Klipper-Backup, please jump to the [installation section](in
 curl -fsSL get.klipperbackup.xyz | bash
 ~/klipper-backup/install.sh
 ```
+!!! warning 
+    There is currently **NO** restore functionality on the release/main branch of klipper-backup. That feature is work in progress. Running script.sh on a brand new machine will not restore files.
 
 ## Features
 - The script does the most complex work in the background automatically
 - Works perfectly with [gcode macros](manual.md/#klipper-macro)
 - Can also be executed [manually in the terminal](manual.md/#shell)
-- Supports [Command-Line Arguments](alternative-methods/#command-line-arguments)
+- Supports [Command-Line Arguments](alternative-methods.md/#command-line-arguments)
 - Automatic backups with [cron](automation.md/#cron) or a service that [reacts to file changes](automation.md/#backup-on-file-changes)
 - Switch between repositories and branches at any time
-- Fully customizable with [parameters](configuration.md/#env)
+- Fully customizable with [parameters](configuration.md)
 
 ## Troubleshooting
 We have found that most errors can be traced back to incorrect use of git and that deleting a special Klipper-Backup related folder (config_backup) can solve the problem. So if you encounter strange error messages, please run the script with the `--fix` parameter:
