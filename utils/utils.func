@@ -1,6 +1,13 @@
+R=$'\e[1;91m' # Red ${R}
+G=$'\e[1;92m' # Green ${G}
+Y=$'\e[1;93m' # Yellow ${Y}
+M=$'\e[1;95m' # Magenta ${M}
+C=$'\e[96m'   # Cyan ${C}
+NC=$'\e[0m'   # No Color ${NC}
+
 # Create unique id for git email
 getUniqueid() {
-    echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | dd bs=7 count=1 2>/dev/null)
+    echo $(date +%s%N | md5sum | head -c 7)
 }
 
 wantsafter() {
@@ -42,13 +49,6 @@ run_command() {
 clearUp() {
     echo -e "\r\033[K\033[1A"
 }
-
-R=$'\e[1;91m' # Red ${R}
-G=$'\e[1;92m' # Green ${G}
-Y=$'\e[1;93m' # Yellow ${Y}
-M=$'\e[1;95m' # Magenta ${M}
-C=$'\e[96m'   # Cyan ${C}
-NC=$'\e[0m'   # No Color ${NC}
 
 logo() {
     clear
@@ -256,23 +256,33 @@ show_help(){
     echo "  -h, --help                     display this help and exit"
     echo "  -c, --commit_message [TEXT]    use your own commit message for the git push"
     echo "  -f, --fix                      delete the config_backup folder. This can help to solve the vast majority of error messages"
+    echo "  -d, --debug                    debugging output"
     echo
     echo "Examples:"
     echo "  $(basename $0) --help"
     echo "  $(basename $0) --commit_message \"My own commit message\""
     echo "  $(basename $0) --fix"
+    echo "  $(basename $0) --debug"
 }
 
 fix(){
     loading_wheel "${Y}●{NC} Delete config_backup folder" &
     loading_pid=$!
     if [ ! -d "$HOME/$backup_folder" ]; then
-        echo -e "\r\033[K${R} config_backup folder does exist${NC}\n"
-        kill $loading_pid
-        exit
+        echo -e "\r\033[K${R}config_backup folder does exist${NC}\n"
+    else
+        rm -rf $HOME/$backup_folder
+        echo -e "\r\033[K${G}●${NC} Delete config_backup folder ${G}Done!${NC}\n"
     fi
-    rm -rf ~/config_backup
     kill $loading_pid
-    echo -e "\r\033[K${G}●${NC} Delete config_backup folder ${G}Done!${NC}\n"
     exit
+
+}
+
+begin_debug_line(){
+    echo -e "\n------------DEBUG:------------"
+}
+
+end_debug_line(){
+    echo -e "------------------------------\n"
 }

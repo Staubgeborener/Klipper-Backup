@@ -19,6 +19,7 @@ check_dependencies "jq" "curl" "rsync"
 kill $loading_pid
 echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
 
+# Do not touch these variables, the .env file and the documentation exist for this purpose
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
 backup_restore_data="$HOME"/klipper-backup-restore
@@ -34,8 +35,9 @@ else
 fi
 exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "*.csv" "*.zip"}
 
-# commit_message_used is required for checking the use of the commit_message parameter
+# Required for checking the use of the commit_message and debug parameter
 commit_message_used=false
+debug_output=false
 
 # Check parameters
 while [[ $# -gt 0 ]]; do
@@ -49,10 +51,18 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     -c|--commit_message)
+      if  [[ -z "$2" || "$2" =~ ^- ]]; then
+          echo -e "\r\033[K${R}Error: commit message expected after $1${NC}" >&2
+          exit 1
+      else
+          commit_message="$2"
+          commit_message_used=true
+          shift 2
+      fi
+      ;;
+    -d|--debug)
+      debug_output=true
       shift
-      commit_message="$@"
-      commit_message_used=true
-      break
       ;;
     *)
       echo -e "\r\033[K${R}Unknown option: $1${NC}"
@@ -63,7 +73,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Check for updates
-[ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-backup is up to date\n" || echo -e "NEW klipper-backup version available!\n"
+[ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-Backup is up to date\n" || echo -e "${Y}●${NC} Update for Klipper-Backup ${Y}Available!${NC}\n"
 
 # Check if .env is v1 version
 if [[ ! -v backupPaths ]]; then
@@ -75,13 +85,47 @@ if [[ ! -v backupPaths ]]; then
     fi
 fi
 
+# Debug output: .env file with hidden token
+if [ "$debug_output" = true ]; then
+    begin_debug_line
+    while IFS= read -r line; do
+    if [[ $line == github_token=* ]]; then
+        echo "github_token=****************"
+    else
+        echo "$line"
+    fi
+    done < $HOME/klipper-backup/.env
+    end_debug_line
+fi
+
 # Check if backup folder exists, create one if it does not
 if [ ! -d "$backup_path" ]; then
     mkdir -p "$backup_path"
 fi
 
-# Git commands
 cd "$backup_path"
+
+# Debug output: $HOME
+[ "$debug_output" = true ] && begin_debug_line && echo -e "\$HOME: $HOME" && end_debug_line
+
+# Debug output: $backup_path - (current) path and content
+[ "$debug_output" = true ] && begin_debug_line && echo -e "\$backup_path: $PWD" && echo -e "\nContent of \$backup_path:" && echo -ne "$(ls -la $backup_path)\n" && end_debug_line
+
+# Debug output: $backup_path/.git/config content
+if [ "$debug_output" = true ]; then
+    begin_debug_line
+    echo -e "\$backup_path/.git/config:\n"
+    while IFS= read -r line; do
+        if [[ $line == *"url ="*@* ]]; then
+            masked_line=$(echo "$line" | sed -E 's/(url = https:\/\/)[^@]*(@.*)/\1********\2/')
+            echo "$masked_line"
+        else
+            echo "$line"
+        fi
+    done < "$backup_path/.git/config"
+    end_debug_line
+fi
+
 # Check if .git exists else init git repo
 if [ ! -d ".git" ]; then
     mkdir .git
@@ -112,7 +156,7 @@ fi
 if [[ "$commit_email" != "" ]]; then
     git config user.email "$commit_email"
 else
-    unique_id=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 7 | head -n 1)
+    unique_id=$(date +%s%N | md5sum | head -c 7)
     user_email=$(whoami)@$(hostname --short)-$unique_id
     git config user.email "$user_email"
     sed -i "s/^commit_email=.*/commit_email=\"$user_email\"/" "$parent_path"/.env
@@ -176,6 +220,9 @@ for path in "${backupPaths[@]}"; do
     fi
 done
 
+# Debug output: $backup_path content after running rsync
+[ "$debug_output" = true ] && begin_debug_line && echo -e "Content of \$backup_path after rsync:" && echo -ne "$(ls -la $backup_path)\n" && end_debug_line
+
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
 if [ $moonraker_db_backups ]; then
@@ -207,7 +254,7 @@ fi
 cd "$backup_path"
 # Create and add Readme to backup folder if it doesn't already exist
 if ! [ -f "README.md" ]; then
-    echo -e "# klipper-backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [klipper-backup](https://github.com/Staubgeborener/klipper-backup)." >"$backup_path/README.md"
+    echo -e "# Klipper-Backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [Klipper-Backup](https://github.com/Staubgeborener/klipper-backup)." >"$backup_path/README.md"
 fi
 # Untrack all files so that any new excluded files are correctly ignored and deleted from remote
 git rm -r --cached . >/dev/null 2>&1
