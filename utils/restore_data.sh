@@ -221,7 +221,7 @@ copyTheme() {
 cleanup() {
     sed -i "s/^theme_url.*//" $envpath
     sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
-    sudo systemctl start klipper.service moonraker.service
+    sudo systemctl restart klipper.service moonraker.service
 }
 
 main
