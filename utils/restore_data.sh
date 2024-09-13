@@ -1,7 +1,7 @@
 # Planning out script process:
 # Prompt for repository name, token, branch - Done!
 # ^ This does not pull from .env since a restore may also be a fresh install where .env will not have been created yet,
-#   as well it for future upgrades/changes like the below potential improvement, and being able to choose the back repo you want to restore from if it defers from the one on the current install
+#   as well it for future upgrades/changes like the below potential improvement, and being able to choose the backup repo you want to restore from if it defers from the one on the current install
 ## Potential improvement, prompt for recent commit message which has backup date and time and ask to confirm if that is the backup they are wanting
 # pull contents of branch to a temp folder, extract paths from restore.config - Done!
 # shut down instances of klipper, moonraker etc.. - Done!
