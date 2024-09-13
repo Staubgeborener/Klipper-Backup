@@ -85,8 +85,15 @@ if [[ ! -v backupPaths ]]; then
     fi
 fi
 
-# Debug output: .env file with hidden token
 if [ "$debug_output" = true ]; then
+    # Debug output: Show last command
+    begin_debug_line
+    if [[ "$SHELL" == */bash* ]]; then
+        echo -n "Command: " && tail -n 3 ~/.bash_history | head -n 1
+    fi
+    end_debug_line
+
+    # Debug output: .env file with hidden token
     begin_debug_line
     while IFS= read -r line; do
     if [[ $line == github_token=* ]]; then
@@ -96,6 +103,17 @@ if [ "$debug_output" = true ]; then
     fi
     done < $HOME/klipper-backup/.env
     end_debug_line
+
+    # Debug output: Check git repo
+    if [[ $git_host == "github.com" ]]; then
+        begin_debug_line
+        if curl -fsS "https://api.github.com/repos/${github_username}/${github_repository}" >/dev/null; then
+            echo "The GitHub repo ${github_username}/${github_repository} exists (public)"
+        else
+            echo "Error: no GitHub repo ${github_username}/${github_repository} found (maybe private)"
+        fi
+        end_debug_line
+    fi
 fi
 
 # Check if backup folder exists, create one if it does not
