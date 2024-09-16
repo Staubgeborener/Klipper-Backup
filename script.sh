@@ -174,6 +174,7 @@ for path in "${backupPaths[@]}"; do
     if [[ -d "$fullPath" && ! -f "$fullPath" ]]; then
         # Check if the directory path ends with only a '/'
         if [[ "$path" =~ /$ ]]; then
+            # TODO: Check if directory is a .git repository before modifying and readding to path list
             # If it ends with '/', replace it with '/*'
             backupPaths[$i]="$path*"
         elif [[ -d "$path" ]]; then
