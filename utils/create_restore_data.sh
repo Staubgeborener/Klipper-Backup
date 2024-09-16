@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-## WANT TO CHANGE:
-# Instead of individually grabbing values from .env use sed to clear token, username, repository and branch and then copy the entire contents to restore folder.
-# Then on restore you fill back in those 4 fields while restoring the backup and copy that back over to klipper-backup folder as .env
 scriptsh_parent_path=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     cd ..
