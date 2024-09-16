@@ -2,7 +2,7 @@
 debug_lastcommand() {
     begin_debug_line
     if [[ "$SHELL" == */bash* ]]; then
-        echo -n "Command: " && tail -n 3 ~/.bash_history | head -n 1
+        echo -n "Command: $0 $args"
     fi
     end_debug_line
 }
@@ -41,17 +41,17 @@ debug_homedir() {
 }
 
 # Debug output: $backup_path - (current) path and content
-debug_backuppathcurrent(){
-    begin_debug_line 
-    echo -e "\$backup_path: $PWD" 
-    echo -e "\nContent of \$backup_path:" 
-    echo -ne "$(ls -la $backup_path)\n" 
+debug_backuppathcurrent() {
+    begin_debug_line
+    echo -e "\$backup_path: $PWD"
+    echo -e "\nContent of \$backup_path:"
+    echo -ne "$(ls -la $backup_path)\n"
     end_debug_line
 }
 
 # Debug output: $backup_path/.git/config content
 debug_gitconfig() {
-        begin_debug_line
+    begin_debug_line
     echo -e "\$backup_path/.git/config:\n"
     while IFS= read -r line; do
         if [[ $line == *"url ="*@* ]]; then
@@ -66,8 +66,8 @@ debug_gitconfig() {
 
 # Debug output: $backup_path content after running rsync
 debug_backuppathafter() {
-    begin_debug_line 
-    echo -e "Content of \$backup_path after rsync:" 
-    echo -ne "$(ls -la $backup_path)\n" 
+    begin_debug_line
+    echo -e "Content of \$backup_path after rsync:"
+    echo -ne "$(ls -la $backup_path)\n"
     end_debug_line
 }
