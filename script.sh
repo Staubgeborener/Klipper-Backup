@@ -12,6 +12,7 @@ parent_path=$(
 # Initialize variables from .env file
 source "$parent_path"/.env
 source "$parent_path"/utils/utils.func
+source "$parent_path"/utils/debug.func
 
 loading_wheel "${Y}●${NC} Checking for installed dependencies" &
 loading_pid=$!
@@ -41,35 +42,35 @@ debug_output=false
 
 # Check parameters
 while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -h|--help)
-      show_help
-      exit 0
-      ;;
-    -f|--fix)
-      fix
-      shift
-      ;;
-    -c|--commit_message)
-      if  [[ -z "$2" || "$2" =~ ^- ]]; then
-          echo -e "\r\033[K${R}Error: commit message expected after $1${NC}" >&2
-          exit 1
-      else
-          commit_message="$2"
-          commit_message_used=true
-          shift 2
-      fi
-      ;;
-    -d|--debug)
-      debug_output=true
-      shift
-      ;;
+    case "$1" in
+    -h | --help)
+        show_help
+        exit 0
+        ;;
+    -f | --fix)
+        fix
+        shift
+        ;;
+    -c | --commit_message)
+        if [[ -z "$2" || "$2" =~ ^- ]]; then
+            echo -e "\r\033[K${R}Error: commit message expected after $1${NC}" >&2
+            exit 1
+        else
+            commit_message="$2"
+            commit_message_used=true
+            shift 2
+        fi
+        ;;
+    -d | --debug)
+        debug_output=true
+        shift
+        ;;
     *)
-      echo -e "\r\033[K${R}Unknown option: $1${NC}"
-      show_help
-      exit 1
-      ;;
-  esac
+        echo -e "\r\033[K${R}Unknown option: $1${NC}"
+        show_help
+        exit 1
+        ;;
+    esac
 done
 
 # Check for updates
@@ -86,34 +87,10 @@ if [[ ! -v backupPaths ]]; then
 fi
 
 if [ "$debug_output" = true ]; then
-    # Debug output: Show last command
-    begin_debug_line
-    if [[ "$SHELL" == */bash* ]]; then
-        echo -n "Command: " && tail -n 3 ~/.bash_history | head -n 1
-    fi
-    end_debug_line
-
-    # Debug output: .env file with hidden token
-    begin_debug_line
-    while IFS= read -r line; do
-    if [[ $line == github_token=* ]]; then
-        echo "github_token=****************"
-    else
-        echo "$line"
-    fi
-    done < $HOME/klipper-backup/.env
-    end_debug_line
-
-    # Debug output: Check git repo
-    if [[ $git_host == "github.com" ]]; then
-        begin_debug_line
-        if curl -fsS "https://api.github.com/repos/${github_username}/${github_repository}" >/dev/null; then
-            echo "The GitHub repo ${github_username}/${github_repository} exists (public)"
-        else
-            echo "Error: no GitHub repo ${github_username}/${github_repository} found (maybe private)"
-        fi
-        end_debug_line
-    fi
+    debug_lastcommand
+    debug_envfile
+    debug_repocheck
+    debug_homedir
 fi
 
 # Check if backup folder exists, create one if it does not
@@ -123,25 +100,9 @@ fi
 
 cd "$backup_path"
 
-# Debug output: $HOME
-[ "$debug_output" = true ] && begin_debug_line && echo -e "\$HOME: $HOME" && end_debug_line
-
-# Debug output: $backup_path - (current) path and content
-[ "$debug_output" = true ] && begin_debug_line && echo -e "\$backup_path: $PWD" && echo -e "\nContent of \$backup_path:" && echo -ne "$(ls -la $backup_path)\n" && end_debug_line
-
-# Debug output: $backup_path/.git/config content
 if [ "$debug_output" = true ]; then
-    begin_debug_line
-    echo -e "\$backup_path/.git/config:\n"
-    while IFS= read -r line; do
-        if [[ $line == *"url ="*@* ]]; then
-            masked_line=$(echo "$line" | sed -E 's/(url = https:\/\/)[^@]*(@.*)/\1********\2/')
-            echo "$masked_line"
-        else
-            echo "$line"
-        fi
-    done < "$backup_path/.git/config"
-    end_debug_line
+    debug_backuppathcurrent
+    debug_gitconfig
 fi
 
 # Check if .git exists else init git repo
@@ -239,7 +200,9 @@ for path in "${backupPaths[@]}"; do
 done
 
 # Debug output: $backup_path content after running rsync
-[ "$debug_output" = true ] && begin_debug_line && echo -e "Content of \$backup_path after rsync:" && echo -ne "$(ls -la $backup_path)\n" && end_debug_line
+if [ "$debug_output" = true ]; then
+    debug_backuppathafter
+fi
 
 cp "$parent_path"/.gitignore "$backup_path/.gitignore"
 
