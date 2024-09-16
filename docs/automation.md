@@ -19,7 +19,7 @@ Description=Klipper Backup On-boot Service
 [Service]
 User={replace with your username}
 Type=oneshot
-ExecStart=/bin/bash -c 'bash $HOME/klipper-backup/script.sh "New Backup on boot $(date +"%%x - %%X")"'
+ExecStart=/usr/bin/env bash -c "/usr/bin/env bash $HOME/klipper-backup/script.sh -c \"New Backup on boot - $(date +\"%%x - %%X\")\""
 
 [Install]
 WantedBy=default.target
@@ -93,30 +93,7 @@ Description=Klipper Backup Filewatch Service
 [Service]
 User={replace with your username}
 Type=simple
-ExecStart=/bin/bash -c '\
-    watchlist=""; \
-    while IFS= read -r path; do \
-        for file in $path; do \
-            if [ ! -h "$file" ]; then \
-                file_dir=$(dirname "$file"); \
-                if [ "$file_dir" = "." ]; then \
-                    watchlist+=" $HOME/$file"; \
-                else \
-                    watchlist+=" $HOME/$file_dir"; \
-                fi; \
-            fi; \
-        done; \
-    done < <(grep -v \'^#\' "$HOME/klipper-backup/.env" | grep \'path_\' | sed \'s/^.*=//\'); \
-    watchlist=$(echo "$watchlist" | tr \' \' \'\n\' | sort -u | tr \'\n\' \' \'); \
-    exclude_pattern=".swp|.tmp|printer-[0-9]*_[0-9]*.cfg|.bak|.bkp"; \
-    inotifywait -mrP -e close_write -e move -e delete --exclude "$exclude_pattern" $watchlist | \
-    while read -r path event file; do \
-        if [ -z $file ]; then \
-            file=$(basename "$path"); \
-        fi; \
-        echo "Event Type: $event, Watched Path: $path, File Name: $file"; \
-        file=$file bash -c '\''bash $HOME/klipper-backup/script.sh "$file modified - $(date +\"%%x - %%X\")"'\'' > /dev/null 2>&1; \
-    done'
+ExecStart=/usr/bin/env bash -c '"$HOME/klipper-backup/utils/filewatch.sh"'
 
 [Install]
 WantedBy=default.target
