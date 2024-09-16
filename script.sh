@@ -88,7 +88,7 @@ if [ "$debug_output" = true ]; then
     # Debug output: Show last command
     begin_debug_line
     if [[ "$SHELL" == */bash* ]]; then
-        echo -n "Command: $0 $args"
+        echo -e "Command: $0 $args"
     fi
     end_debug_line
 
