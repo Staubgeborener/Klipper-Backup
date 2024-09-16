@@ -39,6 +39,7 @@ exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "
 # Required for checking the use of the commit_message and debug parameter
 commit_message_used=false
 debug_output=false
+args="$@"
 
 # Check parameters
 while [[ $# -gt 0 ]]; do
@@ -82,7 +83,7 @@ if [[ ! -v backupPaths ]]; then
     if bash $parent_path/utils/v1convert.sh; then
         echo "Upgrade complete restarting script.sh"
         sleep 2.5
-        exec "$parent_path/script.sh" "$@"
+        exec "$parent_path/script.sh" "$args"
     fi
 fi
 
