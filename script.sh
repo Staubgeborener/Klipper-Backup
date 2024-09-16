@@ -35,6 +35,8 @@ exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "
 # Required for checking the use of the commit_message and debug parameter
 commit_message_used=false
 debug_output=false
+# Collect args before they are consumed by getopts
+args="$@"
 
 # Check parameters
 while [[ $# -gt 0 ]]; do
@@ -78,7 +80,7 @@ if [[ ! -v backupPaths ]]; then
     if bash $parent_path/utils/v1convert.sh; then
         echo "Upgrade complete restarting script.sh"
         sleep 2.5
-        exec "$parent_path/script.sh" "$@"
+        exec "$parent_path/script.sh" "$args"
     fi
 fi
 
@@ -86,7 +88,7 @@ if [ "$debug_output" = true ]; then
     # Debug output: Show last command
     begin_debug_line
     if [[ "$SHELL" == */bash* ]]; then
-        echo -n "Command: " && tail -n 3 ~/.bash_history | head -n 1
+        echo -n "Command: $0 $args"
     fi
     end_debug_line
 
