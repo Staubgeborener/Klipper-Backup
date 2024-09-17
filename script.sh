@@ -77,6 +77,11 @@ done
 # Check for updates
 [ $(git -C "$parent_path" rev-parse HEAD) = $(git -C "$parent_path" ls-remote $(git -C "$parent_path" rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1) ] && echo -e "Klipper-Backup is up to date\n" || echo -e "${Y}●${NC} Update for Klipper-Backup ${Y}Available!${NC}\n"
 
+# Debug output: Show current commit of Klipper-Backup
+if [ "$debug_output" = true ]; then
+    debug_currentcommit
+fi
+
 # Check if .env is v1 version
 if [[ ! -v backupPaths ]]; then
     echo ".env file is not using version 2 config, upgrading to V2"
