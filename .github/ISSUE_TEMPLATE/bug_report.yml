@@ -43,6 +43,7 @@ body:
       label: Debug
       description: >-
         Insert here the output of `~/klipper-backup/script.sh --debug`
+      render: shell
     validations:
       required: true
   - type: textarea
