@@ -11,7 +11,7 @@ body:
     attributes:
       label: Code of Conduct
       options:
-        - label: I promise that i have used markdown syntax to make the `code` more readable which helps to fix the problem and that I have tested the `--fix` command mentioned above without success.
+        - label: I promise that i have used markdown syntax to make the code more readable which helps to fix the problem and that I have tested the --fix command mentioned above without success.
           required: true
   - type: textarea
     id: what-happened
@@ -42,7 +42,8 @@ body:
     attributes:
       label: Debug
       description: >-
-        Insert here the output of `~/klipper-backup/script.sh --debug`
+        Insert here the output of `~/klipper-backup/script.sh --debug` (DO NOT USE MARKDOWN HERE)
+      render: shell
     validations:
       required: true
   - type: textarea
