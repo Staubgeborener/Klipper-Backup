@@ -74,7 +74,7 @@ debug_backuppathafter() {
 
 # Debug output: Show current commit
 debug_currentcommit() {
-    echo -e "Running on commit: $((git -C "$parent_path" rev-parse HEAD) | cut -c1-7)"
+    echo -e "Running on commit: $(git -C "$parent_path" rev-parse HEAD | cut -c1-7)"
 }
 
 # Debug output: Show current branch
@@ -83,8 +83,8 @@ debug_currentbranch() {
 }
 
 debug_repodata() {
-  begin_debug_line
-  debug_currentbranch
-  debug_currentcommit
-  end_debug_line
+    begin_debug_line
+    debug_currentbranch
+    debug_currentcommit
+    end_debug_line
 }
