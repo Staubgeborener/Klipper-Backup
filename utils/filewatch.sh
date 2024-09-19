@@ -23,16 +23,16 @@ excludeString="${excludeString:1}"
 excludeString=$(echo "$excludeString" | sed 's/\*\./\./g')
 
 if [ -z $extraFilewatchExclude ]; then
-exclude_pattern="$excludeString"
+    exclude_pattern="$excludeString"
 else
-exclude_pattern="$excludeString|$extraFilewatchExclude"
+    exclude_pattern="$excludeString|$extraFilewatchExclude"
 fi
 
 inotifywait -mrP -e close_write -e move -e delete --exclude "$exclude_pattern" $watchlist |
-while read -r path event file; do
-    if [ -z "$file" ]; then
-        file=$(basename "$path")
-    fi
-    echo "Event Type: $event, Watched Path: $path, File Name: $file"
-    file="$file" /usr/bin/env bash -c "/usr/bin/env bash  $HOME/klipper-backup/script.sh -c \"\$file modified - \$(date +'%x - %X')\"" > /dev/null 2>&1
-done
+    while read -r path event file; do
+        if [ -z "$file" ]; then
+            file=$(basename "$path")
+        fi
+        echo "Event Type: $event, Watched Path: $path, File Name: $file"
+        file="$file" /usr/bin/env bash -c "/usr/bin/env bash  $HOME/klipper-backup/script.sh -c \"\$file modified - \$(date +'%x - %X')\"" >/dev/null 2>&1
+    done
