@@ -75,7 +75,7 @@ debug_backuppathafter() {
 # Debug output: Show current commit
 debug_currentcommit() {
     begin_debug_line
-    echo -e "Running on commit $((git -C "$parent_path" rev-parse HEAD | cut -c1-7))"
+    echo -e "Running on commit $((git -C "$parent_path" rev-parse HEAD) | cut -c1-7)"
     end_debug_line
 }
 
