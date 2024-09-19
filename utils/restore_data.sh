@@ -26,7 +26,6 @@ tempfolder="/tmp/klipper-backup-restore-tmp"
 temprestore="$tempfolder/klipper-backup-restore/restore.config"
 restore_folder="$HOME"/klipper-backup-restore
 restore_config="$restore_folder"/restore.config
-# theme_path="$HOME"/printer_data/config/.theme
 
 main() {
     clear
@@ -147,11 +146,6 @@ configure() {
         set -e
         break
     done
-
-    # tput cup $(($questionline - 1)) 0
-    # tput ed
-    # echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
-    # pos1=$(getcursor)
 }
 
 tempfolder() {
