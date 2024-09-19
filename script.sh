@@ -80,6 +80,7 @@ done
 # Debug output: Show current commit of Klipper-Backup
 if [ "$debug_output" = true ]; then
     debug_currentcommit
+    debug_currentbranch
 fi
 
 # Check if .env is v1 version
