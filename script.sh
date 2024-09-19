@@ -185,8 +185,6 @@ for path in "${backupPaths[@]}"; do
         elif [[ -d "$path" ]]; then
             # If it's a directory without '/', add '/*' at the end
             backupPaths[$i]="$path/*"
-        elif [ -n "$(find $path -regex '.*/\.git*')"]; then
-            echo ".git folder detected don't add back to backup paths"
         fi
     fi
 
@@ -196,8 +194,8 @@ for path in "${backupPaths[@]}"; do
             # Skip if file is symbolic link
             if [ -h "$file" ]; then
                 echo "Skipping symbolic link: $file"
-            elif [[ $file =~ '.theme' ]]; then
-                echo "Skipping .theme: $file"
+            elif [ -n "$(find $file -regex '.*/\.git*')" ]; then
+                echo ".git folder: $file detected, don't add back to backup"
             else
                 file=$(readlink -e "$file") # Get absolute path before copy (Allows usage of .. in filepath eg. ../../etc/fstab resovles to /etc/fstab )
                 echo "Backing up: $file"
