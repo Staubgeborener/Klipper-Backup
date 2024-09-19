@@ -31,7 +31,6 @@ while IFS= read -r line; do
     configOptions+="$line \n"
 done < <(grep -m 1 -n "# Indivdual file syntax:" $envpath | cut -d ":" -f 1 | xargs -I {} expr {} - 1 | xargs -I {} head -n {} $envpath)
 
-
 while IFS= read -r path; do
     # Check if path is a directory or not a file (needed for /* checking as /* treats the path as not a directory)
     if [[ -d "$HOME/$path" && ! -f "$HOME/$path" ]]; then
