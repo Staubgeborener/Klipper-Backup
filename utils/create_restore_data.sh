@@ -31,7 +31,7 @@ if [ -d "$theme_path" ]; then
         echo -e ".theme folder is a git repo"
         echo -e "Extracting remote url"
         remote_url=$(git remote get-url origin)
-        echo -e "theme_url=$remote_url" >>$restore_config
+        echo -e "\ntheme_url=$remote_url" >>$restore_config
         if [[ $(git status --porcelain | grep '^??') || $(git status --porcelain | grep '^A') ]]; then
             echo ".theme folder has untracked/added changes. Backing up changes to .patch file"
             git add .
