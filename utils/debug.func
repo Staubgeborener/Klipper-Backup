@@ -79,7 +79,7 @@ debug_currentcommit() {
 
 # Debug output: Show current branch
 debug_currentbranch() {
-    echo -e "Running on branch $(git -C "$parent_path" branch --show-current)"
+    echo -e "Running on branch: $(git -C "$parent_path" branch --show-current)"
 }
 
 debug_repodata() {
