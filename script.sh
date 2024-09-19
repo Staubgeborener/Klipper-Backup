@@ -186,7 +186,7 @@ for path in "${backupPaths[@]}"; do
             # If it's a directory without '/', add '/*' at the end
             backupPaths[$i]="$path/*"
         elif [ -n "$(find $path -regex '.*/\.git*')"]; then
-            echo ".git files found"
+            echo ".git folder detected don't add back to backup paths"
         fi
     fi
 
