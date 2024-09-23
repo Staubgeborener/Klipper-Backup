@@ -82,6 +82,19 @@ debug_currentbranch() {
     echo -e "Running on branch: $(git -C "$parent_path" branch --show-current)"
 }
 
+# Debug output: Systemd services
+debug_systemdservices() {
+    begin_debug_line
+    echo -e "List/Status of Klipper-Backup related systemd services:\n\n"
+    echo -e "klipper-backup-filewatch.service:\n"
+    systemctl status klipper-backup-filewatch.service | head -n 50
+    echo -e "\nklipper-backup-on-boot.service:\n"
+    systemctl status klipper-backup-on-boot.service | head -n 50
+    echo -e "\nklipper-backup.service:\n"
+    systemctl status klipper-backup.service | head -n 50
+    end_debug_line
+}
+
 debug_repodata() {
     begin_debug_line
     debug_currentbranch
