@@ -98,6 +98,7 @@ if [ "$debug_output" = true ]; then
     debug_envfile
     debug_repocheck
     debug_homedir
+    debug_systemdservices
 fi
 
 # Check if backup folder exists, create one if it does not
