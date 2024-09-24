@@ -37,12 +37,11 @@ main() {
     copyRestoreConfig
     source $temprestore
     sudo systemctl stop klipper.service
-    sleep 2 # Sleep for 2 seconds to ensure that service is stopped before continuing
+    sleep 5 # Sleep for 2 seconds to ensure that service is stopped before continuing
     restoreBackupFiles
     restoreMoonrakerDB
     copyTheme
     cleanup
-    sleep 2
     sudo systemctl restart klipper.service
     sleep 2
     sudo systemctl restart moonraker.service
