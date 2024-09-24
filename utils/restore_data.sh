@@ -180,7 +180,6 @@ copyRestoreConfig() {
 restoreBackupFiles() {
     echo -e "Restore Backup Files"
     for path in "${backupPaths[@]}"; do
-        echo $path
         for file in $path; do
             echo $file
             rsync -r "$tempfolder/$file" "$HOME/$file"
@@ -218,9 +217,9 @@ copyTheme() {
 cleanup() {
     sed -i "s/^theme_url.*//" $envpath
     sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
-    sudo systemctl restart moonraker.service klipper.service
-    # sleep 3
-    # sudo systemctl start klipper.service
+    sudo systemctl restart moonraker.service
+    sleep 3
+    sudo systemctl start klipper.service
 }
 
 main
