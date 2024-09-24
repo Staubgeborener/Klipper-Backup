@@ -200,7 +200,6 @@ restoreMoonrakerDB() {
 }
 
 copyTheme() {
-    
     if [[ $theme_url ]]; then
         echo -e "Restore Theme"
         cd "$HOME"/printer_data/config/
