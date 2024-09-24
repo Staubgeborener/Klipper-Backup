@@ -42,7 +42,9 @@ main() {
     restoreMoonrakerDB
     copyTheme
     cleanup
-    sudo systemctl restart klipper.service moonraker.service
+    sudo systemctl restart klipper.service
+    sleep 2
+    sudo systemctl restart moonraker.service
 }
 
 logo() {
