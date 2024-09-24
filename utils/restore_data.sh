@@ -37,14 +37,10 @@ main() {
     copyRestoreConfig
     source $temprestore
     sudo systemctl stop klipper.service
-    sleep 5 # Sleep for 2 seconds to ensure that service is stopped before continuing
     restoreBackupFiles
     restoreMoonrakerDB
     copyTheme
     cleanup
-    sudo systemctl restart moonraker.service
-    sleep 3
-    sudo systemctl start klipper.service
 }
 
 logo() {
@@ -222,6 +218,9 @@ copyTheme() {
 cleanup() {
     sed -i "s/^theme_url.*//" $envpath
     sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
+    sudo systemctl restart moonraker.service klipper.service
+    # sleep 3
+    # sudo systemctl start klipper.service
 }
 
 main
