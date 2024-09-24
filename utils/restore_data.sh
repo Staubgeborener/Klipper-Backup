@@ -208,6 +208,9 @@ copyTheme() {
     echo -e "Restore Theme"
     if [[ $theme_url ]]; then
         cd "$HOME"/printer_data/config/
+        if [[ -d ".theme" ]]; then
+            rm -rf .theme
+        fi
         git clone $theme_url .theme
         if [ -f "$tempfolder/klipper-backup-restore/theme_changes.patch" ]; then
             cd .theme
