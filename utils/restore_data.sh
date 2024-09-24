@@ -200,8 +200,9 @@ restoreMoonrakerDB() {
 }
 
 copyTheme() {
-    echo -e "Restore Theme"
+    
     if [[ $theme_url ]]; then
+        echo -e "Restore Theme"
         cd "$HOME"/printer_data/config/
         if [[ -d ".theme" ]]; then
             rm -rf .theme
@@ -211,6 +212,8 @@ copyTheme() {
             cd .theme
             git apply --whitespace=nowarn "$tempfolder"/klipper-backup-restore/theme_changes.patch
         fi
+    else
+        echo -e "No Theme to restore"
     fi
 }
 
