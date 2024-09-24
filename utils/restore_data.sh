@@ -36,12 +36,13 @@ main() {
     tempfolder
     copyRestoreConfig
     source $temprestore
-    sudo systemctl stop klipper.service moonraker.service
+    sudo systemctl stop klipper.service
+    sleep 2 # Sleep for 2 seconds to ensure that service is stopped before continuing
     restoreBackupFiles
     restoreMoonrakerDB
     copyTheme
     cleanup
-    sudo systemctl start klipper.service moonraker.service
+    sudo systemctl restart klipper.service moonraker.service
 }
 
 logo() {
