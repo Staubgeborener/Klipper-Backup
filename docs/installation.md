@@ -26,14 +26,15 @@ The most important part in the next window is here to give the repository a name
 ## Create GitHub token
 1. In GitHub, click on the profile in the upper right corner and click
 2. `Settings` → `Developer settings` → `Personal access tokens` → `Fine-grained tokens` → `Generate new token`
-3. ```
+3.
+   ```
    Token name: whatever your feel like
    Only select repositories: Your backup repository which you created at step "Prepare GitHub repository"
    Repository permissions:
    Administration: Read and write
    Commit statuses: Read and write
    ```
-4. Click `Generate new token`
+5. Click `Generate new token`
 
 Copy the new token, you will need this later.
 
