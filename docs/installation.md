@@ -24,11 +24,16 @@ sudo pacman -Syu && sudo pacman -S git
 The most important part in the next window is here to give the repository a name, you will need this later.
 
 ## Create GitHub token
-1. In GitHub, click on the profile in the upper right corner
-2. Click `Settings`
-3. Click `Developer settings`
-4. Click `Personal access tokens` (you can choose a classic token or a fine-grained token, doesn't really matter)
-5. `Generate new token`
+1. In GitHub, click on the profile in the upper right corner and click
+2. `Settings` → `Developer settings` → `Personal access tokens` → `Fine-grained tokens` → `Generate new token`
+3. ```
+   Token name: whatever your feel like
+   Only select repositories: Your backup repository which you created at step "Prepare GitHub repository"
+   Repository permissions:
+   Administration: Read and write
+   Commit statuses: Read and write
+   ```
+4. Click `Generate new token`
 
 Copy the new token, you will need this later.
 
