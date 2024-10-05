@@ -30,6 +30,7 @@ The most important part in the next window is here to give the repository a name
    ```
    Token name: whatever you feel like
    Only select repositories: Your backup repository which you created at step "Prepare GitHub repository"
+   
    Repository permissions:
    Contents: Read and write
    Metadata: Read and write or Read-Only
