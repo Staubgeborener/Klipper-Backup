@@ -109,3 +109,15 @@ sudo systemctl start klipper-backup-filewatch.service
         When making significant edits you may want to stop the service. You can do so in the service manager of Fluidd/Mainsail. Below is an example within Fluidd of where to find the service manager.  
         
         ![fluidd-service-manager](https://i.imgur.com/kOct70v.gif)
+
+## How do I deactivate systemd services?
+Since the above mentioned procedures [Backup on boot](#backup-on-boot) and [Backup on file changes](#backup-on-file-changes) are systemd services, deactivating them is just as simple as following:
+```
+# Deactivating Backup on boot
+sudo systemctl stop klipper-backup-on-boot.service
+sudo systemctl disable klipper-backup-on-boot.service
+
+# Deactivating Backup on file changes
+sudo systemctl stop klipper-backup-filewatch.service
+sudo systemctl disable klipper-backup-filewatch.service
+```
