@@ -50,14 +50,14 @@ If you are using a different host ex.) gitea, bitbucket, devops, etc... you can 
 | `git_host` | `gitea`, `bitbucket`, `devops`, * | `github.com`    | `git_host="bitbucket.com`  |
 |            |                                   |                 | `git_host="localhost:222"` |
 
+<b>*</b> <em>List is not complete, there are numerous other (unknown) supported hosters</em>
+
 ### 6. ssh_user
 If you want to push the backup via ssh and have assigned an individual ssh user, you can adjust it here. This is particularly relevant if you have deployed a git instance locally.
 
 | Parameter  | Possible values | Default value | Example              |
 | -----------| ----------------|---------------|--------------------- |
 | `ssh_user` | *anything*      | `git`         | `ssh_user="sshuser"` |
-
-<b>*</b> <em>List is not complete, there are numerous other (unknown) supported hosters</em>
 
 ## Paths
 Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here (**note the pattern!** which is explained inside the `.env` file) are considered in the backup.
