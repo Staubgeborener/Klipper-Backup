@@ -50,7 +50,7 @@ If you are using a different host ex.) gitea, bitbucket, devops, etc... you can 
 | `git_host` | `gitea`, `bitbucket`, `devops`, * | `github.com`    | `git_host="gitea:222"` |
 
 ### 6. ssh_user
-If you want to push the backup via ssh and have assigned an individual ssh user, you can transfer it here. This is particularly relevant if you have deployed a git instance locally.
+If you want to push the backup via ssh and have assigned an individual ssh user, you can adjust it here. This is particularly relevant if you have deployed a git instance locally.
 
 | Parameter  | Possible values | Default value | Example              |
 | -----------| ----------------|---------------|--------------------- |
