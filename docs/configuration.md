@@ -47,7 +47,7 @@ If you are using a different host ex.) gitea, bitbucket, devops, etc... you can 
 
 | Parameter  | Possible values                   | Default value   | Example                    |
 | -----------| ----------------------------------|-----------------|--------------------------- |
-| `git_host` | `gitea`, `bitbucket`, `devops`, * | `github.com`    | `git_host="bitbucket.com`  |
+| `git_host` | `gitea`, `bitbucket`, `devops`, * | `github.com`    | `git_host="bitbucket.com"`  |
 |            |                                   |                 | `git_host="localhost:222"` |
 
 <b>*</b> <em>List is not complete, there are numerous other (unknown) supported hosters</em>
