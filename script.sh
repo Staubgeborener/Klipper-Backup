@@ -25,8 +25,10 @@ backup_path="$HOME/$backup_folder"
 allow_empty_commits=${allow_empty_commits:-true}
 git_protocol=${git_protocol:-"https"}
 git_host=${git_host:-"github.com"}
+ssh_user=${ssh_user:-"git"}
+
 if [[ $git_protocol == "ssh" ]]; then
-    full_git_url="git@"$git_host":"$github_username"/"$github_repository".git"
+    full_git_url=$git_protocol"://"$ssh_user"@"$git_host":"$github_username"/"$github_repository".git"
 else
     full_git_url=$git_protocol"://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
 fi
