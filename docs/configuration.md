@@ -31,9 +31,9 @@ You can change the commit email for the commit history here, if it is left empty
 ### 3. allow_empty_commits
 You can choose whether you want to push empty commits or not (this serves to permanently check whether the service is running correctly in the background). The value can be `true` or `false` (default value if nothing is defined: `true`).
 
-| Parameter                | Possible values | Default value | Example                       |
-| ------------------------ | --------------- |---------------|------------------------------ |
-| `allow_empty_commits` | `true`, `false` | `true `       | `allow_empty_commits="false"` |
+| Parameter            | Possible values | Default value | Example                       |
+| -------------------- | --------------- |---------------|------------------------------ |
+| `allow_empty_commits`| `true`, `false` | `true `       | `allow_empty_commits="false"` |
 
 ### 4. git_protocol
 You can use the values `http`, `https` or `ssh` here (default value: `https`). This enables, for example, the local use of git if `https` is not supported.
@@ -43,11 +43,18 @@ You can use the values `http`, `https` or `ssh` here (default value: `https`). T
 | `git_protocol` | `https`, `http`, `ssh` | `https`       | `git_protocol="http"` |
 
 ### 5. git_host
-If you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host` with the corresponding entity to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits. When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}.
+If you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host` with the corresponding entity to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits. If you have deployed the git instance locally and assigned a port, you can also pass it directly here, for example `gitea:222`. When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}.
 
-| Parameter  | Possible values                   | Default value   | Example                       |
-| -----------| ----------------------------------|-----------------|------------------------------ |
-| `git_host` | `gitea`, `bitbucket`, `devops`, * | `github.com`    | `git_protocol="bitbucket.org"` |
+| Parameter  | Possible values                   | Default value   | Example                |
+| -----------| ----------------------------------|-----------------|----------------------- |
+| `git_host` | `gitea`, `bitbucket`, `devops`, * | `github.com`    | `git_host="gitea:222"` |
+
+### 6. ssh_user
+If you want to push the backup via ssh and have assigned an individual ssh user, you can transfer it here. This is particularly relevant if you have deployed a git instance locally.
+
+| Parameter  | Possible values | Default value | Example              |
+| -----------| ----------------|---------------|--------------------- |
+| `ssh_user` | *anything*      | `git`         | `ssh_user="sshuser"` |
 
 <b>*</b> <em>List is not complete, there are numerous other (unknown) supported hosters</em>
 
