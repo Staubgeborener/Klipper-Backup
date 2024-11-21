@@ -55,4 +55,10 @@ The installation script guides you through the essential steps. Have your [GitHu
 !!! info
     You can run the `install.sh` script at any time to install any features!
 
+??? example "Alternative: KIAUH"
+    [KIAUH](https://github.com/dw-0/kiauh) supports Klipper-Backup since v6.0.0-alpha.
+    Download KIAUH, execute v6 at the prompt, select `E` for Extension, select `4` for Klipper-Backup
+    
+    ![kiauh-install](./docs/images/kiauh_install.gif)
+
 [Now edit your `.env` file](configuration.md).
