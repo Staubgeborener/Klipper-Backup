@@ -34,4 +34,4 @@ verbose: True
 
 For a custom commit message using the klipper macro in console, type `update_git MESSAGE="YourMessage"`.
 ***
-![klipper-backup-macro-image](https://i.imgur.com/UglWf6t.png)
+![klipper-backup-macro-image](./images/klipper_backup_macro.png)
