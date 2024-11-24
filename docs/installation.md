@@ -19,7 +19,7 @@ sudo pacman -Syu && sudo pacman -S git
 !!!danger 
     Don't create a `README.md` at this point! You can create your own later.
 
-![create-github-repository](https://i.imgur.com/pMKBQWt.png)
+![create-new-repository](./images/create_new_repository.png)
 
 The most important part in the next window is here to give the repository a name, you will need this later.
 
