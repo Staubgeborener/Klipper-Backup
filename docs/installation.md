@@ -39,26 +39,26 @@ The most important part in the next window is here to give the repository a name
 
 Copy the new token, you will need this later.
 
-## Download Klipper-Backup
+## Installation
+**There are two variants at this point**. Whatever you choose, the installation script guides you through the essential steps. Have your [GitHub token](installation.md#create-github-token) ready for this. You can decide during the installation whether you want to install some features like [backup on boot](automation.md#backup-on-boot), [backup on file changes](automation.md#backup-on-file-changes), or even add the [moonraker entry](updating.md#moonraker-update-manager), etc (this can also be done afterwards).
+
+### 1. Native
+**Download:**
 ```shell
 curl -fsSL get.klipperbackup.xyz | bash
 ```
 
-## Run installation
-Start the installation: 
+**Install:**
 ```shell
 ~/klipper-backup/install.sh
 ```
 
-The installation script guides you through the essential steps. Have your [GitHub token](installation.md#create-github-token) ready for this. You can decide during the installation whether you want to install some features like [backup on boot](automation.md#backup-on-boot), [backup on file changes](automation.md#backup-on-file-changes), or even add the [moonraker entry](updating.md#moonraker-update-manager), etc (this can also be done afterwards).
-
 !!! info
     You can run the `install.sh` script at any time to install any features!
-
-??? example "Alternative: KIAUH"
-    [KIAUH](https://github.com/dw-0/kiauh) supports Klipper-Backup since v6.0.0-alpha.
-    Download KIAUH, execute v6 at the prompt, select `E` for Extension, select `4` for Klipper-Backup
     
-    ![kiauh-install](./images/kiauh_install.gif)
+### 2. KIAUH
+[KIAUH](https://github.com/dw-0/kiauh) supports Klipper-Backup since v6.0.0-alpha. Download KIAUH, execute v6 at the prompt, select `E` for Extension, select `4` for Klipper-Backup
+    
+![kiauh-install](./images/kiauh_install.gif)
 
 [Now edit your `.env` file](configuration.md).
