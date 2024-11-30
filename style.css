@@ -1,0 +1,26 @@
+table thead th {
+    background-color: #e0e0e0;
+    color: #333333;
+}
+
+[data-md-color-scheme="slate"] table thead th {
+    background-color: hsla(var(--md-hue),15%,30%,1);
+    color: #ffffff;
+}
+
+th, td {
+    border: 1px solid var(--md-typeset-table-color);
+    border-spacing: 0;
+    border-bottom: none;
+    border-left: none;
+    border-top: none;
+}
+
+table {
+    line-height: 1;
+}
+
+table td,
+table th {
+    padding: 9px;
+}
