@@ -13,7 +13,7 @@ managed_services: moonraker
 primary_branch: main
 ```
 
-Nor you can simply use the Moonraker API which is supplied with Mainsail or Fluidd, for example, to update the Klipper-Backup. Simple one-click update in the browser UI, as easy as it sounds.
+Now you can simply use the Moonraker API which is supplied with Mainsail or Fluidd, for example, to update the Klipper-Backup. Simple one-click update in the browser UI, as easy as it sounds.
 
 ## Update via shell/console
 If the script is executed (e.g. with `./script.sh`) and a new update is available, you will be notified with the following message
