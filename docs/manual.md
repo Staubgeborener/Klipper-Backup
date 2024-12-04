@@ -26,7 +26,7 @@ timeout: 90.0
 verbose: True
 
 [gcode_shell_command update_git_script_message]
-command: bash -c "bash $HOME/klipper-backup/script.sh -c $0"
+command: bash -c "bash $HOME/klipper-backup/script.sh -c \"$0\""
 timeout: 90.0
 verbose: True
 
