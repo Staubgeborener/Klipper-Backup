@@ -182,7 +182,7 @@ restoreBackupFiles() {
     for path in "${backupPaths[@]}"; do
         for file in $path; do
             echo $file
-            rsync -r "$tempfolder/$file" "$HOME/$file"
+            rsync -r --mkpath "$tempfolder/$file" "$HOME/$file"
         done
     done
 }
