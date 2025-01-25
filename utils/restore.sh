@@ -179,7 +179,7 @@ validate_commit() {
     fi
 }
 
-pullintotempfolder() {
+tempfolder() {
     if [ -d "$tempfolder" ]; then
         rm -rf $tempfolder
     fi
