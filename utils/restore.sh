@@ -189,7 +189,6 @@ tempfolder() {
     defaultBranch = "$repobranch"" >>.git/config #Add desired branch name to config before init
     git init
     git config pull.rebase false
-    getCommit
     git remote add origin "$full_git_url"
     git pull origin "$repobranch"
 
