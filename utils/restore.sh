@@ -139,7 +139,20 @@ configure() {
         pos2=$(getcursor)
         if ask_yn "Would you like to restore from a specific commit?" "no"; then
             commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
-            validate_commit $commit_hash
+
+            menu $pos2
+            exitstatus=$?
+            if [ $exitstatus = 0 ]; then
+                tput cup $pos2 0
+                tput ed
+                validate_commit $commit_hash
+            else
+                tput cup $(($pos2 - 1)) 0
+                tput ed
+                getCommit
+            fi
+
+            
         fi
     }
 
