@@ -183,7 +183,7 @@ validate_commit() {
             getCommit
         fi
     else
-        tput cup $(($pos - 1)) 0
+        tput cup $(($pos - 2)) 0
         tput ed
         echo "Commit $commit_hash does not exist."
         getCommit
