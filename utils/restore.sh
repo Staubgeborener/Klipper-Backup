@@ -31,7 +31,6 @@ main() {
     dependencies
     logo
     configure
-    tempfolder
     copyRestoreConfig
     source $temprestore
     sudo systemctl stop klipper.service
@@ -134,6 +133,8 @@ configure() {
             getBranch
         fi
     }
+
+    tempfolder
 
     getCommit() {
         pos1=$(getcursor)
