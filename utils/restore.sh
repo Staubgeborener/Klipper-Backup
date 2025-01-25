@@ -95,7 +95,7 @@ configure() {
         pos2=$(getcursor)
         ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
 
-        menu
+        menu $pos2
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
             tput cup $pos2 0
@@ -110,7 +110,7 @@ configure() {
         pos2=$(getcursor)
         ghrepo=$(ask_textinput "Enter your repository name")
 
-        menu
+        menu $pos2
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
             tput cup $pos2 0
@@ -125,7 +125,7 @@ configure() {
         pos2=$(getcursor)
         repobranch=$(ask_textinput "Enter your desired branch name" "main")
 
-        menu
+        menu $pos2
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
             tput cup $pos2 0
