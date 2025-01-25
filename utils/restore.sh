@@ -177,15 +177,15 @@ validate_commit() {
             echo "Commit $commit_hash contains the necessary files."
             export COMMIT_HASH=$commit_hash
         else
-            echo "Commit $commit_hash does not contain the necessary files."
-            tput cup $(($pos - 1)) 0
+            tput cup $(($pos - 2)) 0
             tput ed
+            echo "Commit $commit_hash does not contain the necessary files."
             getCommit
         fi
     else
-        echo "Commit $commit_hash does not exist."
         tput cup $(($pos - 1)) 0
         tput ed
+        echo "Commit $commit_hash does not exist."
         getCommit
     fi
 }
