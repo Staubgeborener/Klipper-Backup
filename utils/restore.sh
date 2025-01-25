@@ -136,23 +136,22 @@ configure() {
     }
 
     getCommit() {
-        pos2=$(getcursor)
+        pos1=$(getcursor)
         if ask_yn "Would you like to restore from a specific commit?" "no"; then
             commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
 
-            menu $pos2
+            menu $pos1
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                tput cup $pos2 0
+                tput cup $pos1 0
                 tput ed
-                validate_commit $commit_hash
+                validate_commit $commit_hash $pos1
             else
-                tput cup $(($pos2 - 1)) 0
+                tput cup $(($pos1 - 1)) 0
                 tput ed
                 getCommit
             fi
 
-            
         fi
     }
 
@@ -169,6 +168,7 @@ configure() {
 }
 
 validate_commit() {
+    local pos=$2
     local commit_hash=$1
     git fetch origin $repobranch
     if git cat-file -e $commit_hash^{commit}; then
@@ -178,10 +178,14 @@ validate_commit() {
             export COMMIT_HASH=$commit_hash
         else
             echo "Commit $commit_hash does not contain the necessary files."
+            tput cup $(($pos - 1)) 0
+            tput ed
             getCommit
         fi
     else
         echo "Commit $commit_hash does not exist."
+        tput cup $(($pos - 1)) 0
+        tput ed
         getCommit
     fi
 }
