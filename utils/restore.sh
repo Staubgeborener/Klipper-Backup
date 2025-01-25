@@ -134,13 +134,6 @@ configure() {
             getBranch
         fi
     }
-    getCommit() {
-        pos2=$(getcursor)
-        if ask_yn "Would you like to restore from a specific commit?"; then
-            commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
-            validate_commit $commit_hash
-        fi
-    }
 
     while true; do
         set +e
@@ -148,6 +141,20 @@ configure() {
         getUser
         getRepo
         getBranch
+        set -e
+        break
+    done
+}
+
+getCommit() {
+    pos2=$(getcursor)
+    if ask_yn "Would you like to restore from a specific commit?"; then
+        commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
+        validate_commit $commit_hash
+    fi
+
+    while true; do
+        set +e
         getCommit
         set -e
         break
@@ -161,17 +168,18 @@ validate_commit() {
         echo "Commit $commit_hash exists."
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
             echo "Commit $commit_hash contains the necessary files."
+            export COMMIT_HASH=$commit_hash
         else
             echo "Commit $commit_hash does not contain the necessary files."
-            getBranch
+            getCommit
         fi
     else
         echo "Commit $commit_hash does not exist."
-        getBranch
+        getCommit
     fi
 }
 
-tempfolder() {
+pullintotempfolder() {
     if [ -d "$tempfolder" ]; then
         rm -rf $tempfolder
     fi
@@ -187,8 +195,13 @@ tempfolder() {
     defaultBranch = "$repobranch"" >>.git/config #Add desired branch name to config before init
     git init
     git config pull.rebase false
+    getCommit
     git remote add origin "$full_git_url"
     git pull origin "$repobranch"
+
+    if [ -n "$COMMIT_HASH" ]; then
+        git checkout $COMMIT_HASH
+    fi
 }
 
 copyRestoreConfig() {
