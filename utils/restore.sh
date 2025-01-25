@@ -135,26 +135,20 @@ configure() {
         fi
     }
 
+    getCommit() {
+        pos2=$(getcursor)
+        if ask_yn "Would you like to restore from a specific commit?" "no"; then
+            commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
+            validate_commit $commit_hash
+        fi
+    }
+
     while true; do
         set +e
         getToken
         getUser
         getRepo
         getBranch
-        set -e
-        break
-    done
-}
-
-getCommit() {
-    pos2=$(getcursor)
-    if ask_yn "Would you like to restore from a specific commit?" "no"; then
-        commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
-        validate_commit $commit_hash
-    fi
-
-    while true; do
-        set +e
         getCommit
         set -e
         break
