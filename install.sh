@@ -131,7 +131,7 @@ configure() {
             pos2=$(getcursor)
             ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
 
-            menu
+            menu $pos2
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
                 sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
@@ -147,7 +147,7 @@ configure() {
             pos2=$(getcursor)
             ghrepo=$(ask_textinput "Enter your repository name")
 
-            menu
+            menu $pos2
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
                 sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
@@ -163,7 +163,7 @@ configure() {
             pos2=$(getcursor)
             repobranch=$(ask_textinput "Enter your desired branch name" "main")
 
-            menu
+            menu $pos2
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
                 sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
@@ -179,7 +179,7 @@ configure() {
             pos2=$(getcursor)
             commitname=$(ask_textinput "Enter desired commit username" "$(whoami)")
 
-            menu
+            menu $pos2
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
                 sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
@@ -195,7 +195,7 @@ configure() {
             pos2=$(getcursor)
             commitemail=$(ask_textinput "Enter desired commit email" "$(whoami)@$(hostname --short)-$unique_id")
 
-            menu
+            menu $pos2
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
                 sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"

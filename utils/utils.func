@@ -118,6 +118,7 @@ function move_cursor() {
 
 # Function to display the menu and return status codes
 function menu() {
+    local pos=$1
     choice=1
     while true; do
         # Highlight the current choice
@@ -157,7 +158,7 @@ function menu() {
             ;;
         esac
 
-        move_cursor $pos2 0
+        move_cursor $pos 0
 
     done
 }
