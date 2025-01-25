@@ -148,7 +148,7 @@ configure() {
 
 getCommit() {
     pos2=$(getcursor)
-    if ask_yn "Would you like to restore from a specific commit?" "n"; then
+    if ask_yn "Would you like to restore from a specific commit?" "no"; then
         commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
         validate_commit $commit_hash
     fi
