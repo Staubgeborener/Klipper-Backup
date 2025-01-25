@@ -1,8 +1,6 @@
 # Planning out script process:
 # Prompt for repository name, token, branch - Done!
-# ^ This does not pull from .env since a restore may also be a fresh install where .env will not have been created yet,
-#   as well it allows for future upgrades/changes like the below potential improvement, and being able to choose the backup repo you want to restore from if it defers from the one on the current install
-## Potential improvement, prompt for recent commit message which has backup date and time and ask to confirm if that is the backup they are wanting
+# Prompt if user would like to restore from specific commit, if yes, prompt for commit hash
 # pull contents of branch to a temp folder, extract paths from restore.config - Done!
 # shut down instances of klipper, moonraker etc.. - Done!
 # copy files from temp folder to the respective paths, along with repatching .theme git repo (if applicable) - Done!
@@ -136,6 +134,13 @@ configure() {
             getBranch
         fi
     }
+    getCommit() {
+        pos2=$(getcursor)
+        if ask_yn "Would you like to restore from a specific commit?"; then
+            commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
+            validate_commit $commit_hash
+        fi
+    }
 
     while true; do
         set +e
@@ -143,9 +148,27 @@ configure() {
         getUser
         getRepo
         getBranch
+        getCommit
         set -e
         break
     done
+}
+
+validate_commit() {
+    local commit_hash=$1
+    git fetch origin $repobranch
+    if git cat-file -e $commit_hash^{commit}; then
+        echo "Commit $commit_hash exists."
+        if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
+            echo "Commit $commit_hash contains the necessary files."
+        else
+            echo "Commit $commit_hash does not contain the necessary files."
+            getBranch
+        fi
+    else
+        echo "Commit $commit_hash does not exist."
+        getBranch
+    fi
 }
 
 tempfolder() {
