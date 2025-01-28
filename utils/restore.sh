@@ -201,7 +201,7 @@ tempfolder() {
     full_git_url=$git_protocol"://"$ghtoken"@"$git_host"/"$ghuser"/"$ghrepo".git"
 
     cd $tempfolder
-
+    echo "TempFolder"
     mkdir .git
     echo "[init]
     defaultBranch = "$repobranch"" >>.git/config #Add desired branch name to config before init
