@@ -31,6 +31,7 @@ main() {
     dependencies
     logo
     configure
+    tempfolder
     copyRestoreConfig
     source $temprestore
     sudo systemctl stop klipper.service
@@ -164,6 +165,7 @@ configure() {
         set -e
         break
     done
+
 }
 
 validate_commit() {
@@ -214,6 +216,7 @@ tempfolder() {
 }
 
 copyRestoreConfig() {
+
     echo -e "Restore config token, username, repo, branch name"
     sed -i "s/^github_token=.*/github_token=$ghtoken/" $temprestore
     sed -i "s/^github_username=.*/github_username=$ghuser/" $temprestore
