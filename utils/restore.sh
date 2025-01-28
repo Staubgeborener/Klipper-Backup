@@ -134,8 +134,6 @@ configure() {
         fi
     }
 
-    tempfolder
-
     getCommit() {
         pos1=$(getcursor)
         if ask_yn "Would you like to restore from a specific commit?" "no"; then
