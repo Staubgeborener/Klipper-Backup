@@ -26,7 +26,7 @@ restore_folder="$HOME"/klipper-backup-restore
 restore_config="$restore_folder"/restore.config
 
 main() {
-    # clear
+    clear
     sudo -v
     dependencies
     logo
@@ -42,7 +42,7 @@ main() {
 }
 
 logo() {
-    # clear
+    clear
     echo -e "${C}$(
         cat <<"EOF"
     __ __ ___                             ____             __                     ____            __                
@@ -72,7 +72,7 @@ configure() {
     questionline=$(getcursor)
 
     tput cup $(($questionline - 1)) 0
-    # clearUp
+    clearUp
     pos1=$(getcursor)
     pos2=$(getcursor)
 
