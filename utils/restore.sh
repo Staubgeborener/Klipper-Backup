@@ -60,8 +60,7 @@ EOF
 }
 
 check_klipper_installed() {
-  if service_exists "klipper" && service_exists "moonraker"; then
-  else
+  if ! (service_exists "klipper" && service_exists "moonraker"); then
     echo -e "${R}●${NC} Klipper and Moonraker services not found, please ensure Klipper and Moonraker are installed and running"
     exit 1
   fi
