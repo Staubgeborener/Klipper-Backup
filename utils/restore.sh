@@ -82,7 +82,7 @@ configure() {
         else
             tput cup $(($pos2 - 2)) 0
             tput ed
-            echo "${Y}●${NC} Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
+            echo -e "${Y}●${NC} Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
             getToken
         fi
     }
