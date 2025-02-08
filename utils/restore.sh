@@ -145,6 +145,8 @@ configure() {
     getCommit() {
         if ask_yn "Would you like to restore from a specific commit?" "no"; then
             commitHash
+        else
+            tempfolder
         fi
     }
 
@@ -181,6 +183,7 @@ configure() {
 validate_commit() {
     local pos=$2
     local commit_hash=$1
+    tempfolder
     git fetch origin $repobranch
     if git cat-file -e $commit_hash^{commit}; then
         echo "Commit $commit_hash exists."
@@ -219,10 +222,6 @@ tempfolder() {
     git config pull.rebase false
     git remote add origin "$full_git_url"
     git pull origin "$repobranch"
-
-    if [ -n "$COMMIT_HASH" ]; then
-        git checkout $COMMIT_HASH
-    fi
 }
 
 copyRestoreConfig() {
