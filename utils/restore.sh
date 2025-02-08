@@ -207,10 +207,10 @@ tempfolder() {
     mkdir .git
     echo "[init]
     defaultBranch = "$repobranch"" >>.git/config #Add desired branch name to config before init
-    git init
-    git config pull.rebase false
-    git remote add origin "$full_git_url"
-    git pull origin "$repobranch"
+    git init >/dev/null 2>&1
+    git config pull.rebase false >/dev/null 2>&1
+    git remote add origin "$full_git_url" >/dev/null 2>&1
+    git pull origin "$repobranch" >/dev/null 2>&1
 }
 
 copyRestoreConfig() {
