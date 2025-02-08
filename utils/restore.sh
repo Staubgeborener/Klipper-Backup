@@ -22,6 +22,7 @@ main() {
     logo
     check_klipper_installed
     configure
+    logo
     copyRestoreConfig
     source $temprestore
     sudo systemctl stop klipper.service
@@ -223,7 +224,7 @@ copyRestoreConfig() {
     sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" $temprestore
     cp $temprestore $envpath
     kill $loading_pid
-    echo -e "${CL}${G}●${NC} Creating new .env ${G}Done!${NC}\n"
+    echo -e "${CL}${G}●${NC} Creating new .env ${G}Done!${NC}"
 }
 
 restoreBackupFiles() {
@@ -231,12 +232,12 @@ restoreBackupFiles() {
     loading_pid=$!
     for path in "${backupPaths[@]}"; do
         for file in $path; do
-            echo $file
+            #echo $file
             rsync -r --mkpath "$tempfolder/$file" "$HOME/$file"
         done
     done
     kill $loading_pid
-    echo -e "${CL}${G}●${NC} Restoring files ${G}Done!${NC}\n"
+    echo -e "${CL}${G}●${NC} Restoring files ${G}Done!${NC}"
 }
 
 restoreMoonrakerDB() {
@@ -253,7 +254,7 @@ restoreMoonrakerDB() {
             -d "$data" >/dev/null 2>&1
     fi
     kill $loading_pid
-    echo -e "${CL}${G}●${NC} Restore Moonraker Database ${G}Done!${NC}\n"
+    echo -e "${CL}${G}●${NC} Restore Moonraker Database ${G}Done!${NC}"
 }
 
 copyTheme() {
@@ -274,7 +275,7 @@ copyTheme() {
         echo -e "${CL}${G}●${NC} Restoring Theme ${G}Done!${NC}\n"
     else
         kill $loading_pid
-        echo -e "${CL}${M}●${NC} No Theme to restore - Skipped ${M}Skipped!${NC}\n"
+        echo -e "${CL}${M}●${NC} No Theme to restore - Skipped ${M}Skipped!${NC}"
     fi
 }
 
