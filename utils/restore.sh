@@ -71,67 +71,67 @@ configure() {
 
     tput cup $(($questionline - 1)) 0
     clearUp
-    pos2=$(getcursor)
+    pos=$(getcursor)
 
     getToken() {
-        pos2=$(getcursor)
         ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
         result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
+        pos=$(getcursor)
         if [ "$result" != "" ]; then
             ghtoken_username=$result
         else
-            tput cup $(($pos2 - 2)) 0
+            tput cup $(($pos - 2)) 0
             tput ed
             echo -e "${Y}●${NC} Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
             getToken
         fi
     }
     getUser() {
-        pos2=$(getcursor)
+        pos=$(getcursor)
         ghuser=$(ask_textinput "${C}●${NC} Enter your github username" "$ghtoken_username")
 
-        menu $pos2
+        menu $pos
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            tput cup $pos2 0
+            tput cup $pos 0
             tput ed
         else
-            tput cup $(($pos2 - 1)) 0
+            tput cup $(($pos - 1)) 0
             tput ed
             getUser
         fi
     }
     getRepo() {
-        pos2=$(getcursor)
+        pos=$(getcursor)
         ghrepo=$(ask_textinput "${C}●${NC} Enter your repository name")
         if [ "$ghrepo" == "" ]; then
-            tput cup $(($pos2 - 2)) 0
+            tput cup $(($pos - 2)) 0
             tput ed
             echo -e "${Y}●${NC} Repository name cannot be empty!"
             getRepo
         fi
-        menu $pos2
+        menu $pos
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            tput cup $pos2 0
+            tput cup $pos 0
             tput ed
         else
-            tput cup $(($pos2 - 1)) 0
+            tput cup $(($pos - 1)) 0
             tput ed
             getRepo
         fi
     }
     getBranch() {
-        pos2=$(getcursor)
+        pos=$(getcursor)
         repobranch=$(ask_textinput "${C}●${NC} Enter your desired branch name" "main")
 
-        menu $pos2
+        menu $pos
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            tput cup $pos2 0
+            tput cup $pos 0
             tput ed
         else
-            tput cup $(($pos2 - 1)) 0
+            tput cup $(($pos - 1)) 0
             tput ed
             getBranch
         fi
@@ -146,17 +146,17 @@ configure() {
     }
 
     commitHash() {
-        pos2=$(getcursor)
+        pos=$(getcursor)
         commit_hash=$(ask_textinput "${C}●${NC} Enter the commit hash you would like to restore from")
 
-        menu $pos2
+        menu $pos
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            tput cup $pos2 0
+            tput cup $pos 0
             tput ed
-            validate_commit $commit_hash $pos2
+            validate_commit $commit_hash $pos
         else
-            tput cup $(($pos2 - 1)) 0
+            tput cup $(($pos - 1)) 0
             tput ed
             commitHash
         fi
