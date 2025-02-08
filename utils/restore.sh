@@ -83,7 +83,7 @@ configure() {
             tput cup $(($pos2 - 2)) 0
             tput ed
             pos2=$(getcursor)
-            echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
+            echo "${Y}●${NC} Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
             getToken
         fi
     }
@@ -105,7 +105,11 @@ configure() {
     getRepo() {
         pos2=$(getcursor)
         ghrepo=$(ask_textinput "${C}●${NC} Enter your repository name")
-
+        if ($ghrepo == ""); then
+            tput cup $(($pos2 - 1)) 0
+            tput ed
+            getRepo
+        fi
         menu $pos2
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
@@ -258,7 +262,7 @@ restoreMoonrakerDB() {
 }
 
 copyTheme() {
-  loading_wheel "${Y}●${NC} Restoring Theme" &
+    loading_wheel "${Y}●${NC} Restoring Theme" &
     loading_pid=$!
     if [[ $theme_url ]]; then
         #echo -e "Restore Theme"
