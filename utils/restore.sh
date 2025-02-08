@@ -105,7 +105,7 @@ configure() {
     getRepo() {
         pos2=$(getcursor)
         ghrepo=$(ask_textinput "${C}●${NC} Enter your repository name")
-        if ($ghrepo == ""); then
+        if [ "$ghrepo" == "" ]; then
             tput cup $(($pos2 - 2)) 0
             tput ed
             pos2=$(getcursor)
