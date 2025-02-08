@@ -60,10 +60,10 @@ EOF
 }
 
 check_klipper_installed() {
-  if ! (service_exists "klipper" && service_exists "moonraker"); then
-    echo -e "${R}●${NC} Klipper and Moonraker services not found, please ensure Klipper and Moonraker are installed and running!"
-    exit 1
-  fi
+    if ! (service_exists "klipper" && service_exists "moonraker"); then
+        echo -e "${R}●${NC} Klipper and Moonraker services not found, please ensure Klipper and Moonraker are installed and running!"
+        exit 1
+    fi
 }
 
 dependencies() {
@@ -144,23 +144,23 @@ configure() {
     }
 
     getCommit() {
-        pos2=$(getcursor)
         if ask_yn "Would you like to restore from a specific commit?" "no"; then
-        pos2=$(getcursor)
-            commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
+            commitHash() {
+                pos2=$(getcursor)
+                commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
 
-            menu $pos2
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                tput cup $pos2 0
-                tput ed
-                validate_commit $commit_hash $pos2
-            else
-                tput cup $(($pos2 - 1)) 0
-                tput ed
-                getCommit
-            fi
-
+                menu $pos2
+                exitstatus=$?
+                if [ $exitstatus = 0 ]; then
+                    tput cup $pos2 0
+                    tput ed
+                    validate_commit $commit_hash $pos2
+                else
+                    tput cup $(($pos2 - 1)) 0
+                    tput ed
+                    commitHash
+                fi
+            }
         fi
     }
 
