@@ -74,7 +74,7 @@ configure() {
     pos2=$(getcursor)
 
     getToken() {
-        ghtoken=$(ask_token "Enter your GitHub token associated with the backup you want to restore")
+        ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
         result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
         if [ "$result" != "" ]; then
             ghtoken_username=$result
@@ -88,7 +88,7 @@ configure() {
     }
     getUser() {
         pos2=$(getcursor)
-        ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
+        ghuser=$(ask_textinput "${C}●${NC} Enter your github username" "$ghtoken_username")
 
         menu $pos2
         exitstatus=$?
@@ -103,7 +103,7 @@ configure() {
     }
     getRepo() {
         pos2=$(getcursor)
-        ghrepo=$(ask_textinput "Enter your repository name")
+        ghrepo=$(ask_textinput "${C}●${NC} Enter your repository name")
 
         menu $pos2
         exitstatus=$?
@@ -118,7 +118,7 @@ configure() {
     }
     getBranch() {
         pos2=$(getcursor)
-        repobranch=$(ask_textinput "Enter your desired branch name" "main")
+        repobranch=$(ask_textinput "${C}●${NC} Enter your desired branch name" "main")
 
         menu $pos2
         exitstatus=$?
@@ -133,7 +133,7 @@ configure() {
     }
 
     getCommit() {
-        if ask_yn "Would you like to restore from a specific commit?" "no"; then
+        if ask_yn "${C}●${NC} Would you like to restore from a specific commit?" "no"; then
             commitHash
         else
             tempfolder
@@ -142,7 +142,7 @@ configure() {
 
     commitHash() {
         pos2=$(getcursor)
-        commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
+        commit_hash=$(ask_textinput "${C}●${NC} Enter the commit hash you would like to restore from")
 
         menu $pos2
         exitstatus=$?
@@ -176,20 +176,20 @@ validate_commit() {
     tempfolder
     git fetch origin $repobranch
     if git cat-file -e $commit_hash^{commit}; then
-        echo "Commit $commit_hash exists."
+        #echo "Commit $commit_hash exists."
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
-            echo "Commit $commit_hash contains the necessary files."
+            #echo "Commit $commit_hash contains the necessary files."
             git -c advice.detachedHead=false checkout $commit_hash
         else
             tput cup $(($pos - 2)) 0
             tput ed
-            echo "Commit $commit_hash does not contain the necessary files."
+            echo "${R}●${NC} Commit ${R}$commit_hash${NC} does not contain the necessary files."
             commitHash
         fi
     else
         tput cup $(($pos - 2)) 0
         tput ed
-        echo "Commit $commit_hash does not exist."
+        echo "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist."
         commitHash
     fi
 }
