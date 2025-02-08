@@ -75,8 +75,8 @@ configure() {
 
     getToken() {
         while true; do
-            ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
             pos=$(getcursor)
+            ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
             result=$(check_ghToken "$ghtoken") # Check GitHub Token using API
 
             if [ -n "$result" ]; then
