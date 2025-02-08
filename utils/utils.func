@@ -37,13 +37,14 @@ line() {
 
 getcursor() {
     local pos
-    # Send the cursor query to the terminal (make sure to write it to /dev/tty)
+    # Send the escape sequence to the terminal device.
     printf '\e[6n' > /dev/tty
-    # Read the response (which is of the form ESC [ row ; col R)
-    IFS='[;' read -d R -a pos -rs
-    # pos[1] is the row number
+    # Read the response (expected to be ESC [ row ; col R) from /dev/tty.
+    IFS='[;' read -d R -rs -a pos < /dev/tty
     echo "${pos[1]}"
 }
+
+
 
 run_command() {
     command=$1
