@@ -189,18 +189,18 @@ validate_commit() {
         echo "Commit $commit_hash exists."
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
             echo "Commit $commit_hash contains the necessary files."
-            export COMMIT_HASH=$commit_hash
+            git checkout $commit_hash
         else
             tput cup $(($pos - 2)) 0
             tput ed
             echo "Commit $commit_hash does not contain the necessary files."
-            getCommit
+            commitHash
         fi
     else
         tput cup $(($pos - 2)) 0
         tput ed
         echo "Commit $commit_hash does not exist."
-        getCommit
+        commitHash
     fi
 }
 
@@ -214,7 +214,6 @@ tempfolder() {
     full_git_url=$git_protocol"://"$ghtoken"@"$git_host"/"$ghuser"/"$ghrepo".git"
 
     cd $tempfolder
-    echo "TempFolder"
     mkdir .git
     echo "[init]
     defaultBranch = "$repobranch"" >>.git/config #Add desired branch name to config before init
@@ -225,7 +224,6 @@ tempfolder() {
 }
 
 copyRestoreConfig() {
-
     echo -e "Restore config token, username, repo, branch name"
     sed -i "s/^github_token=.*/github_token=$ghtoken/" $temprestore
     sed -i "s/^github_username=.*/github_username=$ghuser/" $temprestore
