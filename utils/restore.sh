@@ -71,10 +71,10 @@ configure() {
 
     tput cup $(($questionline - 1)) 0
     clearUp
-    pos1=$(getcursor)
     pos2=$(getcursor)
 
     getToken() {
+        pos2=$(getcursor)
         ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
         result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
         if [ "$result" != "" ]; then
@@ -82,7 +82,6 @@ configure() {
         else
             tput cup $(($pos2 - 2)) 0
             tput ed
-            pos2=$(getcursor)
             echo "${Y}●${NC} Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
             getToken
         fi
@@ -106,7 +105,6 @@ configure() {
         pos2=$(getcursor)
         ghrepo=$(ask_textinput "${C}●${NC} Enter your repository name")
         if [ "$ghrepo" == "" ]; then
-            pos2=$(getcursor)
             tput cup $(($pos2 - 2)) 0
             tput ed
             echo -e "${Y}●${NC} Repository name cannot be empty!"
