@@ -145,22 +145,24 @@ configure() {
 
     getCommit() {
         if ask_yn "Would you like to restore from a specific commit?" "no"; then
-            commitHash() {
-                pos2=$(getcursor)
-                commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
+            commitHash
+        fi
+    }
 
-                menu $pos2
-                exitstatus=$?
-                if [ $exitstatus = 0 ]; then
-                    tput cup $pos2 0
-                    tput ed
-                    validate_commit $commit_hash $pos2
-                else
-                    tput cup $(($pos2 - 1)) 0
-                    tput ed
-                    commitHash
-                fi
-            }
+    commitHash() {
+        pos2=$(getcursor)
+        commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
+
+        menu $pos2
+        exitstatus=$?
+        if [ $exitstatus = 0 ]; then
+            tput cup $pos2 0
+            tput ed
+            validate_commit $commit_hash $pos2
+        else
+            tput cup $(($pos2 - 1)) 0
+            tput ed
+            commitHash
         fi
     }
 
