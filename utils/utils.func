@@ -37,7 +37,11 @@ line() {
 
 getcursor() {
     local pos
-    IFS='[;' read -p $'\e[6n' -d R -a pos -rs || echo "failed with error: $? ; ${pos[*]}"
+    # Send the cursor query to the terminal (make sure to write it to /dev/tty)
+    printf '\e[6n' > /dev/tty
+    # Read the response (which is of the form ESC [ row ; col R)
+    IFS='[;' read -d R -a pos -rs
+    # pos[1] is the row number
     echo "${pos[1]}"
 }
 
