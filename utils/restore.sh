@@ -76,7 +76,6 @@ configure() {
     getToken() {
         while true; do
             pos=$(getcursor)
-            echo "Cursor is at line: $(getcursor)"
             ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
             result=$(check_ghToken "$ghtoken") # Check GitHub Token using API
 
