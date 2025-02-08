@@ -5,6 +5,7 @@ M=$'\e[1;95m'  # Magenta ${M}
 C=$'\e[96m'    # Cyan ${C}
 NC=$'\e[0m'    # No Color ${NC}
 CL=$'\r\033[K' # Clear Line
+
 # Create unique id for git email
 getUniqueid() {
     echo $(date +%s%N | md5sum | head -c 7)

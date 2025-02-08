@@ -1,13 +1,3 @@
-# Planning out script process:
-# Prompt for repository name, token, branch - Done!
-# Prompt if user would like to restore from specific commit, if yes, prompt for commit hash - Done!
-# pull contents of branch to a temp folder, extract paths from restore.config - Now not done as need to modify for above commit hash
-# shut down instances of klipper, moonraker etc.. - Done!
-# copy files from temp folder to the respective paths, along with repatching .theme git repo (if applicable) - Done!
-# cleanup including using sed to remove theme_url from the generated .env - Done!
-
-##########################################################################################
-
 #!/usr/bin/env bash
 
 trap 'stty echo; exit' SIGINT
