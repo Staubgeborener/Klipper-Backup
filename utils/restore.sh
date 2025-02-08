@@ -74,22 +74,19 @@ configure() {
     pos=$(getcursor)
 
     getToken() {
-        while true; do
-            pos=$(getcursor)
-            ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
-            result=$(check_ghToken "$ghtoken") # Check GitHub Token using API
+        pos=$(getcursor)
+        ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
+        result=$(check_ghToken "$ghtoken") # Check GitHub Token using API
 
-            if [ -n "$result" ]; then
-                tput cup $pos 0
-                tput ed
-                ghtoken_username=$result
-                break # Exit the loop if the token is valid
-            else
-                tput cup $(($pos - 2)) 0
-                tput ed
-                echo -e "${CL}${Y}●${NC} Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!"
-            fi
-        done
+        if [ -n "$result" ]; then
+            tput cup $pos 0
+            tput ed
+            ghtoken_username=$result
+        else
+            tput cup $(($pos - 2)) 0
+            tput ed
+            echo -e "${CL}${Y}●${NC} Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!"
+        fi
     }
     getUser() {
         pos=$(getcursor)
@@ -161,10 +158,11 @@ configure() {
             tput ed
             validate_commit $commit_hash $pos
         else
-            tput cup $(($pos - 1)) 0
+            tput cup $(($pos - 2)) 0
             tput ed
             commitHash
         fi
+
     }
 
     while true; do
