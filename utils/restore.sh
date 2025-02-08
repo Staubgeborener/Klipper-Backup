@@ -214,26 +214,35 @@ tempfolder() {
 }
 
 copyRestoreConfig() {
-    echo -e "Restore config token, username, repo, branch name"
+    #echo -e "Restore config token, username, repo, branch name"
+    loading_wheel "${Y}●${NC} Creating new .env" &
+    loading_pid=$!
     sed -i "s/^github_token=.*/github_token=$ghtoken/" $temprestore
     sed -i "s/^github_username=.*/github_username=$ghuser/" $temprestore
     sed -i "s/^github_repository=.*/github_repository=$ghrepo/" $temprestore
     sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" $temprestore
     cp $temprestore $envpath
+    kill $loading_pid
+    echo -e "${CL}${G}●${NC} Creating new .env ${G}Done!${NC}\n"
 }
 
 restoreBackupFiles() {
-    echo -e "Restore Backup Files"
+    loading_wheel "${Y}●${NC} Restoring files" &
+    loading_pid=$!
     for path in "${backupPaths[@]}"; do
         for file in $path; do
             echo $file
             rsync -r --mkpath "$tempfolder/$file" "$HOME/$file"
         done
     done
+    kill $loading_pid
+    echo -e "${CL}${G}●${NC} Restoring files ${G}Done!${NC}\n"
 }
 
 restoreMoonrakerDB() {
-    echo -e "Restore Moonraker Database"
+    #echo -e "Restore Moonraker Database"
+    loading_wheel "${Y}●${NC} Restore Moonraker Database" &
+    loading_pid=$!
     if [ -f "$tempfolder/moonraker-db-klipperbackup.db" ]; then
         mkdir -p "$HOME/printer_data/backup/database"
         cp $tempfolder/moonraker-db-klipperbackup.db "$HOME/printer_data/backup/database/moonraker-db-klipperbackup.db"
@@ -243,11 +252,15 @@ restoreMoonrakerDB() {
             -H "Content-Type: application/json" \
             -d "$data" >/dev/null 2>&1
     fi
+    kill $loading_pid
+    echo -e "${CL}${G}●${NC} Restore Moonraker Database ${G}Done!${NC}\n"
 }
 
 copyTheme() {
+  loading_wheel "${Y}●${NC} Restoring Theme" &
+    loading_pid=$!
     if [[ $theme_url ]]; then
-        echo -e "Restore Theme"
+        #echo -e "Restore Theme"
         cd "$HOME"/printer_data/config/
         if [[ -d ".theme" ]]; then
             rm -rf .theme
@@ -257,8 +270,11 @@ copyTheme() {
             cd .theme
             git apply --whitespace=nowarn "$tempfolder"/klipper-backup-restore/theme_changes.patch
         fi
+        kill $loading_pid
+        echo -e "${CL}${G}●${NC} Restoring Theme ${G}Done!${NC}\n"
     else
-        echo -e "No Theme to restore"
+        kill $loading_pid
+        echo -e "${CL}${M}●${NC} No Theme to restore - Skipped ${M}Skipped!${NC}\n"
     fi
 }
 
