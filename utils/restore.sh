@@ -83,9 +83,7 @@ configure() {
                 ghtoken_username=$result
                 break # Exit the loop if the token is valid
             else
-                echo "Cursor is at line: $(getcursor)"
                 tput cup $pos 0
-                #tput ed
                 echo -e "${CL}${Y}●${NC} Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!"
             fi
         done
