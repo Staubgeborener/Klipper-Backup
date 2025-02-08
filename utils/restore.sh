@@ -189,7 +189,7 @@ validate_commit() {
         echo "Commit $commit_hash exists."
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
             echo "Commit $commit_hash contains the necessary files."
-            git checkout $commit_hash
+            git -c advice.detachedHead=false checkout $commit_hash
         else
             tput cup $(($pos - 2)) 0
             tput ed
