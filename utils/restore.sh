@@ -144,18 +144,19 @@ configure() {
     }
 
     getCommit() {
-        pos1=$(getcursor)
+        pos2=$(getcursor)
         if ask_yn "Would you like to restore from a specific commit?" "no"; then
+        pos2=$(getcursor)
             commit_hash=$(ask_textinput "Enter the commit hash you would like to restore from")
 
-            menu $pos1
+            menu $pos2
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                tput cup $pos1 0
+                tput cup $pos2 0
                 tput ed
-                validate_commit $commit_hash $pos1
+                validate_commit $commit_hash $pos2
             else
-                tput cup $(($pos1 - 1)) 0
+                tput cup $(($pos2 - 1)) 0
                 tput ed
                 getCommit
             fi
