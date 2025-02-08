@@ -106,7 +106,7 @@ configure() {
         pos2=$(getcursor)
         ghrepo=$(ask_textinput "${C}●${NC} Enter your repository name")
         if [ "$ghrepo" == "" ]; then
-            tput cup $(($pos2 - 1)) 0
+            tput cup $(($pos2 - 2)) 0
             tput ed
             pos2=$(getcursor)
             echo "${Y}●${NC} Repository name cannot be empty!"
