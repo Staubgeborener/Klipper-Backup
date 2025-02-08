@@ -32,7 +32,6 @@ main() {
     logo
     check_klipper_installed
     configure
-    tempfolder
     copyRestoreConfig
     source $temprestore
     sudo systemctl stop klipper.service
@@ -71,7 +70,7 @@ dependencies() {
     loading_pid=$!
     check_dependencies "jq" "curl" "rsync"
     kill $loading_pid
-    echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
+    echo -e "${CL}${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
     sleep 1
 }
 

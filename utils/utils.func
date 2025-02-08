@@ -1,10 +1,10 @@
-R=$'\e[1;91m' # Red ${R}
-G=$'\e[1;92m' # Green ${G}
-Y=$'\e[1;93m' # Yellow ${Y}
-M=$'\e[1;95m' # Magenta ${M}
-C=$'\e[96m'   # Cyan ${C}
-NC=$'\e[0m'   # No Color ${NC}
-
+R=$'\e[1;91m'  # Red ${R}
+G=$'\e[1;92m'  # Green ${G}
+Y=$'\e[1;93m'  # Yellow ${Y}
+M=$'\e[1;95m'  # Magenta ${M}
+C=$'\e[96m'    # Cyan ${C}
+NC=$'\e[0m'    # No Color ${NC}
+CL=$'\r\033[K' # Clear Line
 # Create unique id for git email
 getUniqueid() {
     echo $(date +%s%N | md5sum | head -c 7)
@@ -42,12 +42,12 @@ run_command() {
     loading_pid=$!
     sudo $command >/dev/null 2>&1
     kill $loading_pid
-    echo -e "\r\033[K   ${G}●${NC} Running $command ${G}Done!${NC}"
+    echo -e "${CL}   ${G}●${NC} Running $command ${G}Done!${NC}"
 }
 
 # Move cursor up one line and clear the line
 clearUp() {
-    echo -e "\r\033[K\033[1A"
+    echo -e "${CL}\033[1A"
 }
 
 logo() {
@@ -70,13 +70,13 @@ EOF
 ask_yn() {
     local default_answer=${2:-yes}
     while true; do
-      read -rp "$1 (yes/no, default is $default_answer): " answer
-      answer=${answer:-$default_answer}
-      case $answer in
-      [Yy]* | [Yy][Ee][Ss]*) return 0 ;;
-      [Nn]* | [Nn][Oo]*) return 1 ;;
-      *) ;;
-      esac
+        read -rp "$1 (yes/no, default is $default_answer): " answer
+        answer=${answer:-$default_answer}
+        case $answer in
+        [Yy]* | [Yy][Ee][Ss]*) return 0 ;;
+        [Nn]* | [Nn][Oo]*) return 1 ;;
+        *) ;;
+        esac
     done
 }
 
@@ -272,10 +272,10 @@ fix() {
     loading_wheel "${Y}●{NC} Delete config_backup folder" &
     loading_pid=$!
     if [ ! -d "$HOME/$backup_folder" ]; then
-        echo -e "\r\033[K${R}config_backup folder does exist${NC}\n"
+        echo -e "${CL}${R}config_backup folder does exist${NC}\n"
     else
         rm -rf $HOME/$backup_folder
-        echo -e "\r\033[K${G}●${NC} Delete config_backup folder ${G}Done!${NC}\n"
+        echo -e "${CL}${G}●${NC} Delete config_backup folder ${G}Done!${NC}\n"
     fi
     kill $loading_pid
     exit

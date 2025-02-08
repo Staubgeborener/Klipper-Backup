@@ -18,7 +18,7 @@ loading_wheel "${Y}●${NC} Checking for installed dependencies" &
 loading_pid=$!
 check_dependencies "jq" "curl" "rsync"
 kill $loading_pid
-echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
+echo -e "${CL}${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
 
 # Do not touch these variables, the .env file and the documentation exist for this purpose
 backup_folder="config_backup"
@@ -55,7 +55,7 @@ while [[ $# -gt 0 ]]; do
         ;;
     -c | --commit_message)
         if [[ -z "$2" || "$2" =~ ^- ]]; then
-            echo -e "\r\033[K${R}Error: commit message expected after $1${NC}" >&2
+            echo -e "${CL}${R}Error: commit message expected after $1${NC}" >&2
             exit 1
         else
             commit_message="$2"
@@ -68,7 +68,7 @@ while [[ $# -gt 0 ]]; do
         shift
         ;;
     *)
-        echo -e "\r\033[K${R}Unknown option: $1${NC}"
+        echo -e "${CL}${R}Unknown option: $1${NC}"
         show_help
         exit 1
         ;;

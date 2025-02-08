@@ -36,7 +36,7 @@ dependencies() {
     loading_pid=$!
     check_dependencies "jq" "curl" "rsync"
     kill $loading_pid
-    echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
+    echo -e "${CL}${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
     sleep 1
 }
 
@@ -54,7 +54,7 @@ install_repo() {
             cp ./klipper-backup/.env.example ./klipper-backup/.env
             sleep .5
             kill $loading_pid
-            echo -e "\r\033[K${G}●${NC} Installing Klipper-Backup ${G}Done!${NC}\n"
+            echo -e "${CL}${G}●${NC} Installing Klipper-Backup ${G}Done!${NC}\n"
         else
             check_updates
         fi
@@ -80,12 +80,12 @@ check_updates() {
             loading_pid=$!
             if git pull >/dev/null 2>&1; then
                 kill $loading_pid
-                echo -e "\r\033[K${G}●${NC} Updating Klipper-Backup ${G}Done!${NC}\n\n Restarting installation script"
+                echo -e "${CL}${G}●${NC} Updating Klipper-Backup ${G}Done!${NC}\n\n Restarting installation script"
                 sleep 1
                 exec $parent_path/install.sh
             else
                 kill $loading_pid
-                echo -e "\r\033[K${R}●${NC} Error Updating Klipper-Backup: Repository is dirty running git reset --hard then restarting script"
+                echo -e "${CL}${R}●${NC} Error Updating Klipper-Backup: Repository is dirty running git reset --hard then restarting script"
                 sleep 1
                 git reset --hard 2>/dev/null
                 exec $parent_path/install.sh
@@ -222,12 +222,12 @@ configure() {
 
         tput cup $(($questionline - 1)) 0
         tput ed
-        echo -e "\r\033[K${G}●${NC} Configuration ${G}Done!${NC}\n"
+        echo -e "${CL}${G}●${NC} Configuration ${G}Done!${NC}\n"
         pos1=$(getcursor)
     else
         tput cup $(($questionline - 1)) 0
         clearUp
-        echo -e "\r\033[K${M}●${NC} Configuration ${M}Skipped!${NC}\n"
+        echo -e "${CL}${M}●${NC} Configuration ${M}Skipped!${NC}\n"
         pos1=$(getcursor)
     fi
 }
@@ -252,16 +252,16 @@ patch_klipper-backup_update_manager() {
                 fi
 
                 kill $loading_pid
-                echo -e "\r\033[K${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
+                echo -e "${CL}${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
             else
                 tput cup $(($questionline - 2)) 0
                 tput ed
-                echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
+                echo -e "${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
             fi
         else
             tput cup $(($questionline - 2)) 0
             tput ed
-            echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
+            echo -e "${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
         fi
     else
         tput cup $(($questionline - 2)) 0
@@ -278,11 +278,11 @@ install_filewatch_service() {
     loading_wheel "${Y}●${NC} Checking for filewatch service" &
     loading_pid=$!
     if service_exists klipper-backup-filewatch; then
-        echo -e "\r\033[K"
+        echo -e "${CL}"
         kill $loading_pid
         message="Would you like to reinstall the filewatch backup service? (this will trigger a backup after changes are detected)"
     else
-        echo -e "\r\033[K"
+        echo -e "${CL}"
         kill $loading_pid
         message="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
     fi
@@ -300,7 +300,7 @@ install_filewatch_service() {
             loading_pid=$!
             git clone https://github.com/inotify-tools/inotify-tools.git 2>/dev/null
             kill $loading_pid
-            echo -e "\r\033[K   ${G}●${NC} Clone inotify-tools repo ${G}Done!${NC}"
+            echo -e "${CL}   ${G}●${NC} Clone inotify-tools repo ${G}Done!${NC}"
             sudo apt-get install autoconf autotools-dev automake libtool -y >/dev/null 2>&1
 
             cd inotify-tools/
@@ -315,7 +315,7 @@ install_filewatch_service() {
             pos2=$(getcursor)
             tput cup $(($pos1 - 1)) 0
             tput ed
-            echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
+            echo -e "${CL}${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
             set -e
         fi
         loading_wheel "${Y}●${NC} Installing filewatch service" &
@@ -344,7 +344,7 @@ install_filewatch_service() {
 
                 # Check if the timeout has been reached
                 if [ $elapsed_time -gt $timeout_duration ]; then
-                    echo -e "\r\033[K${R}●${NC} Installing filewatch service took to long to complete!\n"
+                    echo -e "${CL}${R}●${NC} Installing filewatch service took to long to complete!\n"
                     kill $!
                     kill $loading_pid
                     exit 1
@@ -353,12 +353,12 @@ install_filewatch_service() {
                 sleep 1
             done
         ); then
-            echo -e "\r\033[K${G}●${NC} Installing filewatch service ${G}Done!${NC}\n"
+            echo -e "${CL}${G}●${NC} Installing filewatch service ${G}Done!${NC}\n"
         fi
     else
         tput cup $(($questionline - 2)) 0
         tput ed
-        echo -e "\r\033[K${M}●${NC} Installing filewatch service ${M}Skipped!${NC}\n"
+        echo -e "${CL}${M}●${NC} Installing filewatch service ${M}Skipped!${NC}\n"
 
     fi
 }
@@ -371,11 +371,11 @@ install_backup_service() {
     loading_wheel "${Y}●${NC} Checking for on-boot service" &
     loading_pid=$!
     if service_exists klipper-backup-on-boot; then
-        echo -e "\r\033[K"
+        echo -e "${CL}"
         kill $loading_pid
         message="Would you like to reinstall the on-boot backup service?"
     else
-        echo -e "\r\033[K"
+        echo -e "${CL}"
         kill $loading_pid
         message="Would you like to install the on-boot backup service?"
     fi
@@ -408,7 +408,7 @@ install_backup_service() {
 
                 # Check if the timeout has been reached
                 if [ $elapsed_time -gt $timeout_duration ]; then
-                    echo -e "\r\033[K${R}●${NC} Installing on-boot service took to long to complete!\n"
+                    echo -e "${CL}${R}●${NC} Installing on-boot service took to long to complete!\n"
                     kill $!
                     kill $loading_pid
                     exit 1
@@ -417,12 +417,12 @@ install_backup_service() {
                 sleep 1
             done
         ); then
-            echo -e "\r\033[K${G}●${NC} Installing on-boot service ${G}Done!${NC}\n"
+            echo -e "${CL}${G}●${NC} Installing on-boot service ${G}Done!${NC}\n"
         fi
     else
         tput cup $(($questionline - 2)) 0
         tput ed
-        echo -e "\r\033[K${M}●${NC} Installing on-boot service ${M}Skipped!${NC}\n"
+        echo -e "${CL}${M}●${NC} Installing on-boot service ${M}Skipped!${NC}\n"
     fi
 }
 
@@ -441,16 +441,16 @@ install_cron() {
             ) | crontab -
             sleep .5
             kill $loading_pid
-            echo -e "\r\033[K${G}●${NC} Installing cron task ${G}Done!${NC}\n"
+            echo -e "${CL}${G}●${NC} Installing cron task ${G}Done!${NC}\n"
         else
             tput cup $(($questionline - 2)) 0
             tput ed
-            echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
+            echo -e "${CL}${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
         fi
     else
         tput cup $(($questionline - 2)) 0
         tput ed
-        echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
+        echo -e "${CL}${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
     fi
 }
 
