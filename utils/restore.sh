@@ -85,6 +85,7 @@ configure() {
             else
                 tput cup $(($pos - 2)) 0
                 tput ed
+                echo "Cursor is at line: $(getcursor)"
                 echo -e "${Y}●${NC} Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!"
             fi
         done
