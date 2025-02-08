@@ -22,7 +22,7 @@ main() {
     logo
     check_klipper_installed
     configure
-    logo
+    line
     copyRestoreConfig
     source $temprestore
     sudo systemctl stop klipper.service
@@ -275,7 +275,7 @@ copyTheme() {
         echo -e "${CL}${G}●${NC} Restoring Theme ${G}Done!${NC}\n"
     else
         kill $loading_pid
-        echo -e "${CL}${M}●${NC} No Theme to restore - Skipped ${M}Skipped!${NC}"
+        echo -e "${CL}${M}●${NC} No Theme to restore - Skipped ${M}Skipped!${NC}\n"
     fi
 }
 

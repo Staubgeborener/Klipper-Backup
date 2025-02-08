@@ -31,6 +31,10 @@ loading_wheel() {
     done
 }
 
+line() {
+  echo "==============================================================================================================="
+}
+
 getcursor() {
     local pos
     IFS='[;' read -p $'\e[6n' -d R -a pos -rs || echo "failed with error: $? ; ${pos[*]}"
