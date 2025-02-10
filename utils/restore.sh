@@ -89,6 +89,7 @@ configure() {
             getToken
         fi
     }
+    
     getUser() {
         pos=$(getcursor)
         ghuser=$(ask_textinput "${C}●${NC} Enter your github username" "$ghtoken_username")
@@ -104,6 +105,7 @@ configure() {
             getUser
         fi
     }
+    
     getRepo() {
         pos=$(getcursor)
         ghrepo=$(ask_textinput "${C}●${NC} Enter your repository name")
@@ -124,6 +126,7 @@ configure() {
             getRepo
         fi
     }
+    
     getBranch() {
         pos=$(getcursor)
         repobranch=$(ask_textinput "${C}●${NC} Enter your desired branch name" "main")
@@ -163,7 +166,6 @@ configure() {
             tput ed
             commitHash
         fi
-
     }
 
     while true; do
@@ -176,7 +178,6 @@ configure() {
         set -e
         break
     done
-
 }
 
 validate_commit() {
