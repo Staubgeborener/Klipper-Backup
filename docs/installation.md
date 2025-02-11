@@ -62,5 +62,4 @@ curl -fsSL get.klipperbackup.xyz | bash
     
 ![kiauh-install](./images/kiauh_install.gif)
 
-### Jump to configuration
-[Now edit your `.env` file](configuration.md).
+[Now configure your `.env` file](configuration.md).
