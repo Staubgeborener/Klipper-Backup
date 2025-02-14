@@ -98,5 +98,7 @@ nav:
   - Configuration: configuration.md
   - Updates: updating.md
   - Automated Backups: automation.md
+  - FAQ: faq.md
+
   - Manual Backups: manual.md
   - Alternative Methods: alternative-methods.md
