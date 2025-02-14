@@ -22,12 +22,8 @@ curl -fsSL get.klipperbackup.xyz | bash
 - Switch between repositories and branches at any time
 - Fully customizable with [parameters](configuration.md)
 
-## Troubleshooting
-We have found that most errors can be traced back to incorrect use of git and that deleting a special Klipper-Backup related folder (config_backup) can solve the problem. So if you encounter strange error messages, please run the script with the `--fix` parameter:
-```shell
-~/klipper-backup/script.sh --fix
-```
-If there are still problems, simply open an [issue](https://github.com/Staubgeborener/klipper-backup/issues).
+## FAQ
+Before you open an issue on GitHub or ask somewhere: Please take a quick look at the [FAQ](faq.md). For example, there is a [troubleshooting guide](faq.md/#fix-git-errors) there.
 
 ## Media
 ![type:video](https://www.youtube.com/embed/47qV9BE2n_Y)
