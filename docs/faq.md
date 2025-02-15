@@ -1,5 +1,12 @@
 The FAQ is based on tips and tricks as well as on the most frequently raised issues and questions.
 
+## Fix git errors
+We have found that most errors can be traced back to incorrect use of git and that deleting a special Klipper-Backup related folder (config_backup) can solve the problem. So if you encounter strange error messages, please run the script with the `--fix` parameter:
+
+```shell
+~/klipper-backup/script.sh --fix
+```
+
 ## Klipper-Backup with multiple instances
 If you use multiple Klipper instances on one device, you can also easily implement this with Klipper-Backup. Let's say you have set up several instances with [KIAUH](https://github.com/dw-0/kiauh):
 
@@ -27,14 +34,6 @@ fatal: unable to access 'https://github.com/Staubgeborener/klipper-backup.git/':
 ```
 
 Then there are only two reasons: GitHub itself has [issues](https://www.githubstatus.com/), or the reason lies in your internal network. Either way, this has nothing to do with this project.
-
-## Troubleshooting
-### Fix git errors
-We have found that most errors can be traced back to incorrect use of git and that deleting a special Klipper-Backup related folder (config_backup) can solve the problem. So if you encounter strange error messages, please run the script with the `--fix` parameter:
-
-```shell
-~/klipper-backup/script.sh --fix
-```
 
 ## Still problems?
 If there are still problems, simply open an [issue](https://github.com/Staubgeborener/klipper-backup/issues). Please be sure to use the `--debug` parameter, as it is written there, so that we can understand the error and help you. Also, use [markdown](https://docs.github.com/de/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) syntax to post readable code.
