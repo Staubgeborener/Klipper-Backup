@@ -5,7 +5,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        This issue form is for reporting bugs only! Please run this command first to see if your problem has been solved, otherwise open the issue: `~/klipper-backup/script.sh --fix`
+        This issue form is for reporting bugs only! Please run this command first to see if your problem has been solved, otherwise open the issue:
+        `~/klipper-backup/script.sh --fix`
         If you have a feature request, please use [feature_request](/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml&title=%5BFeature+request%5D%3A+). Please use [markdown syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#quoting-code).
   - type: checkboxes
     attributes:
