@@ -1,3 +1,5 @@
+The FAQ is based on tips and tricks as well as on the most frequently raised issues and questions.
+
 ## Klipper-Backup with multiple instances
 If you use multiple Klipper instances on one device, you can also easily implement this with Klipper-Backup. Let's say you have set up several instances with [KIAUH](https://github.com/dw-0/kiauh):
 
