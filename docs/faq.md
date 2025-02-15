@@ -37,7 +37,7 @@ The tl;dr version:
 For example, you could include the original files in the backup instead of the symbolic links. Navigate to the symbolic links and check with `ls -la` where they point to, the output could look like this, for example:
 `mmu_leds.cfg -> /home/user/Happy-Hare/config/base/mmu_leds.cfg`
 
-`mmu_leds.cfg` is the symbolic link which points to the original file `/home/user/Happy-Hare/config/base/mmu_leds.cfg`. Now you can include `/home/user/Happy-Hare/config/base/mmu_leds.cfg` directly in your `.env` file to backup the original file.
+`mmu_leds.cfg` is the symbolic link which points to the original file `/home/user/Happy-Hare/config/base/mmu_leds.cfg`. Now you can include `Happy-Hare/config/base/mmu_leds.cfg` directly in your `.env` file to backup the original file.
 Messages like `Skipping symbolic link` can be ignored, as this is only of an informative nature. If this still bothers you, you can include the symbolic link in your `.env` file in the `exclude` section.
 For more information on how to edit the `.env` exactly, just have a look at [this](./configuration/#paths) and [this](./configuration/#gitignore-do-not-upload-certain-files) article.
 
