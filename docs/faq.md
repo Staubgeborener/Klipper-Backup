@@ -34,5 +34,5 @@ We have found that most errors can be traced back to incorrect use of git and th
 ~/klipper-backup/script.sh --fix
 ```
 
-### Still problems?
+## Still problems?
 If there are still problems, simply open an [issue](https://github.com/Staubgeborener/klipper-backup/issues). Please be sure to use the `--debug` parameter, as it is written there, so that we can understand the error and help you. Also, use [markdown](https://docs.github.com/de/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) syntax to post readable code.
