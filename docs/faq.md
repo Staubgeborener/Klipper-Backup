@@ -1,5 +1,5 @@
-## Klipper Backup with multiple instances
-If you use multiple Klipper instances on one device, you can also easily implement this with Klipper backup. Let's say you have set up several instances with [KIAUH](https://github.com/dw-0/kiauh):
+## Klipper-Backup with multiple instances
+If you use multiple Klipper instances on one device, you can also easily implement this with Klipper-Backup. Let's say you have set up several instances with [KIAUH](https://github.com/dw-0/kiauh):
 
 During setup, KIAUH asks you which custom name you would like to give the respective instance. If you do not assign one, a consecutive index from '1' is simply assigned as the name.
 Each instance then gets its own folder under `/home/{username}/`, which follows the syntax `printer_{instance_name}_data`. For example, if an instance is called "voron" the corresponding folder is `/home/{username}/printer_voron_data/`.
