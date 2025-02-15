@@ -27,13 +27,17 @@ backupPaths=( \
 
 ## Symolic links
 It could be that you find a symbolic link in your GitHub repository (like [this](./images/symbolic_link_GitHub.png)). Or you might get the message `Skipping symbolic link: [...]”`.
+
 Brief explanation of what symbolic links (also known as symlinks) are: A symbolic link is a link that leads to a file or folder without moving the original file. This is quite neet, as symbolic links save redundancies because they do not duplicate the actual file or folder, but only refer to the original.
 [Long story short](https://github.com/Staubgeborener/Klipper-Backup/issues/69#issuecomment-1965839873): symbolic links are not included in the backup because they are read only.
+
 What you can do now to backup those kind of files: There is a longer version [here](https://github.com/Staubgeborener/Klipper-Backup/issues/121#issuecomment-2345459135).
 
-The tl;dr version: 
+The tl;dr version:
+
 For example, you could include the original files in the backup instead of the symbolic links. Navigate to the symbolic links and check with `ls -la` where they point to, the output could look like this, for example:
 `mmu_leds.cfg -> /home/user/Happy-Hare/config/base/mmu_leds.cfg`
+
 `mmu_leds.cfg` is the symbolic link which points to the original file `/home/user/Happy-Hare/config/base/mmu_leds.cfg`. Now you can include `/home/user/Happy-Hare/config/base/mmu_leds.cfg` directly in your `.env` file to backup the original file.
 Messages like `Skipping symbolic link` can be ignored, as this is only of an informative nature. If this still bothers you, you can include the symbolic link in your `.env` file in the `exclude` section.
 For more information on how to edit the `.env` exactly, just have a look at [this](./configuration/#paths) and [this](./configuration/#gitignore-do-not-upload-certain-files) article.
