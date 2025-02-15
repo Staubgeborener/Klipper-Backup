@@ -14,7 +14,7 @@ curl -fsSL get.klipperbackup.xyz | bash
 ```
 
 ## RTFM
-I would suggest reading the [docs](https://klipperbackup.xyz), as this provides detailed step-by-step instructions and further tips.
+I would suggest reading the [docs](https://klipperbackup.xyz), as this provides detailed step-by-step instructions and further tips such as an [FAQ](https://klipperbackup.xyz/faq/).
 
 ## YouTube
 There are several YouTube videos about Klipper-Backup - thanks to everyone!
