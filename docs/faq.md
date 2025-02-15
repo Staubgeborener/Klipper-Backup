@@ -39,7 +39,7 @@ For example, you could include the original files in the backup instead of the s
 
 `mmu_leds.cfg` is the symbolic link which points to the original file `/home/user/Happy-Hare/config/base/mmu_leds.cfg`. Now you can include `Happy-Hare/config/base/mmu_leds.cfg` directly in your `.env` file to backup the original file.
 Messages like `Skipping symbolic link` can be ignored, as this is only of an informative nature. If this still bothers you, you can include the symbolic link in your `.env` file in the `exclude` section.
-For more information on how to edit the `.env` exactly, just have a look at [this](./configuration/#paths) and [this](./configuration/#gitignore-do-not-upload-certain-files) article.
+For more information on how to edit the `.env` exactly, just have a look at [this](configuration/#paths) and [this](configuration/#gitignore-do-not-upload-certain-files) article.
 
 ## Network / Server error
 If you get an error when cloning the Klipper-Backup repository that looks something like this
