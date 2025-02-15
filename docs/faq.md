@@ -29,9 +29,8 @@ backupPaths=( \
 It could be that you find a symbolic link in your GitHub repository (like [this](./images/symbolic_link_GitHub.png)). Or you might get the message `Skipping symbolic link: [...]”`.
 
 **Brief explanation of what symbolic links (also known as symlinks) are:** A symbolic link is a link that leads to a file or folder without moving the original file. This is quite neet, as symbolic links save redundancies because they do not duplicate the actual file or folder, but only refer to the original.
-[Long story short](https://github.com/Staubgeborener/Klipper-Backup/issues/69#issuecomment-1965839873): symbolic links are not included in the backup because they are read only.
 
-What you can do now to backup those kind of files: There is a longer version [here](https://github.com/Staubgeborener/Klipper-Backup/issues/121#issuecomment-2345459135).
+[Long story short](https://github.com/Staubgeborener/Klipper-Backup/issues/69#issuecomment-1965839873): symbolic links are not included in the backup because they are read only. What you can do now to backup those kind of files: There is a longer version [here](https://github.com/Staubgeborener/Klipper-Backup/issues/121#issuecomment-2345459135).
 
 The tl;dr version:
 
