@@ -23,6 +23,8 @@ backupPaths=( \
 )
 ```
 
+Klipper-Backup creates now a separate backup folder for each of these printers in your GitHub repository.
+
 *Hint:* If you don't quite know what the correct paths are: either look in the home directory with `ls ~`. Also the moonraker.conf has a `klippy_uds_address` section with the paths.
 
 ## Symolic links
