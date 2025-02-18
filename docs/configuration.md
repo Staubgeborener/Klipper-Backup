@@ -29,7 +29,7 @@ You can change the commit email for the commit history here, if it is left empty
 | `commit_email` | *anything*      | `whoami@hostname --short-unique_id` output | `commit_email="backup@hostname"` |
 
 ### 3. allow_empty_commits
-You can choose whether you want to push empty commits or not (this serves to permanently check whether the service is running correctly in the background). The value can be `true` or `false` (default value if nothing is defined: `true`).
+You can choose whether you want to push empty commits or not. This serves to permanently check whether the service is running correctly in the background. The value can be `true` or `false` (default value if nothing is defined: `true`).
 
 | Parameter            | Possible values | Default value | Example                       |
 | -------------------- | --------------- |---------------|------------------------------ |
@@ -43,7 +43,7 @@ You can use the values `http`, `https` or `ssh` here (default value: `https`). T
 | `git_protocol` | `https`, `http`, `ssh` | `https`       | `git_protocol="http"` |
 
 ### 5. git_host
-If you are using a different host ex.) gitea, bitbucket, devops, etc... you can add `git_host` with the corresponding entity to `.env`, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host ex.) bitbucket requires a specific commit email and token format to push commits. If you have deployed the git instance locally and assigned a port, you can also pass it directly here, for example `gitea:222`. When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}.
+If you are using a different host, let's say gitea, bitbucket, devops, etc... you can add `git_host` with the corresponding entity to the `.env` file, for example `git_host="bitbucket.org"`. Be sure to read the requirements for how to push changes to your host. For example bitbucket requires a specific commit email and token format to push commits. If you have deployed the git instance locally and assigned a port, you can also pass it directly here, for example `gitea:222`. When using a host other than github.com you may run into errors or issues that we cannot currently support. If you do find a resolution feel free to create a [pull request](https://github.com/Staubgeborener/klipper-backup/pulls){:target="_blank"} or [feature request](https://github.com/Staubgeborener/klipper-backup/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml){:target="_blank"}.
 
 | Parameter  | Possible values                   | Default value   | Example                    |
 | -----------| ----------------------------------|-----------------|--------------------------- |
@@ -53,14 +53,14 @@ If you are using a different host ex.) gitea, bitbucket, devops, etc... you can 
 <b>*</b> <em>List is not complete, there are numerous other (unknown) supported hosters</em>
 
 ### 6. ssh_user
-If you want to push the backup via ssh and have assigned an individual ssh user, you can adjust it here. This is particularly relevant if you have deployed a git instance locally.
+If you want to push the backup via ssh and have assigned an individual ssh user, you can adjust it here. This is particularly relevant if you have deployed a local git service.
 
 | Parameter  | Possible values | Default value | Example              |
 | -----------| ----------------|---------------|--------------------- |
 | `ssh_user` | *anything*      | `git`         | `ssh_user="sshuser"` |
 
 ## Paths
-Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here (**note the pattern!** which is explained inside the `.env` file) are considered in the backup.
+Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here are considered in the backup. **Note the pattern!** which is explained inside the `.env` file.
 
 Basically, you can break it down to the following three things:
 
@@ -78,7 +78,7 @@ backupPaths=( \
 )
 ```
 
-Back up directories and single files whatever you feel like:
+Back up directories and single files:
 ```ini
 backupPaths=( \
 "printer_data/config/my-files/*" \
@@ -91,7 +91,7 @@ backupPaths=( \
 ## .gitignore (do not upload certain files)
 To edit the `.gitignore` file, which is responsible for preventing certain files from being uploaded, you have to name the corresponding files in the `.env` file. This is important because you do not want to have sensitive data like passwords, tokens, etc. in a public backup. This also means that this file prevents your token from being [revoked](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation#token-revoked-when-pushed-to-a-public-repository-or-public-gist).
 By default, the `.env` file and the `secrets.conf` are included in the `.gitignore` and can be extended accordingly.
-Basically it's an Array of strings in [.gitignore pattern git format](https://git-scm.com/docs/gitignore#_pattern_format){:target="_blank"}. New additions must be enclosed in double quotes and should follow the pattern format as noted in the mentioned link:
+Basically it's an array of strings in [.gitignore pattern git format](https://git-scm.com/docs/gitignore#_pattern_format){:target="_blank"}. New additions must be enclosed in double quotes and should follow the pattern format as noted in the mentioned link:
 ```ini
 exclude=( \
 "*.swp" \
