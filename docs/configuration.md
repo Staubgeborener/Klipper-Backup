@@ -62,7 +62,7 @@ If you want to push the backup via ssh and have assigned an individual ssh user,
 ## Paths
 Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here are considered in the backup. **Note the pattern!** which is explained inside the `.env` file.
 
-Basically, you can break it down to the following three things:
+Basically, you can break it down to the following things:
 
 Back up a whole directories instead of single files:
 ```ini
@@ -87,6 +87,8 @@ backupPaths=( \
 "printer_data/config/another-directory/single-file_b.cfg" \
 )
 ```
+
+It is also possible to use a [multi printer setup](faq.md#klipper-backup-with-multiple-instances).
 
 ## .gitignore (do not upload certain files)
 To edit the `.gitignore` file, which is responsible for preventing certain files from being uploaded, you have to name the corresponding files in the `.env` file. This is important because you do not want to have sensitive data like passwords, tokens, etc. in a public backup. This also means that this file prevents your token from being [revoked](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation#token-revoked-when-pushed-to-a-public-repository-or-public-gist).
