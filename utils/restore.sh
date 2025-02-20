@@ -136,9 +136,10 @@ configure() {
             getBranch
         fi
     }
-
     getCommit() {
         if ask_yn "${C}●${NC} Would you like to restore from a specific commit?" "no"; then
+            tput sc
+            tput ed
             commitHash
         else
             tempfolder
@@ -179,12 +180,10 @@ validate_commit() {
     local pos=$2
     local commit_hash=$1
     tempfolder
-    git fetch origin $repobranch
+    git fetch origin $repobranch 2>/dev/null
     if git cat-file -e $commit_hash^{commit}; then
-        #echo "Commit $commit_hash exists."
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
-            #echo "Commit $commit_hash contains the necessary files."
-            git -c advice.detachedHead=false checkout $commit_hash
+            git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
         else
             tput cup $(($pos - 2)) 0
             tput ed
