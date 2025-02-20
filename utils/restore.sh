@@ -138,14 +138,13 @@ configure() {
     }
     getCommit() {
         if ask_yn "${C}●${NC} Would you like to restore from a specific commit?" "no"; then
-            tput sc
             tput ed
+            tput sc
             commitHash
         else
             tempfolder
         fi
     }
-    tput sc
     commitHash() {
         pos=$(getcursor)
         commit_hash=$(ask_textinput "${C}●${NC} Enter the commit hash you would like to restore from")
@@ -289,11 +288,15 @@ copyTheme() {
 }
 
 cleanup() {
+    loading_wheel "${Y}●${NC} Cleaning Up" &
+    loading_pid=$!
     sed -i "s/^theme_url.*//" $envpath
     sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
     sudo systemctl restart moonraker.service
     sleep 3
     sudo systemctl start klipper.service
+    kill $loading_pid
+    echo -e "${CL}${G}●${NC} Cleaning Up ${G}Done!${NC}\n"
 }
 
 main
