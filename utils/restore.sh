@@ -153,7 +153,7 @@ configure() {
             tput rc
             tput ed
             echo -e "${Y}●${NC} Commit ID cannot be empty!"
-            getRepo
+            commitHash
         fi
 
         menu $pos
