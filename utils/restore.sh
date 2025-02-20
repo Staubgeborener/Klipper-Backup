@@ -162,8 +162,8 @@ configure() {
         if [ $exitstatus = 0 ]; then
             tput cup $pos 0
             tput ed
+            validate_commit $commit_hash
             tput sc
-            validate_commit $commit_hash $pos
         else
             tput rc
             tput ed
@@ -184,7 +184,6 @@ configure() {
 }
 
 validate_commit() {
-    local pos=$2
     local commit_hash=$1
     tempfolder
     git fetch origin $repobranch 2>/dev/null
