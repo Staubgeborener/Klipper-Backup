@@ -12,6 +12,8 @@ DM=$'\e[35m' # Dark Magenta ${DM}
 DC=$'\e[36m' # Dark Cyan ${DC}
 NC=$'\e[0m'    # No Color ${NC}
 CL=$'\r\033[K' # Clear Line
+UL=$'\e[4m' # Underline
+BOLD=$'\e[1m' # Bold
 
 # Create unique id for git email
 getUniqueid() {
