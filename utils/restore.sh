@@ -192,13 +192,13 @@ validate_commit() {
         else
             tput cup $(($pos - 2)) 0
             tput ed
-            echo "${R}●${NC} Commit ${R}$commit_hash${NC} does not contain the necessary files."
+            echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not contain the necessary files."
             commitHash
         fi
     else
         tput cup $(($pos - 2)) 0
         tput ed
-        echo "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist."
+        echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist."
         commitHash
     fi
 }
@@ -283,7 +283,7 @@ copyTheme() {
         echo -e "${CL}${G}●${NC} Restoring Theme ${G}Done!${NC}\n"
     else
         kill $loading_pid
-        echo -e "${CL}${M}●${NC} No Theme to restore - Skipped ${M}Skipped!${NC}\n"
+        echo -e "${CL}${M}●${NC} No Theme to restore - Skipped ${M}Skipped!${NC}"
     fi
 }
 
