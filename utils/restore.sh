@@ -192,6 +192,8 @@ validate_commit() {
     if git cat-file -e $commit_hash^{commit}; then
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
             git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
+            kill $loading_pid
+            echo -e "${CL}${G}●${NC} Commit Found! ${NC}"
         else
             tput rc
             tput ed
