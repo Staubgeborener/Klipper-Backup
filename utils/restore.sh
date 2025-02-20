@@ -106,8 +106,9 @@ configure() {
             tput ed
             echo -e "${Y}●${NC} Repository name cannot be empty!"
             getRepo
+        else
+            menu $pos
         fi
-        menu $pos
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
             tput cup $pos 0
