@@ -149,6 +149,12 @@ configure() {
     commitHash() {
         pos=$(getcursor)
         commit_hash=$(ask_textinput "${C}●${NC} Enter the commit hash you would like to restore from")
+        if [ "$commit_hash" == "" ]; then
+            tput rc
+            tput ed
+            echo -e "${Y}●${NC} Commit ID cannot be empty!"
+            getRepo
+        fi
 
         menu $pos
         exitstatus=$?
