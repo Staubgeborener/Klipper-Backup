@@ -300,8 +300,8 @@ cleanup() {
     sed -i "s/^theme_url.*//" $envpath
     sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' $envpath
     sudo systemctl restart moonraker.service
-    sleep 3
-    sudo systemctl start klipper.service
+    sleep 5
+    sudo systemctl restart klipper.service
     kill $loading_pid
     echo -e "${CL}${G}●${NC} Cleaning Up ${G}Done!${NC}\n"
 }
