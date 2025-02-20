@@ -186,6 +186,8 @@ configure() {
 validate_commit() {
     local commit_hash=$1
     tempfolder
+    loading_wheel "${Y}●${NC} Checking for Commit" &
+    loading_pid=$!
     git fetch origin $repobranch 2>/dev/null
     if git cat-file -e $commit_hash^{commit}; then
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
@@ -193,12 +195,14 @@ validate_commit() {
         else
             tput rc
             tput ed
+            kill $loading_pid
             echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not contain the necessary files."
             commitHash
         fi
     else
         tput rc
         tput ed
+        kill $loading_pid
         echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist."
         commitHash
     fi
