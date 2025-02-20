@@ -193,7 +193,7 @@ validate_commit() {
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
             git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
             kill $loading_pid
-            echo -e "${CL}${G}●${NC} Commit Found! Using ${G}$commit_hash${NC} for restore \n Commit Message: ${git show -s --format='%s'}${NC}"
+            echo -e "${CL}${G}●${NC} Commit Found! Using ${G}$commit_hash${NC} for restore \n Commit Message: $(git show -s --format='%s')${NC}"
         else
             tput rc
             tput ed
