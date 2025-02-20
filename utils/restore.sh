@@ -185,9 +185,9 @@ configure() {
 
 validate_commit() {
     local commit_hash=$1
-    tempfolder
     loading_wheel "${Y}●${NC} Checking for Commit" &
     loading_pid=$!
+    tempfolder
     git fetch origin $repobranch 2>/dev/null
     if git cat-file -e $commit_hash^{commit}; then
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
