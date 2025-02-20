@@ -154,9 +154,10 @@ configure() {
             tput ed
             echo -e "${Y}●${NC} Commit ID cannot be empty!"
             commitHash
+        else
+            menu $pos
         fi
 
-        menu $pos
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
             tput cup $pos 0
@@ -191,13 +192,13 @@ validate_commit() {
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
             git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
         else
-            tput cup $(($pos - 2)) 0
+            tput rc
             tput ed
             echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not contain the necessary files."
             commitHash
         fi
     else
-        tput cup $(($pos - 2)) 0
+        tput rc
         tput ed
         echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist."
         commitHash
