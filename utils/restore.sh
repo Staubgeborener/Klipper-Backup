@@ -66,30 +66,24 @@ dependencies() {
 }
 
 configure() {
-    ghtoken_username=""
-    questionline=$(getcursor)
-
-    tput cup $(($questionline - 1)) 0
-    clearUp
-    pos=$(getcursor)
-
+    tput sc
     getToken() {
-        pos=$(getcursor)
+        ghtoken_username=""
         ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
         result=$(check_ghToken "$ghtoken") # Check GitHub Token using API
 
         if [ -n "$result" ]; then
-            tput cup $pos 0
+            tput sc
             tput ed
             ghtoken_username=$result
         else
-            tput cup $(($pos - 2)) 0
+            tput rc
             tput ed
             echo -e "${CL}${Y}●${NC} Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!"
             getToken
         fi
     }
-    
+    tput sc
     getUser() {
         pos=$(getcursor)
         ghuser=$(ask_textinput "${C}●${NC} Enter your github username" "$ghtoken_username")
@@ -99,18 +93,18 @@ configure() {
         if [ $exitstatus = 0 ]; then
             tput cup $pos 0
             tput ed
+            tput sc
         else
-            tput cup $(($pos - 1)) 0
+            tput rc
             tput ed
             getUser
         fi
     }
-    
     getRepo() {
         pos=$(getcursor)
         ghrepo=$(ask_textinput "${C}●${NC} Enter your repository name")
         if [ "$ghrepo" == "" ]; then
-            tput cup $(($pos - 2)) 0
+            tput rc
             tput ed
             echo -e "${Y}●${NC} Repository name cannot be empty!"
             getRepo
@@ -120,13 +114,14 @@ configure() {
         if [ $exitstatus = 0 ]; then
             tput cup $pos 0
             tput ed
+            tput sc
         else
-            tput cup $(($pos - 1)) 0
+            tput rc
             tput ed
             getRepo
         fi
     }
-    
+    tput sc
     getBranch() {
         pos=$(getcursor)
         repobranch=$(ask_textinput "${C}●${NC} Enter your desired branch name" "main")
@@ -136,8 +131,9 @@ configure() {
         if [ $exitstatus = 0 ]; then
             tput cup $pos 0
             tput ed
+            tput sc
         else
-            tput cup $(($pos - 1)) 0
+            tput rc
             tput ed
             getBranch
         fi
@@ -150,7 +146,7 @@ configure() {
             tempfolder
         fi
     }
-
+    tput sc
     commitHash() {
         pos=$(getcursor)
         commit_hash=$(ask_textinput "${C}●${NC} Enter the commit hash you would like to restore from")
@@ -160,9 +156,10 @@ configure() {
         if [ $exitstatus = 0 ]; then
             tput cup $pos 0
             tput ed
+            tput sc
             validate_commit $commit_hash $pos
         else
-            tput cup $(($pos - 2)) 0
+            tput rc
             tput ed
             commitHash
         fi
