@@ -198,7 +198,7 @@ validate_commit() {
             tput rc
             tput ed
             kill $loading_pid
-            echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not contain the necessary files."
+            echo -e "${DM}●${NC} Commit ${DM}$commit_hash${NC} found! However this commit does not contain the necessary files to restore."
             commitHash
         fi
     else
