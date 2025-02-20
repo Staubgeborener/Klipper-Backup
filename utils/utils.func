@@ -1,8 +1,15 @@
-R=$'\e[1;91m'  # Red ${R}
-G=$'\e[1;92m'  # Green ${G}
-Y=$'\e[1;93m'  # Yellow ${Y}
-M=$'\e[1;95m'  # Magenta ${M}
-C=$'\e[96m'    # Cyan ${C}
+R=$'\e[91m' # Red ${BR}
+G=$'\e[92m' # Green ${G}
+Y=$'\e[93m' # Yellow ${Y}
+B=$'\e[94m' # Blue ${B}
+M=$'\e[95m' # Magenta ${M}
+C=$'\e[96m' # Cyan ${C}
+DR=$'\e[31m' # Dark Red ${DR}
+DG=$'\e[32m' # Dark Green ${DG}
+DY=$'\e[33m' # Dark Yellow ${DY}
+DB=$'\e[34m' # Dark Blue ${DB}
+DM=$'\e[35m' # Dark Magenta ${DM}
+DC=$'\e[36m' # Dark Cyan ${DC}
 NC=$'\e[0m'    # No Color ${NC}
 CL=$'\r\033[K' # Clear Line
 
