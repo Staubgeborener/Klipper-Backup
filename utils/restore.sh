@@ -257,9 +257,9 @@ restoreBackupFiles() {
 
 restoreMoonrakerDB() {
     #echo -e "Restore Moonraker Database"
-    loading_wheel "${Y}●${NC} Restore Moonraker Database" &
-    loading_pid=$!
     if [ -f "$tempfolder/moonraker-db-klipperbackup.db" ]; then
+        loading_wheel "${Y}●${NC} Restore Moonraker Database" &
+        loading_pid=$!
         mkdir -p "$HOME/printer_data/backup/database"
         cp $tempfolder/moonraker-db-klipperbackup.db "$HOME/printer_data/backup/database/moonraker-db-klipperbackup.db"
         MOONRAKER_URL="http://localhost:7125"
@@ -267,9 +267,11 @@ restoreMoonrakerDB() {
         curl -X POST "$MOONRAKER_URL/server/database/restore" \
             -H "Content-Type: application/json" \
             -d "$data" >/dev/null 2>&1
+        kill $loading_pid
+        echo -e "${CL}${G}●${NC} Restore Moonraker Database ${G}Done!${NC}"
+    else
+      echo -e "${CL}${M}●${NC} Restore Moonraker Database ${M}Skipped! (No database backup found)${NC}"
     fi
-    kill $loading_pid
-    echo -e "${CL}${G}●${NC} Restore Moonraker Database ${G}Done!${NC}"
 }
 
 copyTheme() {
