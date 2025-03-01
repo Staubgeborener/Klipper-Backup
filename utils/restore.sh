@@ -8,7 +8,10 @@ scriptsh_parent_path=$(
     pwd -P
 )
 
+# Initialize functions from utils
 source "$scriptsh_parent_path"/utils/utils.func
+#
+
 envpath="$scriptsh_parent_path"/.env
 tempfolder="/tmp/klipper-backup-restore-tmp"
 temprestore="$tempfolder/klipper-backup-restore/restore.config"

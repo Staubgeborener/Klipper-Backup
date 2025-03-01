@@ -54,8 +54,6 @@ getcursor() {
     echo "${pos[1]}"
 }
 
-
-
 run_command() {
     command=$1
     loading_wheel "   ${Y}●${NC} Running $command" &
