@@ -147,6 +147,13 @@ configure() {
             commitHash
         else
             tempfolder
+            if !(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
+                tput rc
+                tput ed
+                kill $loading_pid
+                echo -e "${DM}●${NC} The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from"
+                getBranch
+            fi
         fi
     }
     commitHash() {
@@ -273,7 +280,7 @@ restoreMoonrakerDB() {
         kill $loading_pid
         echo -e "${CL}${G}●${NC} Restore Moonraker Database ${G}Done!${NC}"
     else
-      echo -e "${CL}${M}●${NC} Restore Moonraker Database ${M}Skipped! (No database backup found)${NC}"
+        echo -e "${CL}${M}●${NC} Restore Moonraker Database ${M}Skipped! (No database backup found)${NC}"
     fi
 }
 
