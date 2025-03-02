@@ -84,7 +84,6 @@ configure() {
             getToken
         fi
     }
-    tput sc
     getUser() {
         pos=$(getcursor)
         ghuser=$(ask_textinput "${C}●${NC} Enter your github username" "$ghtoken_username")
@@ -123,7 +122,6 @@ configure() {
             getRepo
         fi
     }
-    tput sc
     getBranch() {
         pos=$(getcursor)
         repobranch=$(ask_textinput "${C}●${NC} Enter your desired branch name" "main")
