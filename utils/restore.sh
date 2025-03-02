@@ -134,7 +134,6 @@ configure() {
         if [ $exitstatus = 0 ]; then
             tput cup $pos 0
             tput ed
-            tput sc
             getCommit
         else
             tput rc
