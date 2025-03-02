@@ -60,7 +60,7 @@ install_repo() {
         fi
     else
         tput cup $(($questionline - 1)) 0
-        #clearUp
+        clearLine
         echo -e "${R}●${NC} Installation aborted.\n"
         exit 1
     fi
@@ -92,7 +92,7 @@ check_updates() {
             fi
         else
             tput cup $(($questionline - 3)) 0
-            #clearUp
+            clearLine
             echo -e "${M}●${NC} Klipper-Backup update ${M}Skipped!${NC}\n"
         fi
     fi
@@ -226,7 +226,7 @@ configure() {
         pos1=$(getcursor)
     else
         tput cup $(($questionline - 1)) 0
-        #clearUp
+        clearLine
         echo -e "${CL}${M}●${NC} Configuration ${M}Skipped!${NC}\n"
         pos1=$(getcursor)
     fi
