@@ -77,6 +77,7 @@ configure() {
             tput sc
             tput ed
             ghtoken_username=$result
+            getUser
         else
             tput rc
             tput ed
@@ -94,6 +95,7 @@ configure() {
             tput cup $pos 0
             tput ed
             tput sc
+            getRepo
         else
             tput rc
             tput ed
@@ -116,6 +118,7 @@ configure() {
             tput cup $pos 0
             tput ed
             tput sc
+            getBranch
         else
             tput rc
             tput ed
@@ -132,6 +135,7 @@ configure() {
             tput cup $pos 0
             tput ed
             tput sc
+            getCommit
         else
             tput rc
             tput ed
@@ -178,16 +182,9 @@ configure() {
         fi
     }
 
-    while true; do
-        set +e
-        getToken
-        getUser
-        getRepo
-        getBranch
-        getCommit
-        set -e
-        break
-    done
+    set +e
+    getToken
+    set -e
 }
 
 validate_commit() {
