@@ -64,8 +64,8 @@ run_command() {
 }
 
 # Move cursor up one line and clear the line
-clearLine() {
-    echo -e "${CL}"
+clearUp() {
+    echo -e "\r\033[K\033[1A"
 }
 
 logo() {

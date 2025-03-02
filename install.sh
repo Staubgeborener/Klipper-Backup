@@ -44,7 +44,7 @@ install_repo() {
     questionline=$(getcursor)
     if ask_yn "Do you want to proceed with installation/(re)configuration?"; then
         tput cup $(($questionline - 1)) 0
-        #clearUp
+        clearUp
         cd "$HOME"
         if [ ! -d "klipper-backup" ]; then
             loading_wheel "${Y}●${NC} Installing Klipper-Backup" &
@@ -60,7 +60,7 @@ install_repo() {
         fi
     else
         tput cup $(($questionline - 1)) 0
-        clearLine
+        clearUp
         echo -e "${R}●${NC} Installation aborted.\n"
         exit 1
     fi
@@ -92,7 +92,7 @@ check_updates() {
             fi
         else
             tput cup $(($questionline - 3)) 0
-            clearLine
+            clearUp
             echo -e "${M}●${NC} Klipper-Backup update ${M}Skipped!${NC}\n"
         fi
     fi
@@ -108,7 +108,7 @@ configure() {
     fi
     if ask_yn "$message"; then
         tput cup $(($questionline - 1)) 0
-        #clearUp
+        clearUp
         pos1=$(getcursor)
         pos2=$(getcursor)
 
@@ -226,7 +226,7 @@ configure() {
         pos1=$(getcursor)
     else
         tput cup $(($questionline - 1)) 0
-        clearLine
+        clearUp
         echo -e "${CL}${M}●${NC} Configuration ${M}Skipped!${NC}\n"
         pos1=$(getcursor)
     fi
