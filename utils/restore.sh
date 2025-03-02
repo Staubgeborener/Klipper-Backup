@@ -165,7 +165,7 @@ configure() {
             tput ed
             echo -e "${Y}●${NC} Commit ID cannot be empty!"
             commitHash
-        elif [ "$commit_hash" == "B" || "$commit_hash" == "b" ]; then
+        elif [ "$commit_hash" == "B" ] || [ "$commit_hash" == "b" ]; then
             getCommit
         else
             menu $pos
