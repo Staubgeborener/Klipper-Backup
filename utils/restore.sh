@@ -165,6 +165,8 @@ configure() {
             tput ed
             echo -e "${Y}●${NC} Commit ID cannot be empty!"
             commitHash
+        else if [ "$commit_hash" == "B" || "$commit_hash" == "b" ]; then
+            getCommit
         else
             menu $pos
         fi
@@ -202,14 +204,14 @@ validate_commit() {
             tput rc
             tput ed
             kill $loading_pid
-            echo -e "${DM}●${NC} Commit ${DM}$commit_hash${NC} found! However this commit does not contain the necessary files to restore."
+            echo -e "${DM}●${NC} Commit ${DM}$commit_hash${NC} found! However this commit does not contain the necessary files to restore. To go back enter B as the input."
             commitHash
         fi
     else
         tput rc
         tput ed
         kill $loading_pid
-        echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist."
+        echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist. To go back enter B as the input."
         commitHash
     fi
 }
