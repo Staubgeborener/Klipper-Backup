@@ -153,6 +153,8 @@ configure() {
                 tput rc
                 clearUp
                 clearUp
+                clearUp
+                clearUp
                 tput ed
                 tput sc
                 echo -e "${DM}●${NC} The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from."
