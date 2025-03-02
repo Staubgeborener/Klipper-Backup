@@ -152,11 +152,10 @@ configure() {
             if !(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
                 tput rc
                 tput ed
-                tput sc
-                tput cup $(($pos - 1)) 0
                 echo -e "${DM}●${NC} The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from."
                 getBranch
             fi
+            tput sc
         fi
     }
     commitHash() {
