@@ -177,7 +177,6 @@ configure() {
             tput cup $pos 0
             tput ed
             validate_commit $commit_hash
-            tput sc
         else
             tput rc
             tput ed
@@ -201,6 +200,7 @@ validate_commit() {
             git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
             kill $loading_pid
             echo -e "${CL}${G}●${NC} Commit Found! Using ${G}$commit_hash${NC} for restore\n  Commit Message: $(git show -s --format='%s')${NC}"
+            tput sc
         else
             tput rc
             tput ed
