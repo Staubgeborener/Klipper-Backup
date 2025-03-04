@@ -149,7 +149,7 @@ configure() {
         else
             tempfolder
             if !(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
-                tput cup $(($pos - 2)) 0
+                tput cup $pos 0
                 tput ed
                 echo -e "${DM}●${NC} The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from."
                 getBranch
