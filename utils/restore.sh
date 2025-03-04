@@ -165,7 +165,7 @@ configure() {
             echo -e "${Y}●${NC} Commit ID cannot be empty!"
             commitHash
         elif [ "$commit_hash" == "B" ] || [ "$commit_hash" == "b" ]; then
-            tput cup $(($pos - 2)) 0
+            tput cup $(($pos - 3)) 0
             tput ed
             getCommit
         else
