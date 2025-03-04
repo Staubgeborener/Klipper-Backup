@@ -150,12 +150,16 @@ configure() {
     commitHash() {
         commit_hash=$(whiptail --inputbox "Enter the commit hash you would like to restore from:" 10 60 3>&1 1>&2 2>&3)
 
-        if [ -z "$commit_hash" ]; then
-            whiptail --msgbox "Commit ID cannot be empty!" 10 50
-            commitHash
+        exitstatus=$?
+        if [ $exitstatus == 0 ]; then
+            if [ -z "$commit_hash" ]; then
+                whiptail --msgbox "Commit ID cannot be empty!" 10 50
+                commitHash
+            fi
+            #validate_commit "$commit_hash"
+        else
+            cancelMenu "getHash" "getBranch"
         fi
-
-        #validate_commit "$commit_hash"
     }
 
     debug_info() {
