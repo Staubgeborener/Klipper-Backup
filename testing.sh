@@ -8,18 +8,60 @@ scriptsh_parent_path=$(
     pwd -P
 )
 
-confirmCancel() {
-    optionMenu=$1
-    optionDesc=$2
-    choice=$(whiptail --title "Klipper Backup Restore" --menu "Please confirm your action?" 15 75 5 \
-    "$1" "$2" \
-    "Back" "Return to previous menu." \
-    "Quit" "Stop Script." \
-    3>&1 1>&2 2>&3)
-    echo $choice
+yesnoMenu() {
+    local message=$1
+    local yesMenu=$2
+    local currentMenu=$3
+    local previousMenu=$4
+    local nextMenu=$5
+
+    choice=$(whiptail --title "Klipper Backup Restore" --menu "$message" 15 75 5 \
+        "Yes" "" \
+        "No" "" \
+        "Cancel" "" \
+        3>&1 1>&2 2>&3)
+    case $choice in
+    "Yes")
+        $yesMenu
+        ;;
+    "No")
+        $nextMenu
+        ;;
+    "Cancel")
+        cancelMenu $currentMenu $previousMenu
+        ;;
+    esac
 }
 
-source "$scriptsh_parent_path"utils/utils.func
+cancelMenu() {
+    local currentMenu=$1
+    local previousMenu=$2
+    if [ -n "$2" ]; then
+        local choice=$(whiptail --title "Klipper Backup Restore" --menu "Please confirm your action?" 15 75 5 \
+            "Redo" "| Return to previous prompt." \
+            "Back" "| Return to current prompt." \
+            "Quit" "| Stop Script." \
+            3>&1 1>&2 2>&3)
+    else
+        local choice=$(whiptail --title "Klipper Backup Restore" --menu "Please confirm your action?" 15 75 5 \
+            "Back" "| Return to previous menu." \
+            "Quit" "| Stop Script." \
+            3>&1 1>&2 2>&3)
+    fi
+    case $choice in
+    "Back")
+        $currentMenu
+        ;;
+    "Quit")
+        exit
+        ;;
+    "Redo")
+        $previousMenu
+        ;;
+    esac
+}
+
+source "$scriptsh_parent_path"/klipper-backup/utils/utils.func
 
 configure() {
     getToken() {
@@ -43,7 +85,7 @@ configure() {
                 getToken
             fi
         else
-            confirmCancel
+            cancelMenu "getToken"
             exit
         fi
     }
@@ -59,7 +101,7 @@ configure() {
             fi
             getRepo
         else
-            exit
+            cancelMenu "getUser" "getToken"
         fi
     }
 
@@ -74,7 +116,7 @@ configure() {
             fi
             getBranch
         else
-            exit
+            cancelMenu "getRepo" "getUser"
         fi
     }
 
@@ -89,24 +131,20 @@ configure() {
             fi
             getCommit
         else
-            exit
+            cancelMenu "getBranch" "getRepo"
         fi
     }
 
     getCommit() {
-        whiptail --title "Klipper Backup Restore" --yesno "Would you like to restore from a specific commit? (Default No)" --defaultno 10 50
-        exitstatus=$?
-
-        if [ $exitstatus = 0 ]; then
-            commitHash
-        else
+        nextMenu() {
             echo "TempFolder would run"
             #tempfolder
-            if "$repobranch" == "test"; then #!(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
-                whiptail --msgbox "The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from." 10 70
-                getBranch
-            fi
-        fi
+            # if "$repobranch" == "test"; then #!(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
+            #     whiptail --msgbox "The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from." 10 70
+            #     getBranch
+            # fi
+        }
+        yesnoMenu "Would you like to restore from a specific commit?" "commitHash" "getCommit" "getBranch" "nextMenu"
     }
 
     commitHash() {
@@ -128,9 +166,9 @@ configure() {
         Branch Name: $repobranch\n\
         Commit Hash: ${commit_hash:-N/A}"
     }
-
+    set +e
     getToken
-
+    set -e
 }
 
 configure
