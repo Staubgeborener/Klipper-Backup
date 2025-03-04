@@ -19,7 +19,7 @@ confirmCancel() {
     echo $choice
 }
 
-source "$scriptsh_parent_path"/klipper-backup/utils/utils.func
+source "$scriptsh_parent_path"utils/utils.func
 
 configure() {
     getToken() {
