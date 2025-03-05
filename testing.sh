@@ -17,161 +17,118 @@ debug_info() {
         Commit Hash: ${commit_hash:-N/A}"
 }
 
-yesnoMenu() {
-    local message=$1
-    local yesMenu=$2
-    local currentMenu=$3
-    local previousMenu=$4
-    local nextMenu=$5
+source "$scriptsh_parent_path/klipper-backup/utils/utils.func"
 
-    choice=$(whiptail --title "Klipper Backup Restore" --nocancel --menu "$message" 15 75 5 \
-        "Yes" "" \
-        "No" "" \
-        "Cancel" "" \
-        3>&1 1>&2 2>&3)
-    case $choice in
-    "Yes")
-        $yesMenu
-        ;;
-    "No")
-        $nextMenu
-        ;;
-    "Cancel")
-        cancelMenu $currentMenu $previousMenu
-        ;;
-    esac
-}
+prompt_with_cancel() {
+    local type=$1      # "input" or "password"
+    local msg=$2
+    local default=$3
+    local result
 
-cancelMenu() {
-    local currentMenu=$1
-    local previousMenu=$2
-    if [ -n "$2" ]; then
-        local choice=$(whiptail --title "Klipper Backup Restore" --menu "Please confirm your action?" 15 75 5 \
-            "Redo" "| Return to previous prompt." \
-            "Back" "| Return to current prompt." \
-            "Quit" "| Stop Script." \
-            3>&1 1>&2 2>&3)
+    if [ "$type" = "password" ]; then
+        result=$(whiptail --title "Klipper Backup Restore" --passwordbox "$msg" 10 76 "$default" 3>&1 1>&2 2>&3)
     else
-        local choice=$(whiptail --title "Klipper Backup Restore" --menu "Please confirm your action?" 15 75 5 \
-            "Back" "| Return to previous menu." \
-            "Quit" "| Stop Script." \
-            3>&1 1>&2 2>&3)
+        result=$(whiptail --title "Klipper Backup Restore" --inputbox "$msg" 10 50 "$default" 3>&1 1>&2 2>&3)
     fi
-    case $choice in
-    "Back")
-        $currentMenu
-        ;;
-    "Quit")
-        exit
-        ;;
-    "Redo")
-        $previousMenu
-        ;;
-    esac
+    local status=$?
+    if [ $status -ne 0 ]; then
+        result=$(whiptail --title "Klipper Backup Restore" --menu "Select an option:" 15 75 3 \
+            "Redo" "| Retry current prompt" \
+            "Back" "| Go back to previous prompt" \
+            "Quit" "| Quit the script" 3>&1 1>&2 2>&3)
+    fi
+    echo "$result"
 }
-
-source "$scriptsh_parent_path"/klipper-backup/utils/utils.func
 
 configure() {
-    getToken() {
-        ghtoken_username=""
-        ghtoken=$(whiptail --title "Klipper Backup Restore" --passwordbox "Enter your GitHub token associated with the backup you want to restore:" 10 76 3>&1 1>&2 2>&3)
+    local step=0
 
-        exitstatus=$?
-        if [ $exitstatus = 0 ]; then
-            if [ -z "$ghtoken" ]; then
-                whiptail --msgbox "GitHub token cannot be empty!" 10 50
-                getToken
-            fi
+    while [ $step -le 4 ]; do
+        case $step in
+            0)
+                ghtoken=$(prompt_with_cancel "password" "Enter your GitHub token:" "")
+                case "$(echo "$ghtoken" | tr '[:upper:]' '[:lower:]')" in
+                    redo) continue ;;
+                    back) ;;
+                    quit) exit 1 ;;
+                esac
+                if [ -z "$ghtoken" ]; then
+                    whiptail --msgbox "GitHub token cannot be empty!" 10 50
+                    continue
+                fi
+                gh_username=$(check_ghToken "$ghtoken")
+                if [ -z "$gh_username" ]; then
+                    whiptail --msgbox "Invalid token or API error!" 10 50
+                    continue
+                fi
+                ((step++))
+                ;;
+            1)
+                ghuser=$(prompt_with_cancel "input" "Enter your GitHub username:" "$gh_username")
+                case "$(echo "$ghuser" | tr '[:upper:]' '[:lower:]')" in
+                    redo) continue ;;
+                    back) ((step--)); continue ;;
+                    quit) exit 1 ;;
+                esac
+                if [ -z "$ghuser" ]; then
+                    whiptail --msgbox "Username cannot be empty!" 10 50
+                    continue
+                fi
+                ((step++))
+                ;;
+            2)
+                ghrepo=$(prompt_with_cancel "input" "Enter your repository name:" "")
+                case "$(echo "$ghrepo" | tr '[:upper:]' '[:lower:]')" in
+                    redo) continue ;;
+                    back) ((step--)); continue ;;
+                    quit) exit 1 ;;
+                esac
+                if [ -z "$ghrepo" ]; then
+                    whiptail --msgbox "Repository name cannot be empty!" 10 50
+                    continue
+                fi
+                ((step++))
+                ;;
+            3)
+                repobranch=$(prompt_with_cancel "input" "Enter your branch name:" "")
+                case "$(echo "$repobranch" | tr '[:upper:]' '[:lower:]')" in
+                    redo) continue ;;
+                    back) ((step--)); continue ;;
+                    quit) exit 1 ;;
+                esac
+                if [ -z "$repobranch" ]; then
+                    whiptail --msgbox "Branch name cannot be empty!" 10 50
+                    continue
+                fi
+                ((step++))
+                ;;
+            4)
+                commit_option=$(whiptail --title "Klipper Backup Restore" --default-item "No" --menu "Restore from specific commit? (Default No)" 15 75 3 \
+                    "Yes" "| Enter a commit hash" \
+                    "No" "| Continue without specifying a commit" \
+                    "Back" "| Go back" 3>&1 1>&2 2>&3)
+                case "$(echo "$commit_option" | tr '[:upper:]' '[:lower:]')" in
+                    back) ((step--)); continue ;;
+                    no) commit_hash=""; ((step++)); continue ;;
+                    yes) ;;
+                    *) ((step++)); continue ;;
+                esac
+                commit_hash=$(prompt_with_cancel "input" "Enter the commit hash:" "")
+                case "$(echo "$commit_hash" | tr '[:upper:]' '[:lower:]')" in
+                    redo) continue ;;
+                    back) continue ;;
+                    quit) exit 1 ;;
+                esac
+                if [ -z "$commit_hash" ]; then
+                    whiptail --msgbox "Commit hash cannot be empty!" 10 50
+                    continue
+                fi
+                ((step++))
+                ;;
+        esac
+    done
 
-            result=$(check_ghToken "$ghtoken") # Check GitHub Token using API
-
-            if [ -n "$result" ]; then
-                ghtoken_username=$result
-                getUser
-            else
-                whiptail --title "Klipper Backup Restore" --msgbox "Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!" 10 60
-                getToken
-            fi
-        else
-            cancelMenu "getToken"
-            exit
-        fi
-    }
-
-    getUser() {
-        ghuser=$(whiptail --title "Klipper Backup Restore" --inputbox "Enter your GitHub username:" 10 50 "$ghtoken_username" 3>&1 1>&2 2>&3)
-
-        exitstatus=$?
-        if [ $exitstatus == 0 ]; then
-            if [ -z "$ghuser" ]; then
-                whiptail --msgbox "GitHub username cannot be empty!" 10 50
-                getUser
-            fi
-            getRepo
-        else
-            cancelMenu "getUser" "getToken"
-        fi
-    }
-
-    getRepo() {
-        ghrepo=$(whiptail --title "Klipper Backup Restore" --inputbox "Enter your repository name:" 10 50 3>&1 1>&2 2>&3)
-
-        exitstatus=$?
-        if [ $exitstatus == 0 ]; then
-            if [ -z "$ghrepo" ]; then
-                whiptail --title "Klipper Backup Restore" --msgbox "Repository name cannot be empty!" 10 50
-                getRepo
-            fi
-            getBranch
-        else
-            cancelMenu "getRepo" "getUser"
-        fi
-    }
-
-    getBranch() {
-        repobranch=$(whiptail --title "Klipper Backup Restore" --inputbox "Enter your desired branch name:" 10 50 "main" 3>&1 1>&2 2>&3)
-
-        exitstatus=$?
-        if [ $exitstatus == 0 ]; then
-            if [ -z "$repobranch" ]; then
-                whiptail --title "Klipper Backup Restore" --msgbox "Branch name cannot be empty!" 10 50
-                getBranch
-            fi
-            getCommit
-        else
-            cancelMenu "getBranch" "getRepo"
-        fi
-    }
-
-    getCommit() {
-        nextMenu() {
-            echo "TempFolder would run"
-            #tempfolder
-            # if "$repobranch" == "test"; then #!(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
-            #     whiptail --msgbox "The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from." 10 70
-            #     getBranch
-            # fi
-        }
-        yesnoMenu "Would you like to restore from a specific commit?" "commitHash" "getCommit" "getBranch" "nextMenu"
-    }
-
-    commitHash() {
-        commit_hash=$(whiptail --inputbox "Enter the commit hash you would like to restore from:" 10 60 3>&1 1>&2 2>&3)
-
-        exitstatus=$?
-        if [ $exitstatus == 0 ]; then
-            if [ -z "$commit_hash" ]; then
-                whiptail --msgbox "Commit ID cannot be empty!" 10 50
-                commitHash
-            fi
-            #validate_commit "$commit_hash"
-        else
-            cancelMenu "getHash" "getBranch"
-        fi
-    }
-
-    getToken
+    export ghtoken ghuser ghrepo repobranch commit_hash
 }
 
 configure
