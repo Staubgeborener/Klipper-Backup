@@ -8,17 +8,15 @@ scriptsh_parent_path=$(
     pwd -P
 )
 
-<<<<<<< HEAD
-confirmCancel() {
-    optionMenu=$1
-    optionDesc=$2
-    choice=$(whiptail --title "Klipper Backup Restore" --menu "Please confirm your action?" 15 75 5 \
-        "$1" "$2" \
-        "Back" "Return to previous menu." \
-        "Quit" "Stop Script." \
-        3>&1 1>&2 2>&3)
-    echo $choice
-=======
+debug_info() {
+    echo -e "DEBUG INFO:\n\n\
+        GitHub Token: $ghtoken\n\
+        GitHub Username: $ghuser\n\
+        Repository Name: $ghrepo\n\
+        Branch Name: $repobranch\n\
+        Commit Hash: ${commit_hash:-N/A}"
+}
+
 yesnoMenu() {
     local message=$1
     local yesMenu=$2
@@ -70,7 +68,6 @@ cancelMenu() {
         $previousMenu
         ;;
     esac
->>>>>>> a10593bab8a01736a943ffe0f1b4489247c88c52
 }
 
 source "$scriptsh_parent_path"/klipper-backup/utils/utils.func
@@ -173,18 +170,7 @@ configure() {
             cancelMenu "getHash" "getBranch"
         fi
     }
-    getToken
 
-}
-
-debug_info() {
-    echo -e "DEBUG INFO:\n\n\
-        GitHub Token: $ghtoken\n\
-        GitHub Username: $ghuser\n\
-        Repository Name: $ghrepo\n\
-        Branch Name: $repobranch\n\
-        Commit Hash: ${commit_hash:-N/A}"
-    }
     set +e
     getToken
     set -e
