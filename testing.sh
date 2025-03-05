@@ -24,9 +24,10 @@ yesnoMenu() {
     local previousMenu=$4
     local nextMenu=$5
 
-    choice=$(whiptail --title "Klipper Backup Restore" --menu "$message" 15 75 5 \
+    choice=$(whiptail --title "Klipper Backup Restore" --nocancel --menu "$message" 15 75 5 \
         "Yes" "" \
         "No" "" \
+        "Cancel" "" \
         3>&1 1>&2 2>&3)
     case $choice in
     "Yes")
