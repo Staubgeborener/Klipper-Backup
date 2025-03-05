@@ -175,4 +175,5 @@ configure() {
 }
 
 configure
-debug_info # Call debug after last input
+echo "test"
+debug_info
