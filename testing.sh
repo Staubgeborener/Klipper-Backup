@@ -12,10 +12,10 @@ confirmCancel() {
     optionMenu=$1
     optionDesc=$2
     choice=$(whiptail --title "Klipper Backup Restore" --menu "Please confirm your action?" 15 75 5 \
-    "$1" "$2" \
-    "Back" "Return to previous menu." \
-    "Quit" "Stop Script." \
-    3>&1 1>&2 2>&3)
+        "$1" "$2" \
+        "Back" "Return to previous menu." \
+        "Quit" "Stop Script." \
+        3>&1 1>&2 2>&3)
     echo $choice
 }
 
@@ -119,18 +119,17 @@ configure() {
 
         #validate_commit "$commit_hash"
     }
+    getToken
 
-    debug_info() {
-        echo -e "DEBUG INFO:\n\n\
+}
+
+debug_info() {
+    echo -e "DEBUG INFO:\n\n\
         GitHub Token: $ghtoken\n\
         GitHub Username: $ghuser\n\
         Repository Name: $ghrepo\n\
         Branch Name: $repobranch\n\
         Commit Hash: ${commit_hash:-N/A}"
-    }
-
-    getToken
-
 }
 
 configure
