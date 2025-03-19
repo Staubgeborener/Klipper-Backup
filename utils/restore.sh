@@ -78,8 +78,8 @@ checkExit() {
 
 validate_commit() {
     local commit_hash=$1
-    tempfolder
     {
+        tempfolder
         echo 10
         sleep 0.1
         git fetch origin $ghbranch 2>/dev/null
