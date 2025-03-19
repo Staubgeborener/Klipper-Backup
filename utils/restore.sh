@@ -99,12 +99,12 @@ validate_commit() {
     } | whiptail --gauge "Checking for Commit $commit_hash..." 8 50 0
     if git cat-file -e $commit_hash^{commit}; then
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
-            echo 0
+            return 0
         else
-            echo 1
+            return 1
         fi
     else
-        echo 2
+        return 2
     fi
 }
 
@@ -227,19 +227,19 @@ configure() {
                 whiptail --msgbox "Commit hash cannot be empty!" 10 50
                 continue
             fi
-            result=$(validate_commit $ghcommithash)
-            if [ "$result" -eq "1" ]; then
-                whiptail --msgbox "Commit ${G}$commit_hash${NC} found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
+            validate_commit $ghcommithash
+            if [ $? -eq 1 ]; then
+                whiptail --msgbox "Commit ${G}$ghcommithash${NC} found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
                 ghcommithash=""
                 ghbranch=""
                 continue
-            elif [ "$result" -eq "2" ]; then
-                whiptail --msgbox "Commit ${R}$commit_hash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from." 10 76
+            elif [ $? -eq 2 ]; then
+                whiptail --msgbox "Commit ${R}$ghcommithash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from." 10 76
                 ghcommithash=""
                 ghbranch=""
                 continue
             else
-                whiptail --msgbox "Commit Found! Using $commit_hash for restore\n  Commit Message: $(git show -s --format='%s')" 10 76
+                whiptail --msgbox "Commit Found! Using $ghcommithash for restore\n  Commit Message: $(git show -s --format='%s')" 10 76
             fi
         fi
         break
