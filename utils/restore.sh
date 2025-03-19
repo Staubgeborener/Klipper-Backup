@@ -101,10 +101,10 @@ validate_commit() {
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
             return 0
         else
-            return 2
+            return 1
         fi
     else
-        return 1
+        return 2
     fi
 }
 
