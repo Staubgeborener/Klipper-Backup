@@ -166,6 +166,7 @@ configure() {
                 if !(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
                     whiptail --msgbox "The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from." 10 76
                     ghbranch=""
+                    commit_option=""
                     ghcommithash=""
                     continue
                 fi
