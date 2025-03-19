@@ -112,7 +112,7 @@ validate_commit() {
             echo 1
         fi
     else
-        whiptail --msgbox "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from."
+        whiptail --msgbox "Commit ${R}$commit_hash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from." 10 76
         echo 1
     fi
 }
