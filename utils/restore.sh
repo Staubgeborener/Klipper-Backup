@@ -231,13 +231,15 @@ configure() {
             result=$?
             if [ $result -eq 1 ]; then
                 whiptail --msgbox "Commit: $ghcommithash found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
-                ghcommithash=""
-                ghbranch=""
+                    ghbranch=""
+                    commit_option=""
+                    ghcommithash=""
                 continue
             elif [ $result -eq 2 ]; then
                 whiptail --msgbox "Commit: $ghcommithash does not exist.\n Please choose another branch or specify a different commit hash to restore from." 10 76
-                ghcommithash=""
-                ghbranch=""
+                    ghbranch=""
+                    commit_option=""
+                    ghcommithash=""
                 continue
             else
                 whiptail --msgbox "Commit Found! Using: $ghcommithash for restore\n  Commit Message: $(git show -s --format='%s')" 10 76
@@ -249,7 +251,7 @@ configure() {
 
 tempfolder() {
     if [ -d "$tempfolder" ]; then
-        rm -rf $tempfolder
+        rm -rf $tempfolder 2>/dev/null
     fi
     mkdir $tempfolder
     git_protocol=${git_protocol:-"https"}
