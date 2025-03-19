@@ -97,7 +97,7 @@ validate_commit() {
             fi
         fi
     } | whiptail --gauge "Checking for Commit $commit_hash..." 8 50 0
-    if git cat-file -e $commit_hash^{commit}; then
+    if [[ "$commit_hash" =~ ^[0-9a-f]{7,40}$ ]] && git cat-file -e $commit_hash^{commit}; then
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
             return 0
         else
