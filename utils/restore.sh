@@ -25,7 +25,7 @@ main() {
     check_klipper_installed
     clear
     configure
-    logo
+    #logo
     copyRestoreConfig
     source $temprestore
     sudo systemctl stop klipper.service
