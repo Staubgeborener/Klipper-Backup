@@ -23,6 +23,7 @@ main() {
     sudo -v
     dependencies
     check_klipper_installed
+    clear
     configure
     logo
     copyRestoreConfig
