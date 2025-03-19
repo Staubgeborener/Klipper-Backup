@@ -228,13 +228,12 @@ configure() {
                 continue
             fi
             result=$(validate_commit $ghcommithash)
-            result=$((result))
-            if [ $result -eq 1 ]; then
+            if [ "$result" -eq "1" ]; then
                 whiptail --msgbox "Commit ${G}$commit_hash${NC} found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
                 ghcommithash=""
                 ghbranch=""
                 continue
-            elif [ $result -eq 2 ]; then
+            elif [ "$result" -eq "2" ]; then
                 whiptail --msgbox "Commit ${R}$commit_hash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from." 10 76
                 ghcommithash=""
                 ghbranch=""
