@@ -237,9 +237,10 @@ configure() {
                 continue
             fi
             result=$(validate_commit $ghcommithash)
-            if [ $result -ne 0 ]; then
+            if [ "$result" -ne 0 ]; then
                 ghcommithash=""
                 ghbranch=""
+                continue
             fi
         fi
         break
