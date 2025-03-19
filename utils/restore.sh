@@ -65,6 +65,16 @@ dependencies() {
     sleep 1
 }
 
+checkExit() {
+    if [ $1 -ne 0 ]; then
+        result=$(whiptail --title "Klipper Backup Restore" --menu "Select an option:" 15 75 3 \
+            "Redo" "| Retry current prompt" \
+            "Back" "| Go back to previous prompt" \
+            "Quit" "| Quit the script" 3>&1 1>&2 2>&3)
+        echo $result
+    fi
+}
+
 configure() {
     while true; do
         if [ -z $ghtoken ]; then
