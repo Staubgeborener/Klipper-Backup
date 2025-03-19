@@ -236,7 +236,7 @@ configure() {
                 whiptail --msgbox "Commit hash cannot be empty!" 10 50
                 continue
             fi
-            result=(validate_commit $ghcommithash)
+            result=$(validate_commit $ghcommithash)
             if [ $result -ne 0 ]; then
                 ghcommithash=""
                 ghbranch=""
