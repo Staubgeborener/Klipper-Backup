@@ -79,41 +79,32 @@ checkExit() {
 validate_commit() {
     local commit_hash=$1
     tempfolder
-
     {
         echo 10
         sleep 0.1
-
         git fetch origin $ghbranch 2>/dev/null
         echo 30
         sleep 0.1
-
         if git cat-file -e $commit_hash^{commit}; then
             echo 50
             sleep 0.1
-
             if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
                 git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
                 echo 80
                 sleep 0.1
-
                 echo 100
                 sleep 0.3
             fi
         fi
     } | whiptail --gauge "Checking for Commit $commit_hash..." 8 50 0
-
     if git cat-file -e $commit_hash^{commit}; then
         if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
-            whiptail --msgbox "Commit Found! Using $commit_hash for restore\n  Commit Message: $(git show -s --format='%s')" 10 76
             echo 0
         else
-            whiptail --msgbox "Commit ${G}$commit_hash${NC} found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
             echo 1
         fi
     else
-        whiptail --msgbox "Commit ${R}$commit_hash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from." 10 76
-        echo 1
+        echo 2
     fi
 }
 
@@ -237,10 +228,19 @@ configure() {
                 continue
             fi
             result=$(validate_commit $ghcommithash)
-            if [ "$result" -ne 0 ]; then
+            result=$((result))
+            if [ $result -eq 1 ]; then
+                whiptail --msgbox "Commit ${G}$commit_hash${NC} found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
                 ghcommithash=""
                 ghbranch=""
                 continue
+            elif [ $result -eq 2 ]; then
+                whiptail --msgbox "Commit ${R}$commit_hash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from." 10 76
+                ghcommithash=""
+                ghbranch=""
+                continue
+            else
+                whiptail --msgbox "Commit Found! Using $commit_hash for restore\n  Commit Message: $(git show -s --format='%s')" 10 76
             fi
         fi
         break
