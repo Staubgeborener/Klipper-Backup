@@ -95,7 +95,7 @@ configure() {
                 continue
             fi
             ghusername=$(check_ghToken "$ghtoken")
-            if [ -z "$username" ]; then
+            if [ -z "$ghusername" ]; then
                 whiptail --msgbox "Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!" 10 76
                 ghtoken=""
                 continue
