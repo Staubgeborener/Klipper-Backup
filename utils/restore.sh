@@ -204,7 +204,7 @@ configure() {
                 echo 10
                 sleep 0.1
 
-                git fetch origin $repobranch 2>/dev/null
+                git fetch origin $ghbranch 2>/dev/null
                 echo 30
                 sleep 0.1
 
@@ -249,16 +249,16 @@ tempfolder() {
     mkdir $tempfolder
     git_protocol=${git_protocol:-"https"}
     git_host=${git_host:-"github.com"}
-    full_git_url=$git_protocol"://"$ghtoken"@"$git_host"/"$ghuser"/"$ghrepo".git"
+    full_git_url=$git_protocol"://"$ghtoken"@"$git_host"/"$ghusername"/"$ghrepo".git"
 
     cd $tempfolder
     mkdir .git
     echo "[init]
-    defaultBranch = "$repobranch"" >>.git/config #Add desired branch name to config before init
+    defaultBranch = "$ghbranch"" >>.git/config #Add desired branch name to config before init
     git init >/dev/null 2>&1
     git config pull.rebase false >/dev/null 2>&1
     git remote add origin "$full_git_url" >/dev/null 2>&1
-    git pull origin "$repobranch" >/dev/null 2>&1
+    git pull origin "$ghbranch" >/dev/null 2>&1
 }
 
 copyRestoreConfig() {
@@ -266,9 +266,9 @@ copyRestoreConfig() {
     loading_wheel "${Y}●${NC} Creating new .env" &
     loading_pid=$!
     sed -i "s/^github_token=.*/github_token=$ghtoken/" $temprestore
-    sed -i "s/^github_username=.*/github_username=$ghuser/" $temprestore
+    sed -i "s/^github_username=.*/github_username=$ghusername/" $temprestore
     sed -i "s/^github_repository=.*/github_repository=$ghrepo/" $temprestore
-    sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" $temprestore
+    sed -i "s/^branch_name=.*/branch_name=\"$ghbranch\"/" $temprestore
     cp $temprestore $envpath
     kill $loading_pid
     echo -e "${CL}${G}●${NC} Creating new .env ${G}Done!${NC}"
