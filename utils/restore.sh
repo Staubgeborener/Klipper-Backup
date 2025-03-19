@@ -85,10 +85,10 @@ validate_commit() {
         git fetch origin $ghbranch 2>/dev/null
         echo 30
         sleep 0.1
-        if git cat-file -e $commit_hash^{commit}; then
+        if git cat-file -e $commit_hash^{commit} 2>/dev/null; then
             echo 50
             sleep 0.1
-            if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
+            if git ls-tree -r $commit_hash --name-only | grep -q "restore.config" 2>/dev/null; then
                 git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
                 echo 80
                 sleep 0.1
@@ -97,8 +97,8 @@ validate_commit() {
             fi
         fi
     } | whiptail --gauge "Checking for Commit $commit_hash..." 8 50 0
-    if [[ "$commit_hash" =~ ^[0-9a-f]{7,40}$ ]] && git cat-file -e $commit_hash^{commit}; then
-        if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
+    if [[ "$commit_hash" =~ ^[0-9a-f]{7,40}$ ]] && git cat-file -e $commit_hash^{commit} 2>/dev/null; then
+        if git ls-tree -r $commit_hash --name-only | grep -q "restore.config" 2>/dev/null; then
             return 0
         else
             return 1
@@ -228,12 +228,13 @@ configure() {
                 continue
             fi
             validate_commit $ghcommithash
-            if [ $? -eq 1 ]; then
+            result=$?
+            if [ $result -eq 1 ]; then
                 whiptail --msgbox "Commit: $ghcommithash found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
                 ghcommithash=""
                 ghbranch=""
                 continue
-            elif [ $? -eq 2 ]; then
+            elif [ $result -eq 2 ]; then
                 whiptail --msgbox "Commit: $ghcommithash does not exist.\n Please choose another branch or specify a different commit hash to restore from." 10 76
                 ghcommithash=""
                 ghbranch=""
