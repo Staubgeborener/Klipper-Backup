@@ -8,7 +8,9 @@ scriptsh_parent_path=$(
     pwd -P
 )
 
-source "$scriptsh_parent_path/utils/utils.func"
+# Initialize functions from utils
+source "$scriptsh_parent_path"/utils/utils.func
+#
 
 debug_info() {
     echo -e "DEBUG INFO:\n\n\

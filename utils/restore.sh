@@ -25,7 +25,6 @@ main() {
     logo
     check_klipper_installed
     configure
-    line
     copyRestoreConfig
     source $temprestore
     sudo systemctl stop klipper.service
@@ -67,154 +66,169 @@ dependencies() {
 }
 
 configure() {
-    tput sc
-    getToken() {
-        ghtoken_username=""
-        ghtoken=$(ask_token "${C}●${NC} Enter your GitHub token associated with the backup you want to restore")
-        result=$(check_ghToken "$ghtoken") # Check GitHub Token using API
-
-        if [ -n "$result" ]; then
-            tput sc
-            tput ed
-            ghtoken_username=$result
-            getUser
-        else
-            tput rc
-            tput ed
-            echo -e "${CL}${Y}●${NC} Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!"
-            getToken
-        fi
-    }
-    getUser() {
-        pos=$(getcursor)
-        ghuser=$(ask_textinput "${C}●${NC} Enter your github username" "$ghtoken_username")
-
-        menu $pos
-        exitstatus=$?
-        if [ $exitstatus = 0 ]; then
-            tput cup $pos 0
-            tput ed
-            tput sc
-            getRepo
-        else
-            tput rc
-            tput ed
-            getUser
-        fi
-    }
-    getRepo() {
-        pos=$(getcursor)
-        ghrepo=$(ask_textinput "${C}●${NC} Enter your repository name")
-        if [ "$ghrepo" == "" ]; then
-            tput rc
-            tput ed
-            echo -e "${Y}●${NC} Repository name cannot be empty!"
-            getRepo
-        else
-            menu $pos
-        fi
-        exitstatus=$?
-        if [ $exitstatus = 0 ]; then
-            tput cup $pos 0
-            tput ed
-            tput sc
-            getBranch
-        else
-            tput rc
-            tput ed
-            getRepo
-        fi
-    }
-    getBranch() {
-        pos=$(getcursor)
-        repobranch=$(ask_textinput "${C}●${NC} Enter your desired branch name" "main")
-
-        menu $pos
-        exitstatus=$?
-        if [ $exitstatus = 0 ]; then
-            tput cup $pos 0
-            tput ed
-            getCommit
-        else
-            tput rc
-            tput ed
-            getBranch
-        fi
-    }
-    getCommit() {
-        if ask_yn "${C}●${NC} Would you like to restore from a specific commit?" "no"; then
-            tput ed
-            tput sc
-            commitHash
-        else
-            tempfolder
-            if !(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
-                tput cup $pos 0
-                tput ed
-                echo -e "${DM}●${NC} The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from."
-                getBranch
+    while true; do
+        if [ -z $ghtoken ]; then
+            ghtoken=$(whiptail --title "Klipper Backup Restore" --passwordbox "Enter your Github token:" 10 76 "" 3>&1 1>&2 2>&3)
+            check=$(checkExit $?)
+            case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+            redo)
+                ghtoken=""
+                continue
+                ;;
+            back)
+                continue
+                ;;
+            quit) exit 1 ;;
+            esac
+            if [ -z "$ghtoken" ]; then
+                whiptail --msgbox "GitHub token cannot be empty!" 10 50
+                continue
+            fi
+            ghusername=$(check_ghToken "$ghtoken")
+            if [ -z "$username" ]; then
+                whiptail --msgbox "Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!" 10 76
+                ghtoken=""
+                continue
             fi
         fi
-    }
-    commitHash() {
-        pos=$(getcursor)
-        commit_hash=$(ask_textinput "${C}●${NC} Enter the commit hash you would like to restore from")
-        if [ "$commit_hash" == "" ]; then
-            tput rc
-            tput ed
-            echo -e "${Y}●${NC} Commit ID cannot be empty!"
-            commitHash
-        elif [ "$commit_hash" == "B" ] || [ "$commit_hash" == "b" ]; then
-            tput cup $(($pos - 3)) 0
-            tput ed
-            getCommit
-        else
-            menu $pos
+        if [ -z $ghrepo ]; then
+            ghrepo=$(whiptail --title "Klipper Backup Restore" --inputbox "Enter your repository name:" 10 50 "" 3>&1 1>&2 2>&3)
+            check=$(checkExit $?)
+            case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+            redo)
+                ghrepo=""
+                continue
+                ;;
+            back)
+                ghtoken=""
+                ghrepo=""
+                continue
+                ;;
+            quit) exit 1 ;;
+            esac
+            if [ -z "$ghrepo" ]; then
+                whiptail --msgbox "Repository name cannot be empty!" 10 50
+                continue
+            fi
         fi
-
-        exitstatus=$?
-        if [ $exitstatus = 0 ]; then
-            tput cup $pos 0
-            tput ed
-            validate_commit $commit_hash
-        else
-            tput rc
-            tput ed
-            commitHash
+        if [ -z $ghbranch ]; then
+            ghbranch=$(whiptail --title "Klipper Backup Restore" --inputbox "Enter the branch name:" 10 50 "" 3>&1 1>&2 2>&3)
+            check=$(checkExit $?)
+            case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+            redo)
+                ghbranch=""
+                continue
+                ;;
+            back)
+                ghrepo=""
+                ghbranch=""
+                continue
+                ;;
+            quit) exit 1 ;;
+            esac
+            if [ -z "$ghbranch" ]; then
+                whiptail --msgbox "Branch name cannot be empty!" 10 50
+                continue
+            fi
         fi
-    }
-
-    set +e
-    getToken
-    set -e
-}
-
-validate_commit() {
-    local commit_hash=$1
-    loading_wheel "${Y}●${NC} Checking for Commit" &
-    loading_pid=$!
-    tempfolder
-    git fetch origin $repobranch 2>/dev/null
-    if git cat-file -e $commit_hash^{commit}; then
-        if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
-            git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
-            kill $loading_pid
-            echo -e "${CL}${G}●${NC} Commit Found! Using ${G}$commit_hash${NC} for restore\n  Commit Message: $(git show -s --format='%s')${NC}"
-            tput sc
-        else
-            tput rc
-            tput ed
-            kill $loading_pid
-            echo -e "${DM}●${NC} Commit ${DM}$commit_hash${NC} found! However this commit does not contain the necessary files to restore. To go back enter B as the input."
-            commitHash
+        if [ -z $commit_option ]; then
+            commit_option=$(whiptail --title "Klipper Backup Restore" --default-item "No" --menu "Restore from specific commit? (Default No)" 15 75 3 \
+                "Yes" "| Enter a commit hash" \
+                "No" "| Continue without specifying a commit" \
+                3>&1 1>&2 2>&3)
+            check=$(checkExit $?)
+            case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+            redo)
+                ghcommithash=""
+                continue
+                ;;
+            back)
+                ghbranch=""
+                ghcommithash=""
+                continue
+                ;;
+            quit) exit 1 ;;
+            esac
+            case "$(echo "$commit_option" | tr '[:upper:]' '[:lower:]')" in
+            no)
+                ghcommithash=""
+                tempfolder
+                if !(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
+                    whiptail --msgbox "The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from." 10 76
+                    ghbranch=""
+                    ghcommithash=""
+                    continue
+                fi
+                break
+                ;;
+            yes) ;;
+            esac
         fi
-    else
-        tput rc
-        tput ed
-        kill $loading_pid
-        echo -e "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist. To go back enter B as the input."
-        commitHash
-    fi
+        if [ -z $ghcommithash ]; then
+            ghcommithash=$(whiptail --title "Klipper Backup Restore" --inputbox "Enter the commit hash:" 10 50 "" 3>&1 1>&2 2>&3)
+            check=$(checkExit $?)
+            case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+            redo)
+                ghcommithash=""
+                continue
+                ;;
+            back)
+                commit_option=""
+                ghcommithash=""
+                continue
+                ;;
+            quit) exit 1 ;;
+            esac
+            if [ -z "$ghcommithash" ]; then
+                whiptail --msgbox "Commit hash cannot be empty!" 10 50
+                continue
+            fi
+            validate_commit $ghcommithash
+        fi
+        validate_commit() {
+            local commit_hash=$1
+            tempfolder
+
+            {
+                echo 10
+                sleep 0.1
+
+                git fetch origin $repobranch 2>/dev/null
+                echo 30
+                sleep 0.1
+
+                if git cat-file -e $commit_hash^{commit}; then
+                    echo 50
+                    sleep 0.1
+
+                    if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
+                        git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
+                        echo 80
+                        sleep 0.1
+
+                        echo 100
+                        sleep 0.3
+                    fi
+                fi
+            } | whiptail --gauge "Checking for Commit $commit_hash..." 8 50 0
+
+            if git cat-file -e $commit_hash^{commit}; then
+                if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
+                    whiptail --msgbox "Commit Found! Using $commit_hash for restore\n  Commit Message: $(git show -s --format='%s')" 10 76
+                    break
+                else
+                    ghcommithash=""
+                    ghbranch=""
+                    whiptail --msgbox "Commit ${G}$commit_hash${NC} found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
+                    continue
+                fi
+            else
+                whiptail --msgbox "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from."
+                continue
+            fi
+        }
+        break
+    done
 }
 
 tempfolder() {
