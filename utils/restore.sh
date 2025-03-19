@@ -76,6 +76,47 @@ checkExit() {
     fi
 }
 
+validate_commit() {
+    local commit_hash=$1
+    tempfolder
+
+    {
+        echo 10
+        sleep 0.1
+
+        git fetch origin $ghbranch 2>/dev/null
+        echo 30
+        sleep 0.1
+
+        if git cat-file -e $commit_hash^{commit}; then
+            echo 50
+            sleep 0.1
+
+            if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
+                git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
+                echo 80
+                sleep 0.1
+
+                echo 100
+                sleep 0.3
+            fi
+        fi
+    } | whiptail --gauge "Checking for Commit $commit_hash..." 8 50 0
+
+    if git cat-file -e $commit_hash^{commit}; then
+        if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
+            whiptail --msgbox "Commit Found! Using $commit_hash for restore\n  Commit Message: $(git show -s --format='%s')" 10 76
+            echo 0
+        else
+            whiptail --msgbox "Commit ${G}$commit_hash${NC} found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
+            echo 1
+        fi
+    else
+        whiptail --msgbox "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from."
+        echo 1
+    fi
+}
+
 configure() {
     while true; do
         if [ -z $ghtoken ]; then
@@ -196,49 +237,11 @@ configure() {
                 continue
             fi
             validate_commit $ghcommithash
-        fi
-        validate_commit() {
-            local commit_hash=$1
-            tempfolder
-
-            {
-                echo 10
-                sleep 0.1
-
-                git fetch origin $ghbranch 2>/dev/null
-                echo 30
-                sleep 0.1
-
-                if git cat-file -e $commit_hash^{commit}; then
-                    echo 50
-                    sleep 0.1
-
-                    if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
-                        git -c advice.detachedHead=false checkout $commit_hash 2>/dev/null
-                        echo 80
-                        sleep 0.1
-
-                        echo 100
-                        sleep 0.3
-                    fi
-                fi
-            } | whiptail --gauge "Checking for Commit $commit_hash..." 8 50 0
-
-            if git cat-file -e $commit_hash^{commit}; then
-                if git ls-tree -r $commit_hash --name-only | grep -q "restore.config"; then
-                    whiptail --msgbox "Commit Found! Using $commit_hash for restore\n  Commit Message: $(git show -s --format='%s')" 10 76
-                    break
-                else
-                    ghcommithash=""
-                    ghbranch=""
-                    whiptail --msgbox "Commit ${G}$commit_hash${NC} found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
-                    continue
-                fi
-            else
-                whiptail --msgbox "${R}●${NC} Commit ${R}$commit_hash${NC} does not exist.\n Please choose another branch or specify a different commit hash to restore from."
-                continue
+            if [ $? -ne 0 ]; then
+                ghcommithash=""
+                ghbranch=""
             fi
-        }
+        fi
         break
     done
 }
