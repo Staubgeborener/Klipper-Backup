@@ -33,7 +33,7 @@ You can choose whether you want to push empty commits or not. This serves to per
 
 | Parameter            | Possible values | Default value | Example                       |
 | -------------------- | --------------- |---------------|------------------------------ |
-| `allow_empty_commits`| `true`, `false` | `true `       | `allow_empty_commits="false"` |
+| `allow_empty_commits`| `true`, `false` | `true`        | `allow_empty_commits="false"` |
 
 ### 4. git_protocol
 You can use the values `http`, `https` or `ssh` here (default value: `https`). This enables, for example, the local use of git if `https` is not supported.
@@ -58,6 +58,13 @@ If you want to push the backup via ssh and have assigned an individual ssh user,
 | Parameter  | Possible values | Default value | Example              |
 | -----------| ----------------|---------------|--------------------- |
 | `ssh_user` | *anything*      | `git`         | `ssh_user="sshuser"` |
+
+### 7. use_filenames_as_commit_msg
+By default, Klipper-Backup shows the timestamp or other information in the commit, with this function the names of the files are displayed in the commit history, which were actually changed. The value can be `true` or `false` (default value if nothing is defined: `false`).
+
+| Parameter                    | Possible values | Default value | Example                              |
+| ---------------------------- | --------------- |---------------|------------------------------------- |
+| `use_filenames_as_commit_msg`| `true`, `false` | `false`       | `use_filenames_as_commit_msg="true"` |
 
 ## Paths
 Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here are considered in the backup. **Note the pattern!** which is explained inside the `.env` file.
