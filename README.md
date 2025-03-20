@@ -1,3 +1,6 @@
+# ANNOUNCEMENT
+The beta test for the restore function is now open, more information can be found [here](https://github.com/Staubgeborener/Klipper-Backup/discussions/143).
+
 # Klipper-Backup 💾
 Klipper-Backup is a script for manual or automated GitHub backups. It's Lightweight, pragmatic and comfortable.
 

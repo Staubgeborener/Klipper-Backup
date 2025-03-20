@@ -23,6 +23,7 @@ echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}
 backup_folder="config_backup"
 backup_path="$HOME/$backup_folder"
 allow_empty_commits=${allow_empty_commits:-true}
+use_filenames_as_commit_msg=${use_filenames_as_commit_msg:-false}
 git_protocol=${git_protocol:-"https"}
 git_host=${git_host:-"github.com"}
 ssh_user=${ssh_user:-"git"}
@@ -250,6 +251,12 @@ cd "$backup_path"
 if ! [ -f "README.md" ]; then
     echo -e "# Klipper-Backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [Klipper-Backup](https://github.com/Staubgeborener/klipper-backup)." >"$backup_path/README.md"
 fi
+
+# Show in commit message which files have been changed
+if $use_filenames_as_commit_msg; then
+    commit_message=$(git diff --name-only "$branch_name" | xargs -n 1 basename | tr '\n' ' ')
+fi
+
 # Untrack all files so that any new excluded files are correctly ignored and deleted from remote
 git rm -r --cached . >/dev/null 2>&1
 git add .
