@@ -26,6 +26,8 @@ curl -fsSL get.klipperbackup.xyz | bash
 Before you open an issue on GitHub or ask somewhere: Please take a quick look at the [FAQ](faq.md). For example, there is [this article](faq.md/#fix-git-errors) that solves most of the problems directly.
 
 ## Media
+![type:video](https://www.youtube.com/embed/RCWWtzrI-e8)
+
 ![type:video](https://www.youtube.com/embed/47qV9BE2n_Y)
 
 ![type:video](https://www.youtube.com/embed/J4_dlCtZY48)
