@@ -115,7 +115,7 @@ configure() {
             check=$(checkExit $?)
             case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
             redo)
-                ghtoken=""
+                unset ghtoken
                 continue
                 ;;
             back)
@@ -130,7 +130,7 @@ configure() {
             ghusername=$(check_ghToken "$ghtoken")
             if [ -z "$ghusername" ]; then
                 whiptail --msgbox "Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!" 10 76
-                ghtoken=""
+                unset ghtoken
                 continue
             fi
         fi
@@ -139,12 +139,12 @@ configure() {
             check=$(checkExit $?)
             case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
             redo)
-                ghrepo=""
+                unset ghrepo
                 continue
                 ;;
             back)
-                ghtoken=""
-                ghrepo=""
+                unset ghtoken
+                unset ghrepo
                 continue
                 ;;
             quit) exit 1 ;;
@@ -159,12 +159,12 @@ configure() {
             check=$(checkExit $?)
             case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
             redo)
-                ghbranch=""
+                unset ghbranch
                 continue
                 ;;
             back)
-                ghrepo=""
-                ghbranch=""
+                unset ghrepo
+                unset ghbranch
                 continue
                 ;;
             quit) exit 1 ;;
@@ -182,25 +182,25 @@ configure() {
             check=$(checkExit $?)
             case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
             redo)
-                ghcommithash=""
+                unset ghcommithash
                 continue
                 ;;
             back)
-                ghbranch=""
-                ghcommithash=""
+                unset ghbranch
+                unset ghcommithash
                 continue
                 ;;
             quit) exit 1 ;;
             esac
             case "$(echo "$commit_option" | tr '[:upper:]' '[:lower:]')" in
             no)
-                ghcommithash=""
+                unset ghcommithash
                 tempfolder
                 if !(git ls-tree -r HEAD --name-only | grep -q "restore.config"); then
                     whiptail --msgbox "The latest commit for this branch does not contain the necessary files to restore. Please choose another branch or specify a commit to restore from." 10 76
-                    ghbranch=""
-                    commit_option=""
-                    ghcommithash=""
+                    unset ghbranch
+                    unset commit_option
+                    unset ghcommithash
                     continue
                 fi
                 break
@@ -213,12 +213,12 @@ configure() {
             check=$(checkExit $?)
             case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
             redo)
-                ghcommithash=""
+                unset ghcommithash
                 continue
                 ;;
             back)
-                commit_option=""
-                ghcommithash=""
+                unset commit_option
+                unset ghcommithash
                 continue
                 ;;
             quit) exit 1 ;;
@@ -231,15 +231,15 @@ configure() {
             result=$?
             if [ $result -eq 1 ]; then
                 whiptail --msgbox "Commit: $ghcommithash found! However, this commit does not contain the necessary files to restore.\n Please choose another branch or specify a different commit hash to restore from." 10 76
-                    ghbranch=""
-                    commit_option=""
-                    ghcommithash=""
+                    unset ghbranch
+                    unset commit_option
+                    unset ghcommithash
                 continue
             elif [ $result -eq 2 ]; then
                 whiptail --msgbox "Commit: $ghcommithash does not exist.\n Please choose another branch or specify a different commit hash to restore from." 10 76
-                    ghbranch=""
-                    commit_option=""
-                    ghcommithash=""
+                    unset ghbranch
+                    unset commit_option
+                    unset ghcommithash
                 continue
             else
                 whiptail --msgbox "Commit Found! Using: $ghcommithash for restore\n  Commit Message: $(git show -s --format='%s')" 10 76
