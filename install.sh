@@ -71,7 +71,7 @@ check_updates() {
     if [ "$(git rev-parse HEAD)" = "$(git ls-remote $(git rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1)" ]; then
         echo -e "${G}●${NC} Klipper-Backup ${G}is up to date.${NC}\n"
     else
-        echo -e "${Y}●${NC} Update for klipper-backup ${Y}Available!${NC}\n"
+        echo -e "${Y}●${NC} Update for Klipper-Backup ${Y}Available!${NC}\n"
         questionline=$(getcursor)
         if ask_yn "Proceed with update?"; then
             tput cup $(($questionline - 3)) 0
@@ -236,11 +236,11 @@ patch_klipper-backup_update_manager() {
     questionline=$(getcursor)
     if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
         if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
-            if ask_yn "Would you like to add klipper-backup to moonraker update manager?"; then
+            if ask_yn "Would you like to add Klipper-Backup to moonraker update manager?"; then
                 tput cup $(($questionline - 2)) 0
                 tput ed
                 pos1=$(getcursor)
-                loading_wheel "${Y}●${NC} Adding klipper-backup to update manager" &
+                loading_wheel "${Y}●${NC} Adding Klipper-Backup to update manager" &
                 loading_pid=$!
                 ### add new line to conf if it doesn't end with one
                 if [[ $(tail -c1 "$HOME/printer_data/config/moonraker.conf" | wc -l) -eq 0 ]]; then
@@ -252,16 +252,16 @@ patch_klipper-backup_update_manager() {
                 fi
 
                 kill $loading_pid
-                echo -e "${CL}${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
+                echo -e "${CL}${G}●${NC} Adding Klipper-Backup to update manager ${G}Done!${NC}\n"
             else
                 tput cup $(($questionline - 2)) 0
                 tput ed
-                echo -e "${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
+                echo -e "${CL}${M}●${NC} Adding Klipper-Backup to update manager ${M}Skipped!${NC}\n"
             fi
         else
             tput cup $(($questionline - 2)) 0
             tput ed
-            echo -e "${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
+            echo -e "${CL}${M}●${NC} Adding Klipper-Backup to update manager ${M}Skipped! (Already Added)${NC}\n"
         fi
     else
         tput cup $(($questionline - 2)) 0
@@ -428,29 +428,35 @@ install_backup_service() {
 
 install_cron() {
     questionline=$(getcursor)
-    if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
-        if ask_yn "Would you like to install the cron task? (automatic backup every 4 hours)"; then
-            tput cup $(($questionline - 2)) 0
-            tput ed
-            pos1=$(getcursor)
-            loading_wheel "${Y}●${NC} Installing cron task" &
-            loading_pid=$!
-            (
-                crontab -l 2>/dev/null
-                echo "0 */4 * * * $HOME/klipper-backup/script.sh -c \"Cron backup - \$(date +'\\%x - \\%X')\""
-            ) | crontab -
-            sleep .5
-            kill $loading_pid
-            echo -e "${CL}${G}●${NC} Installing cron task ${G}Done!${NC}\n"
+    if [ -x "$(command -v cron)" ]; then
+        if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
+            if ask_yn "Would you like to install the cron task? (automatic backup every 4 hours)"; then
+                tput cup $(($questionline - 2)) 0
+                tput ed
+                pos1=$(getcursor)
+                loading_wheel "${Y}●${NC} Installing cron task" &
+                loading_pid=$!
+                (
+                    crontab -l 2>/dev/null
+                    echo "0 */4 * * * $HOME/klipper-backup/script.sh -c \"Cron backup - \$(date +'\\%x - \\%X')\""
+                ) | crontab -
+                sleep .5
+                kill $loading_pid
+                echo -e "\r\033[K${G}●${NC} Installing cron task ${G}Done!${NC}\n"
+            else
+                tput cup $(($questionline - 2)) 0
+                tput ed
+                echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
+            fi
         else
             tput cup $(($questionline - 2)) 0
             tput ed
-            echo -e "${CL}${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
+            echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped! (already installed)${NC}\n"
         fi
     else
         tput cup $(($questionline - 2)) 0
         tput ed
-        echo -e "${CL}${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
+        echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped! (cron is not installed on system)${NC}\n"
     fi
 }
 
