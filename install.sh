@@ -71,7 +71,7 @@ check_updates() {
     if [ "$(git rev-parse HEAD)" = "$(git ls-remote $(git rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1)" ]; then
         echo -e "${G}●${NC} Klipper-Backup ${G}is up to date.${NC}\n"
     else
-        echo -e "${Y}●${NC} Update for klipper-backup ${Y}Available!${NC}\n"
+        echo -e "${Y}●${NC} Update for Klipper-Backup ${Y}Available!${NC}\n"
         questionline=$(getcursor)
         if ask_yn "Proceed with update?"; then
             tput cup $(($questionline - 3)) 0
@@ -93,7 +93,7 @@ check_updates() {
         else
             tput cup $(($questionline - 3)) 0
             clearUp
-            echo -e "${M}●${NC} Klipper-Backup update ${M}Skipped!${NC}\n"
+            echo -e "${M}●${NC} Klipper-Backup update ${M}skipped!${NC}\n"
         fi
     fi
 }
@@ -227,7 +227,7 @@ configure() {
     else
         tput cup $(($questionline - 1)) 0
         clearUp
-        echo -e "\r\033[K${M}●${NC} Configuration ${M}Skipped!${NC}\n"
+        echo -e "\r\033[K${M}●${NC} Configuration ${M}skipped!${NC}\n"
         pos1=$(getcursor)
     fi
 }
@@ -236,11 +236,11 @@ patch_klipper-backup_update_manager() {
     questionline=$(getcursor)
     if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
         if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
-            if ask_yn "Would you like to add klipper-backup to moonraker update manager?"; then
+            if ask_yn "Would you like to add Klipper-Backup to moonraker update manager?"; then
                 tput cup $(($questionline - 2)) 0
                 tput ed
                 pos1=$(getcursor)
-                loading_wheel "${Y}●${NC} Adding klipper-backup to update manager" &
+                loading_wheel "${Y}●${NC} Adding Klipper-Backup to update manager" &
                 loading_pid=$!
                 ### add new line to conf if it doesn't end with one
                 if [[ $(tail -c1 "$HOME/printer_data/config/moonraker.conf" | wc -l) -eq 0 ]]; then
@@ -252,21 +252,21 @@ patch_klipper-backup_update_manager() {
                 fi
 
                 kill $loading_pid
-                echo -e "\r\033[K${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
+                echo -e "\r\033[K${G}●${NC} Adding Klipper-Backup to update manager ${G}Done!${NC}\n"
             else
                 tput cup $(($questionline - 2)) 0
                 tput ed
-                echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
+                echo -e "\r\033[K${M}●${NC} Adding Klipper-Backup to update manager ${M}skipped!${NC}\n"
             fi
         else
             tput cup $(($questionline - 2)) 0
             tput ed
-            echo -e "\r\033[K${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
+            echo -e "\r\033[K${M}●${NC} Adding Klipper-Backup to update manager ${M}skipped! (already added)${NC}\n"
         fi
     else
         tput cup $(($questionline - 2)) 0
         tput ed
-        echo -e "${R}●${NC} Moonraker is not installed update manager configuration ${R}Skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
+        echo -e "${R}●${NC} Moonraker is not installed update manager configuration ${R}skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
     fi
 }
 
@@ -294,7 +294,7 @@ install_filewatch_service() {
         if ! checkinotify >/dev/null 2>&1; then # Checks if the version of inotify installed matches the latest release
             removeOldInotify
             echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
-            sudo rm -rf inotify-tools/                              # remove folder incase it for some reason still exists
+            sudo rm -rf inotify-tools/ # remove folder incase it for some reason still exists
             sudo rm -f /usr/bin/fsnotifywait /usr/bin/fsnotifywatch # remove symbolic links to keep error about file exists from occurring
             loading_wheel "   ${Y}●${NC} Clone inotify-tools repo" &
             loading_pid=$!
@@ -358,7 +358,7 @@ install_filewatch_service() {
     else
         tput cup $(($questionline - 2)) 0
         tput ed
-        echo -e "\r\033[K${M}●${NC} Installing filewatch service ${M}Skipped!${NC}\n"
+        echo -e "\r\033[K${M}●${NC} Installing filewatch service ${M}skipped!${NC}\n"
 
     fi
 }
@@ -422,35 +422,41 @@ install_backup_service() {
     else
         tput cup $(($questionline - 2)) 0
         tput ed
-        echo -e "\r\033[K${M}●${NC} Installing on-boot service ${M}Skipped!${NC}\n"
+        echo -e "\r\033[K${M}●${NC} Installing on-boot service ${M}skipped!${NC}\n"
     fi
 }
 
 install_cron() {
     questionline=$(getcursor)
-    if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
-        if ask_yn "Would you like to install the cron task? (automatic backup every 4 hours)"; then
-            tput cup $(($questionline - 2)) 0
-            tput ed
-            pos1=$(getcursor)
-            loading_wheel "${Y}●${NC} Installing cron task" &
-            loading_pid=$!
-            (
-                crontab -l 2>/dev/null
-                echo "0 */4 * * * $HOME/klipper-backup/script.sh -c \"Cron backup - \$(date +'\\%x - \\%X')\""
-            ) | crontab -
-            sleep .5
-            kill $loading_pid
-            echo -e "\r\033[K${G}●${NC} Installing cron task ${G}Done!${NC}\n"
+    if [ -x "$(command -v cron)" ]; then
+        if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
+            if ask_yn "Would you like to install the cron task? (automatic backup every 4 hours)"; then
+                tput cup $(($questionline - 2)) 0
+                tput ed
+                pos1=$(getcursor)
+                loading_wheel "${Y}●${NC} Installing cron task" &
+                loading_pid=$!
+                (
+                    crontab -l 2>/dev/null
+                    echo "0 */4 * * * $HOME/klipper-backup/script.sh -c \"Cron backup - \$(date +'\\%x - \\%X')\""
+                ) | crontab -
+                sleep .5
+                kill $loading_pid
+                echo -e "\r\033[K${G}●${NC} Installing cron task ${G}Done!${NC}\n"
+            else
+                tput cup $(($questionline - 2)) 0
+                tput ed
+                echo -e "\r\033[K${M}●${NC} Installing cron task ${M}skipped!${NC}\n"
+            fi
         else
             tput cup $(($questionline - 2)) 0
             tput ed
-            echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
+            echo -e "\r\033[K${M}●${NC} Installing cron task ${M}skipped! (already Installed)${NC}\n"
         fi
     else
-        tput cup $(($questionline - 2)) 0
-        tput ed
-        echo -e "\r\033[K${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
+            tput cup $(($questionline - 2)) 0
+            tput ed
+            echo -e "\r\033[K${M}●${NC} Installing cron task ${M}skipped! (cron is not installed on system)${NC}\n"
     fi
 }
 
