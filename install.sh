@@ -454,9 +454,9 @@ install_cron() {
             echo -e "\r\033[K${M}●${NC} Installing cron task ${M}skipped! (already Installed)${NC}\n"
         fi
     else
-            tput cup $(($questionline - 2)) 0
-            tput ed
-            echo -e "\r\033[K${M}●${NC} Installing cron task ${M}skipped! (cron is not installed on system)${NC}\n"
+        tput cup $(($questionline - 2)) 0
+        tput ed
+        echo -e "\r\033[K${M}●${NC} Installing cron task ${M}skipped! (cron is not installed on system)${NC}\n"
     fi
 }
 
