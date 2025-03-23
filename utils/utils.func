@@ -1,19 +1,19 @@
-R=$'\e[91m' # Red ${BR}
-G=$'\e[92m' # Green ${G}
-Y=$'\e[93m' # Yellow ${Y}
-B=$'\e[94m' # Blue ${B}
-M=$'\e[95m' # Magenta ${M}
-C=$'\e[96m' # Cyan ${C}
-DR=$'\e[31m' # Dark Red ${DR}
-DG=$'\e[32m' # Dark Green ${DG}
-DY=$'\e[33m' # Dark Yellow ${DY}
-DB=$'\e[34m' # Dark Blue ${DB}
-DM=$'\e[35m' # Dark Magenta ${DM}
-DC=$'\e[36m' # Dark Cyan ${DC}
+R=$'\e[91m'    # Red ${BR}
+G=$'\e[92m'    # Green ${G}
+Y=$'\e[93m'    # Yellow ${Y}
+B=$'\e[94m'    # Blue ${B}
+M=$'\e[95m'    # Magenta ${M}
+C=$'\e[96m'    # Cyan ${C}
+DR=$'\e[31m'   # Dark Red ${DR}
+DG=$'\e[32m'   # Dark Green ${DG}
+DY=$'\e[33m'   # Dark Yellow ${DY}
+DB=$'\e[34m'   # Dark Blue ${DB}
+DM=$'\e[35m'   # Dark Magenta ${DM}
+DC=$'\e[36m'   # Dark Cyan ${DC}
 NC=$'\e[0m'    # No Color ${NC}
 CL=$'\r\033[K' # Clear Line
-UL=$'\e[4m' # Underline
-BOLD=$'\e[1m' # Bold
+UL=$'\e[4m'    # Underline
+BOLD=$'\e[1m'  # Bold
 
 # Create unique id for git email
 getUniqueid() {
@@ -41,16 +41,16 @@ loading_wheel() {
 }
 
 line() {
-  
-  echo -e "\n===============================================================================================================\n"
+
+    echo -e "\n===============================================================================================================\n"
 }
 
 getcursor() {
     local pos
     # Send the escape sequence to the terminal device.
-    printf '\e[6n' > /dev/tty
+    printf '\e[6n' >/dev/tty
     # Read the response (expected to be ESC [ row ; col R) from /dev/tty.
-    IFS='[;' read -d R -rs -a pos < /dev/tty
+    IFS='[;' read -d R -rs -a pos </dev/tty
     echo "${pos[1]}"
 }
 
@@ -183,19 +183,42 @@ function menu() {
     done
 }
 
-check_ghToken() {
+getUsername() {
     GITHUB_TOKEN="$1"
     API_URL="https://api.github.com/user"
 
-    response=$(curl -s -H "Authorization: token $GITHUB_TOKEN" $API_URL)
+    response=$(curl -s -w "%{http_code}" -H "Authorization: token $GITHUB_TOKEN" "$API_URL")
 
-    if [[ $response =~ "message" ]]; then
-        ghtoken_username=""
-        echo $ghtoken_username
-    else
-        ghtoken_username=$(echo $response | jq -r '.login')
-        echo $ghtoken_username
+    http_status="${response: -3}"
+    json_response="${response:0:${#response}-3}"
+
+    if [[ "$http_status" -ne 200 ]]; then
+        echo "Error: Invalid token or API error (HTTP $http_status)"
+        return 1
     fi
+
+    $username=$(echo "$json_response" | jq -r '.login')
+    echo "$username"
+}
+
+checkPrivate() {
+    GITHUB_TOKEN="$1"
+    OWNER="$2"
+    REPO="$3"
+    API_URL="https://api.github.com/repos"
+
+    response=$(curl -s -w "%{http_code}" -H "Authorization: token $GITHUB_TOKEN" "$API_URL/$OWNER/$REPO")
+
+    http_status="${response: -3}"
+    json_response="${response:0:${#response}-3}"
+
+    if [[ "$http_status" -ne 200 ]]; then
+        echo "Error: Invalid token or API error (HTTP $http_status)"
+        return 1
+    fi
+
+    PRIVATE=$(echo "$json_response" | jq -r '.private')
+    echo "$PRIVATE"
 }
 
 service_exists() {
