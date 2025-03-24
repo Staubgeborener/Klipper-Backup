@@ -98,139 +98,126 @@ check_updates() {
     fi
 }
 
+checkExit() {
+    if [ $1 -ne 0 ]; then
+        exit 1
+    fi
+}
+
 configure() {
-    unset ghtoken_username
-    questionline=$(getcursor)
     if grep -q "github_token=ghp_xxxxxxxxxxxxxxxx" "$parent_path"/.env; then # Check if the github token still matches the value when initially copied from .env.example
         message="Do you want to proceed with configuring the Klipper-Backup .env?"
     else
         message="Do you want to proceed with reconfiguring the Klipper-Backup .env?"
     fi
-    if ask_yn "$message"; then
-        tput cup $(($questionline - 1)) 0
-        clearUp
-        pos1=$(getcursor)
-        pos2=$(getcursor)
 
-        getToken() {
-            echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens (Ensure you set access to the backup repository and have push/pull & commit permissions for the token) \n"
-            ghtoken=$(ask_token "Enter your GitHub token")
-            result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
-            if [ "$result" != "" ]; then
-                sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
-                ghtoken_username=$result
-            else
-                tput cup $(($pos2 - 2)) 0
-                tput ed
-                pos2=$(getcursor)
-                echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
-                getToken
-            fi
-        }
-        getUser() {
-            pos2=$(getcursor)
-            ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
+    configResult=$(whiptail --title "Klipper Backup Restore" --noitem --default-item "Yes" --menu "$message" 15 75 3 \
+        "Yes" "" \
+        "No" "" \
+        3>&1 1>&2 2>&3)
 
-            menu $pos2
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
-                tput cup $pos2 0
-                tput ed
-            else
-                tput cup $(($pos2 - 1)) 0
-                tput ed
-                getUser
-            fi
-        }
-        getRepo() {
-            pos2=$(getcursor)
-            ghrepo=$(ask_textinput "Enter your repository name")
-
-            menu $pos2
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
-                tput cup $pos2 0
-                tput ed
-            else
-                tput cup $(($pos2 - 1)) 0
-                tput ed
-                getRepo
-            fi
-        }
-        getBranch() {
-            pos2=$(getcursor)
-            repobranch=$(ask_textinput "Enter your desired branch name" "main")
-
-            menu $pos2
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
-                tput cup $pos2 0
-                tput ed
-            else
-                tput cup $(($pos2 - 1)) 0
-                tput ed
-                getBranch
-            fi
-        }
-        getCommitName() {
-            pos2=$(getcursor)
-            commitname=$(ask_textinput "Enter desired commit username" "$(whoami)")
-
-            menu $pos2
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
-                tput cup $pos2 0
-                tput ed
-            else
-                tput cup $(($pos2 - 1)) 0
-                tput ed
-                getCommitName
-            fi
-        }
-        getCommitEmail() {
-            pos2=$(getcursor)
-            commitemail=$(ask_textinput "Enter desired commit email" "$(whoami)@$(hostname --short)-$unique_id")
-
-            menu $pos2
-            exitstatus=$?
-            if [ $exitstatus = 0 ]; then
-                sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
-                tput cup $pos2 0
-                tput ed
-            else
-                tput cup $(($pos2 - 1)) 0
-                tput ed
-                getCommitEmail
-            fi
-        }
-
+    checkExit $?
+    if [[ $configResult == "Yes" ]]; then
         while true; do
-            set +e
-            getToken
-            getUser
-            getRepo
-            getBranch
-            getCommitName
-            getCommitEmail
-            set -e
-            break
-        done
+            getToken() {
+                echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
+                ghtoken=$(ask_token "Enter your GitHub token")
+                result=$(getUsername "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
+                if [ "$result" != "" ]; then
+                    sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
+                    ghtoken_username=$result
+                else
+                    tput cup $(($pos2 - 2)) 0
+                    tput ed
+                    pos2=$(getcursor)
+                    echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
+                    getToken
+                fi
+            }
+            getUser() {
+                pos2=$(getcursor)
+                ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
 
-        tput cup $(($questionline - 1)) 0
-        tput ed
-        echo -e "${CL}${G}●${NC} Configuration ${G}Done!${NC}\n"
-        pos1=$(getcursor)
-    else
-        tput cup $(($questionline - 1)) 0
-        clearUp
-        echo -e "${CL}${M}●${NC} Configuration ${M}Skipped!${NC}\n"
-        pos1=$(getcursor)
+                menu $pos2
+                exitstatus=$?
+                if [ $exitstatus = 0 ]; then
+                    sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
+                    tput cup $pos2 0
+                    tput ed
+                else
+                    tput cup $(($pos2 - 1)) 0
+                    tput ed
+                    getUser
+                fi
+            }
+            getRepo() {
+                pos2=$(getcursor)
+                ghrepo=$(ask_textinput "Enter your repository name")
+
+                menu $pos2
+                exitstatus=$?
+                if [ $exitstatus = 0 ]; then
+                    sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
+                    tput cup $pos2 0
+                    tput ed
+                else
+                    tput cup $(($pos2 - 1)) 0
+                    tput ed
+                    getRepo
+                fi
+            }
+            getBranch() {
+                pos2=$(getcursor)
+                repobranch=$(ask_textinput "Enter your desired branch name" "main")
+
+                menu $pos2
+                exitstatus=$?
+                if [ $exitstatus = 0 ]; then
+                    sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
+                    tput cup $pos2 0
+                    tput ed
+                else
+                    tput cup $(($pos2 - 1)) 0
+                    tput ed
+                    getBranch
+                fi
+            }
+            getCommitName() {
+                pos2=$(getcursor)
+                commitname=$(ask_textinput "Enter desired commit username" "$(whoami)")
+
+                menu $pos2
+                exitstatus=$?
+                if [ $exitstatus = 0 ]; then
+                    sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
+                    tput cup $pos2 0
+                    tput ed
+                else
+                    tput cup $(($pos2 - 1)) 0
+                    tput ed
+                    getCommitName
+                fi
+            }
+            getCommitEmail() {
+                pos2=$(getcursor)
+                commitemail=$(ask_textinput "Enter desired commit email" "$(whoami)@$(hostname --short)-$unique_id")
+
+                menu $pos2
+                exitstatus=$?
+                if [ $exitstatus = 0 ]; then
+                    sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
+                    tput cup $pos2 0
+                    tput ed
+                else
+                    tput cup $(($pos2 - 1)) 0
+                    tput ed
+                    getCommitEmail
+                fi
+            }
+        done
     fi
 }
+
 
 patch_klipper-backup_update_manager() {
     questionline=$(getcursor)
