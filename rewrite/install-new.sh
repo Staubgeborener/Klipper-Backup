@@ -14,6 +14,7 @@ fi
 source $parent_path/utils/utils.func
 
 unique_id=$(getUniqueid)
+title="Klipper Backup Install"
 
 set -e
 
@@ -21,14 +22,34 @@ main() {
     clear
     sudo -v
     dependencies
-    # logo
-    install_repo
+    install_update
     configure
     patch_klipper-backup_update_manager
     install_filewatch_service
     install_backup_service
     install_cron
     echo -e "${G}●${NC} Installation Complete!\n  For help or further information, read the docs: https://klipperbackup.xyz"
+}
+
+logo() {
+    clear
+    echo -e "${C}$(
+        cat <<"EOF"
+    __ __ ___                             ____             __                     ____           __        ____
+   / //_// (_)___  ____  ___  _____      / __ )____ ______/ /____  ______        /  _/___  _____/ /_____ _/ / /
+  / ,<  / / / __ \/ __ \/ _ \/ ___/_____/ __  / __ `/ ___/ //_/ / / / __ \______ / // __ \/ ___/ __/ __ `/ / /
+ / /| |/ / / /_/ / /_/ /  __/ /  /_____/ /_/ / /_/ / /__/ ,< / /_/ / /_/ /_____// // / / (__  ) /_/ /_/ / / /
+/_/ |_/_/_/ .___/ .___/\___/_/        /_____/\__,_/\___/_/|_|\__,_/ .___/     /___/_/ /_/____/\__/\__,_/_/_/
+         /_/   /_/                                               /_/
+EOF
+    )${NC}"
+    line
+}
+
+checkExit() {
+    if [ $1 -ne 0 ]; then
+        exit 1
+    fi
 }
 
 dependencies() {
@@ -40,27 +61,36 @@ dependencies() {
     sleep 1
 }
 
-install_repo() {
-    questionline=$(getcursor)
-    if ask_yn "Do you want to proceed with installation/(re)configuration?"; then
-        tput cup $(($questionline - 1)) 0
-        clearUp
+install_update() {
+    promptInstall=$(whiptail --title "$title" --backtitle "$updateMsg" --noitem --default-item "Yes" --menu "Do you want to proceed with installation/(re)configuration?" 15 75 3 \
+        "Yes" "" \
+        "No" "" \
+        3>&1 1>&2 2>&3)
+
+    checkExit $?
+    if [[ $promptInstall == "Yes" ]]; then
         cd "$HOME"
         if [ ! -d "klipper-backup" ]; then
-            loading_wheel "${Y}●${NC} Installing Klipper-Backup" &
-            loading_pid=$!
-            git clone https://github.com/Staubgeborener/klipper-backup.git 2>/dev/null
-            chmod +x ./klipper-backup/script.sh
-            cp ./klipper-backup/.env.example ./klipper-backup/.env
-            sleep .5
-            kill $loading_pid
-            echo -e "${CL}${G}●${NC} Installing Klipper-Backup ${G}Done!${NC}\n"
+            {
+                echo 20
+                sleep 0.1
+                git clone https://github.com/Staubgeborener/klipper-backup.git 2>/dev/null
+                echo 50
+                sleep 0.1
+                chmod +x ./klipper-backup/script.sh
+                echo 70
+                sleep 0.1
+                cp ./klipper-backup/.env.example ./klipper-backup/.env
+                echo 90
+                sleep 0.1
+                echo 100
+                sleep 0.3
+            } | whiptail --title "$title" --backtitle "$updateMsg" --guage "Installing Klipper-Backup" 8 50 0
         else
             check_updates
         fi
     else
-        tput cup $(($questionline - 1)) 0
-        clearUp
+        clear
         echo -e "${R}●${NC} Installation aborted.\n"
         exit 1
     fi
@@ -69,38 +99,43 @@ install_repo() {
 check_updates() {
     cd ~/klipper-backup
     if [ "$(git rev-parse HEAD)" = "$(git ls-remote $(git rev-parse --abbrev-ref @{u} | sed 's/\// /g') | cut -f1)" ]; then
-        echo -e "${G}●${NC} Klipper-Backup ${G}is up to date.${NC}\n"
+        updateMsg="● Klipper-Backup is up to date."
     else
-        echo -e "${Y}●${NC} Update for klipper-backup ${Y}Available!${NC}\n"
-        questionline=$(getcursor)
-        if ask_yn "Proceed with update?"; then
-            tput cup $(($questionline - 3)) 0
-            tput ed
-            loading_wheel "${Y}●${NC} Updating Klipper-Backup" &
-            loading_pid=$!
+        updateMsg="● Update for klipper-backup Available!"
+        promptUpdate=$(whiptail --title "$title" --backtitle "$updateMsg" --noitem --default-item "Yes" --menu "Proceed with update?" 15 75 3 \
+            "Yes" "" \
+            "No" "" \
+            3>&1 1>&2 2>&3)
+
+        checkExit $?
+        if [[ $promptUpdate == "Yes" ]]; then
+            update_progress() {
+                local progress=0
+                while [ $progress -lt 100 ]; do
+                    echo $progress
+                    sleep 0.5
+                    progress=$((progress + 10))
+                done
+            }
+
+            update_progress | whiptail --title "$title" --backtitle "$updateMsg" --gauge "Updating Klipper-Backup" 8 50 0
+            progress_pid=$!
+
             if git pull >/dev/null 2>&1; then
-                kill $loading_pid
-                echo -e "${CL}${G}●${NC} Updating Klipper-Backup ${G}Done!${NC}\n\n Restarting installation script"
+                kill $progress_pid 2>/dev/null
+                echo 100 | whiptail --title "$title" --backtitle "$updateMsg" --gauge "Updating Klipper-Backup Done!\n Restarting script..." 8 50 0
                 sleep 1
                 exec $parent_path/install.sh
             else
-                kill $loading_pid
-                echo -e "${CL}${R}●${NC} Error Updating Klipper-Backup: Repository is dirty running git reset --hard then restarting script"
+                kill $progress_pid 2>/dev/null
+                whiptail --title "$title" --backtitle "$updateMsg" --infobox "Error Updating Klipper-Backup: Repository is dirty running git reset --hard then restarting script"
                 sleep 1
                 git reset --hard 2>/dev/null
                 exec $parent_path/install.sh
             fi
         else
-            tput cup $(($questionline - 3)) 0
-            clearUp
             echo -e "${M}●${NC} Klipper-Backup update ${M}Skipped!${NC}\n"
         fi
-    fi
-}
-
-checkExit() {
-    if [ $1 -ne 0 ]; then
-        exit 1
     fi
 }
 
@@ -217,7 +252,6 @@ configure() {
         done
     fi
 }
-
 
 patch_klipper-backup_update_manager() {
     questionline=$(getcursor)

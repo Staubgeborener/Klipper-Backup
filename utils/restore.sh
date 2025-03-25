@@ -4,7 +4,7 @@ trap 'stty echo; exit' SIGINT
 
 scriptsh_parent_path=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
-    cd ..
+    cd ..``
     pwd -P
 )
 
@@ -12,6 +12,7 @@ scriptsh_parent_path=$(
 source "$scriptsh_parent_path"/utils/utils.func
 #
 
+title="Klipper Backup Restore"
 envpath="$scriptsh_parent_path"/.env
 tempfolder="/tmp/klipper-backup-restore-tmp"
 temprestore="$tempfolder/klipper-backup-restore/restore.config"
@@ -68,7 +69,7 @@ dependencies() {
 
 checkExit() {
     if [ $1 -ne 0 ]; then
-        result=$(whiptail --title "Klipper Backup Restore" --menu "Select an option:" 15 75 3 \
+        result=$(whiptail --title "$title" --menu "Select an option:" 15 75 3 \
             "Redo" "| Retry current prompt" \
             "Back" "| Go back to previous prompt" \
             "Quit" "| Quit the script" 3>&1 1>&2 2>&3)
@@ -111,7 +112,7 @@ validate_commit() {
 configure() {
     while true; do
         if [ -z $ghtoken ]; then
-            ghtoken=$(whiptail --title "Klipper Backup Restore" --passwordbox "Enter your Github token:" 10 76 "" 3>&1 1>&2 2>&3)
+            ghtoken=$(whiptail --title "$title" --passwordbox "Enter your Github token:" 10 76 "" 3>&1 1>&2 2>&3)
             check=$(checkExit $?)
             case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
             redo)
@@ -135,7 +136,7 @@ configure() {
             fi
         fi
         if [ -z $ghrepo ]; then
-            ghrepo=$(whiptail --title "Klipper Backup Restore" --inputbox "Enter your repository name:" 10 50 "" 3>&1 1>&2 2>&3)
+            ghrepo=$(whiptail --title "$title" --inputbox "Enter your repository name:" 10 50 "" 3>&1 1>&2 2>&3)
             check=$(checkExit $?)
             case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
             redo)
@@ -155,7 +156,7 @@ configure() {
             fi
         fi
         if [ -z $ghbranch ]; then
-            ghbranch=$(whiptail --title "Klipper Backup Restore" --inputbox "Enter the branch name:" 10 50 "" 3>&1 1>&2 2>&3)
+            ghbranch=$(whiptail --title "$title" --inputbox "Enter the branch name:" 10 50 "" 3>&1 1>&2 2>&3)
             check=$(checkExit $?)
             case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
             redo)
@@ -175,7 +176,7 @@ configure() {
             fi
         fi
         if [ -z $commit_option ]; then
-            commit_option=$(whiptail --title "Klipper Backup Restore" --default-item "No" --menu "Restore from specific commit? (Default No)" 15 75 3 \
+            commit_option=$(whiptail --title "$title" --default-item "No" --menu "Restore from specific commit? (Default No)" 15 75 3 \
                 "Yes" "| Enter a commit hash" \
                 "No" "| Continue without specifying a commit" \
                 3>&1 1>&2 2>&3)
@@ -209,7 +210,7 @@ configure() {
             esac
         fi
         if [ -z $ghcommithash ]; then
-            ghcommithash=$(whiptail --title "Klipper Backup Restore" --inputbox "Enter the commit hash:" 10 50 "" 3>&1 1>&2 2>&3)
+            ghcommithash=$(whiptail --title "$title" --inputbox "Enter the commit hash:" 10 50 "" 3>&1 1>&2 2>&3)
             check=$(checkExit $?)
             case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
             redo)
