@@ -72,6 +72,16 @@ function move_cursor() {
     echo -e "\033[${1};${2}H"
 }
 
+checkExit() {
+    if [ $1 -ne 0 ]; then
+        result=$(whiptail --title "$title" --menu "Select an option:" 15 75 3 \
+            "Redo" "| Retry current prompt" \
+            "Back" "| Go back to previous prompt" \
+            "Quit" "| Quit the script" 3>&1 1>&2 2>&3)
+        echo $result
+    fi
+}
+
 getUsername() {
     GITHUB_TOKEN="$1"
     API_URL="https://api.github.com/user"

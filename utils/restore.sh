@@ -67,16 +67,6 @@ dependencies() {
     sleep 1
 }
 
-checkExit() {
-    if [ $1 -ne 0 ]; then
-        result=$(whiptail --title "$title" --menu "Select an option:" 15 75 3 \
-            "Redo" "| Retry current prompt" \
-            "Back" "| Go back to previous prompt" \
-            "Quit" "| Quit the script" 3>&1 1>&2 2>&3)
-        echo $result
-    fi
-}
-
 validate_commit() {
     local commit_hash=$1
     {
@@ -128,7 +118,7 @@ configure() {
                 whiptail --msgbox "GitHub token cannot be empty!" 10 50
                 continue
             fi
-            ghusername=$(check_ghToken "$ghtoken")
+            ghusername=$(getUsername "$ghtoken")
             if [ -z "$ghusername" ]; then
                 whiptail --msgbox "Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!" 10 76
                 unset ghtoken

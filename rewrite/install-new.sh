@@ -46,18 +46,9 @@ EOF
     line
 }
 
-checkExit() {
-    if [ $1 -ne 0 ]; then
-        exit 1
-    fi
-}
-
 dependencies() {
-    loading_wheel "${Y}●${NC} Checking for installed dependencies" &
-    loading_pid=$!
     check_dependencies "jq" "curl" "rsync"
     kill $loading_pid
-    echo -e "${CL}${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
     sleep 1
 }
 
@@ -67,7 +58,11 @@ install_update() {
         "No" "" \
         3>&1 1>&2 2>&3)
 
-    checkExit $?
+    if [ $? -ne 0 ]; then
+        clear
+        echo -e "${R}●${NC} Installation aborted.\n"
+        exit 1
+    fi
     if [[ $promptInstall == "Yes" ]]; then
         cd "$HOME"
         if [ ! -d "klipper-backup" ]; then
@@ -107,7 +102,6 @@ check_updates() {
             "No" "" \
             3>&1 1>&2 2>&3)
 
-        checkExit $?
         if [[ $promptUpdate == "Yes" ]]; then
             update_progress() {
                 local progress=0
@@ -134,7 +128,7 @@ check_updates() {
                 exec $parent_path/install.sh
             fi
         else
-            echo -e "${M}●${NC} Klipper-Backup update ${M}Skipped!${NC}\n"
+            whiptail --title "$title" --msgbox "Klipper-Backup update Skipped!" 10 78
         fi
     fi
 }
@@ -151,104 +145,119 @@ configure() {
         "No" "" \
         3>&1 1>&2 2>&3)
 
-    checkExit $?
     if [[ $configResult == "Yes" ]]; then
         while true; do
-            getToken() {
-                echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
-                ghtoken=$(ask_token "Enter your GitHub token")
-                result=$(getUsername "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
-                if [ "$result" != "" ]; then
-                    sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
-                    ghtoken_username=$result
-                else
-                    tput cup $(($pos2 - 2)) 0
-                    tput ed
-                    pos2=$(getcursor)
-                    echo "Invalid Github token or Unable to contact github API, Please re-enter your token and check for valid connection to github.com then try again!"
-                    getToken
+            if [ -z $ghtoken ]; then
+                whiptail --title "$title" --msgbox "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" 10 78
+                ghtoken=$(whiptail --title "$title" --passwordbox "Enter your Github token:" 10 76 "" 3>&1 1>&2 2>&3)
+                check=$(checkExit $?)
+                case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+                redo)
+                    unset ghtoken
+                    continue
+                    ;;
+                back)
+                    continue
+                    ;;
+                quit) exit 1 ;;
+                esac
+                if [ -z "$ghtoken" ]; then
+                    whiptail --msgbox "GitHub token cannot be empty!" 10 50
+                    continue
                 fi
-            }
-            getUser() {
-                pos2=$(getcursor)
-                ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
-
-                menu $pos2
-                exitstatus=$?
-                if [ $exitstatus = 0 ]; then
-                    sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
-                    tput cup $pos2 0
-                    tput ed
-                else
-                    tput cup $(($pos2 - 1)) 0
-                    tput ed
-                    getUser
+                ghusername=$(getUsername "$ghtoken")
+                if [ -z "$ghusername" ]; then
+                    whiptail --msgbox "Invalid GitHub token or unable to contact GitHub API. Please check your connection and try again!" 10 76
+                    unset ghtoken
+                    continue
                 fi
-            }
-            getRepo() {
-                pos2=$(getcursor)
-                ghrepo=$(ask_textinput "Enter your repository name")
-
-                menu $pos2
-                exitstatus=$?
-                if [ $exitstatus = 0 ]; then
-                    sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
-                    tput cup $pos2 0
-                    tput ed
-                else
-                    tput cup $(($pos2 - 1)) 0
-                    tput ed
-                    getRepo
+                sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
+                sed -i "s/^github_username=.*/github_username=$ghusername/" "$HOME/klipper-backup/.env"
+            fi
+            if [ -z $ghrepo ]; then
+                ghrepo=$(whiptail --title "$title" --inputbox "Enter your repository name:" 10 50 "" 3>&1 1>&2 2>&3)
+                check=$(checkExit $?)
+                case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+                redo)
+                    unset ghrepo
+                    continue
+                    ;;
+                back)
+                    unset ghtoken
+                    unset ghrepo
+                    continue
+                    ;;
+                quit) exit 1 ;;
+                esac
+                if [ -z "$ghrepo" ]; then
+                    whiptail --msgbox "Repository name cannot be empty!" 10 50
+                    continue
                 fi
-            }
-            getBranch() {
-                pos2=$(getcursor)
-                repobranch=$(ask_textinput "Enter your desired branch name" "main")
-
-                menu $pos2
-                exitstatus=$?
-                if [ $exitstatus = 0 ]; then
-                    sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
-                    tput cup $pos2 0
-                    tput ed
-                else
-                    tput cup $(($pos2 - 1)) 0
-                    tput ed
-                    getBranch
+                sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
+            fi
+            if [ -z $ghbranch ]; then
+                ghbranch=$(whiptail --title "$title" --inputbox "Enter your desired branch name:" 10 50 "main" 3>&1 1>&2 2>&3)
+                check=$(checkExit $?)
+                case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+                redo)
+                    unset ghbranch
+                    continue
+                    ;;
+                back)
+                    unset ghrepo
+                    unset ghbranch
+                    continue
+                    ;;
+                quit) exit 1 ;;
+                esac
+                if [ -z "$ghbranch" ]; then
+                    whiptail --msgbox "Branch name cannot be empty!" 10 50
+                    continue
                 fi
-            }
-            getCommitName() {
-                pos2=$(getcursor)
-                commitname=$(ask_textinput "Enter desired commit username" "$(whoami)")
-
-                menu $pos2
-                exitstatus=$?
-                if [ $exitstatus = 0 ]; then
-                    sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
-                    tput cup $pos2 0
-                    tput ed
-                else
-                    tput cup $(($pos2 - 1)) 0
-                    tput ed
-                    getCommitName
+                sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
+            fi
+            if [ -z $commitname ]; then
+                commitname=$(whiptail --title "$title" --inputbox "Enter your desired git commit username:" 10 50 "$(whoami)" 3>&1 1>&2 2>&3)
+                check=$(checkExit $?)
+                case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+                redo)
+                    unset commitname
+                    continue
+                    ;;
+                back)
+                    unset ghbranch
+                    unset commitname
+                    continue
+                    ;;
+                quit) exit 1 ;;
+                esac
+                if [ -z "$commitname" ]; then
+                    whiptail --msgbox "Git commit username cannot be empty!" 10 50
+                    continue
                 fi
-            }
-            getCommitEmail() {
-                pos2=$(getcursor)
-                commitemail=$(ask_textinput "Enter desired commit email" "$(whoami)@$(hostname --short)-$unique_id")
-
-                menu $pos2
-                exitstatus=$?
-                if [ $exitstatus = 0 ]; then
-                    sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
-                    tput cup $pos2 0
-                    tput ed
-                else
-                    tput cup $(($pos2 - 1)) 0
-                    tput ed
-                    getCommitEmail
+                sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
+            fi
+            if [ -z $commitemail ]; then
+                commitemail=$(whiptail --title "$title" --inputbox "Enter your desired git commit email:" 10 50 "$(whoami)@$(hostname --short)-$unique_id" 3>&1 1>&2 2>&3)
+                check=$(checkExit $?)
+                case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+                redo)
+                    unset commitemail
+                    continue
+                    ;;
+                back)
+                    unset commitname
+                    unset commitemail
+                    continue
+                    ;;
+                quit) exit 1 ;;
+                esac
+                if [ -z "$commitemail" ]; then
+                    whiptail --msgbox "Git commit email cannot be empty!" 10 50
+                    continue
                 fi
-            }
+                sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
+            fi
         done
     fi
 }
@@ -258,8 +267,7 @@ patch_klipper-backup_update_manager() {
     if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
         if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
             if ask_yn "Would you like to add klipper-backup to moonraker update manager?"; then
-                tput cup $(($questionline - 2)) 0
-                tput ed
+
                 pos1=$(getcursor)
                 loading_wheel "${Y}●${NC} Adding klipper-backup to update manager" &
                 loading_pid=$!
@@ -275,26 +283,22 @@ patch_klipper-backup_update_manager() {
                 kill $loading_pid
                 echo -e "${CL}${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
             else
-                tput cup $(($questionline - 2)) 0
-                tput ed
+
                 echo -e "${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
             fi
         else
-            tput cup $(($questionline - 2)) 0
-            tput ed
+
             echo -e "${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
         fi
     else
-        tput cup $(($questionline - 2)) 0
-        tput ed
+
         echo -e "${R}●${NC} Moonraker is not installed update manager configuration ${R}Skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
     fi
 }
 
 install_filewatch_service() {
     questionline=$(getcursor)
-    tput cup $(($questionline - 2)) 0
-    tput ed
+
     pos1=$(getcursor)
     loading_wheel "${Y}●${NC} Checking for filewatch service" &
     loading_pid=$!
@@ -308,8 +312,7 @@ install_filewatch_service() {
         message="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
     fi
     if ask_yn "$message"; then
-        tput cup $(($questionline - 2)) 0
-        tput ed
+
         pos1=$(getcursor)
         set +e
         if ! checkinotify >/dev/null 2>&1; then # Checks if the version of inotify installed matches the latest release
@@ -334,8 +337,7 @@ install_filewatch_service() {
             cd ..
             sudo rm -rf inotify-tools
             pos2=$(getcursor)
-            tput cup $(($pos1 - 1)) 0
-            tput ed
+
             echo -e "${CL}${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
             set -e
         fi
@@ -377,8 +379,7 @@ install_filewatch_service() {
             echo -e "${CL}${G}●${NC} Installing filewatch service ${G}Done!${NC}\n"
         fi
     else
-        tput cup $(($questionline - 2)) 0
-        tput ed
+
         echo -e "${CL}${M}●${NC} Installing filewatch service ${M}Skipped!${NC}\n"
 
     fi
@@ -386,8 +387,7 @@ install_filewatch_service() {
 
 install_backup_service() {
     questionline=$(getcursor)
-    tput cup $(($questionline - 2)) 0
-    tput ed
+
     pos1=$(getcursor)
     loading_wheel "${Y}●${NC} Checking for on-boot service" &
     loading_pid=$!
@@ -401,8 +401,7 @@ install_backup_service() {
         message="Would you like to install the on-boot backup service?"
     fi
     if ask_yn "$message"; then
-        tput cup $(($questionline - 2)) 0
-        tput ed
+
         pos1=$(getcursor)
         loading_wheel "${Y}●${NC} Installing on-boot service" &
         loading_pid=$!
@@ -441,8 +440,7 @@ install_backup_service() {
             echo -e "${CL}${G}●${NC} Installing on-boot service ${G}Done!${NC}\n"
         fi
     else
-        tput cup $(($questionline - 2)) 0
-        tput ed
+
         echo -e "${CL}${M}●${NC} Installing on-boot service ${M}Skipped!${NC}\n"
     fi
 }
@@ -451,8 +449,7 @@ install_cron() {
     questionline=$(getcursor)
     if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
         if ask_yn "Would you like to install the cron task? (automatic backup every 4 hours)"; then
-            tput cup $(($questionline - 2)) 0
-            tput ed
+
             pos1=$(getcursor)
             loading_wheel "${Y}●${NC} Installing cron task" &
             loading_pid=$!
@@ -464,13 +461,11 @@ install_cron() {
             kill $loading_pid
             echo -e "${CL}${G}●${NC} Installing cron task ${G}Done!${NC}\n"
         else
-            tput cup $(($questionline - 2)) 0
-            tput ed
+
             echo -e "${CL}${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
         fi
     else
-        tput cup $(($questionline - 2)) 0
-        tput ed
+
         echo -e "${CL}${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
     fi
 }
