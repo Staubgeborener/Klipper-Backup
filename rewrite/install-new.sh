@@ -16,8 +16,6 @@ source $parent_path/utils/utils.func
 unique_id=$(getUniqueid)
 title="Klipper Backup Install"
 
-set -e
-
 main() {
     clear
     sudo -v
@@ -311,9 +309,6 @@ install_filewatch_service() {
         message="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
     fi
     if ask_yn "$message"; then
-
-        pos1=$(getcursor)
-        set +e
         if ! checkinotify >/dev/null 2>&1; then # Checks if the version of inotify installed matches the latest release
             removeOldInotify
             echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
@@ -338,7 +333,6 @@ install_filewatch_service() {
             pos2=$(getcursor)
 
             echo -e "${CL}${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
-            set -e
         fi
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
