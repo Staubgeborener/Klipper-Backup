@@ -48,7 +48,6 @@ EOF
 
 dependencies() {
     check_dependencies "jq" "curl" "rsync"
-    kill $loading_pid
     sleep 1
 }
 
