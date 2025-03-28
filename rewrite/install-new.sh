@@ -22,8 +22,9 @@ main() {
     dependencies
     clear
     install_update
+    echo -e "${UL}${BOLD}${G} Klipper Backup Install${NC}"
     configure
-    installOptional
+    promptOptional
     patch_klipper-backup_update_manager
     install_filewatch_service
     install_backup_service
@@ -264,7 +265,7 @@ configure() {
     fi
 }
 
-installOptional() {
+promptOptional() {
     while true; do
         if [ -z $moonrakerManager ]; then
             if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
@@ -362,7 +363,6 @@ installOptional() {
 
 patch_klipper-backup_update_manager() {
     if [[ $moonrakerManager == "Yes" ]]; then
-        pos1=$(getcursor)
         loading_wheel "${Y}●${NC} Adding klipper-backup to update manager" &
         loading_pid=$!
         ### add new line to conf if it doesn't end with one
@@ -402,8 +402,6 @@ install_filewatch_service() {
 
             cd ..
             sudo rm -rf inotify-tools
-            pos2=$(getcursor)
-
             echo -e "${CL}${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
         fi
         loading_wheel "${Y}●${NC} Installing filewatch service" &
@@ -493,7 +491,6 @@ install_backup_service() {
 
 install_cron() {
     if [[ $installCron == "Yes" ]]; then
-        pos1=$(getcursor)
         loading_wheel "${Y}●${NC} Installing cron task" &
         loading_pid=$!
         (
