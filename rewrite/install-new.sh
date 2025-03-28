@@ -20,6 +20,7 @@ main() {
     clear
     sudo -v
     dependencies
+    clear
     install_update
     configure
     installOptional
