@@ -22,7 +22,6 @@ main() {
     dependencies
     clear
     install_update
-    echo -e "${UL}${BOLD}${G} Klipper Backup Install${NC}"
     configure
     promptOptional
     patch_klipper-backup_update_manager
@@ -258,9 +257,12 @@ configure() {
                 fi
                 sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
             fi
+                echo -e "${UL}${BOLD}${G}Klipper Backup Install${NC}"
+                echo -e "${CL}${M}●${NC} Configuration ${G}Done!${NC}"
             break
         done
     else
+        echo -e "${UL}${BOLD}${G}Klipper Backup Install${NC}"
         echo -e "${CL}${M}●${NC} Configuration ${M}Skipped!${NC}"
     fi
 }
