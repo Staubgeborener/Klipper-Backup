@@ -96,7 +96,7 @@ getUsername() {
         return 1
     fi
 
-    $username=$(echo "$json_response" | jq -r '.login')
+    username=$(echo "$json_response" | jq -r '.login')
     echo "$username"
 }
 
