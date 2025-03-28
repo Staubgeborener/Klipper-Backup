@@ -256,6 +256,7 @@ configure() {
                 fi
                 sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
             fi
+            break
         done
     else
         echo -e "${CL}${M}●${NC} Configuration ${M}Skipped!${NC}\n"
@@ -352,6 +353,7 @@ installOptional() {
                 cronMsg="${CL}${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
             fi
         fi
+        break
     done
 }
 
