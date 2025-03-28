@@ -273,15 +273,15 @@ installOptional() {
                         "No" "" \
                         3>&1 1>&2 2>&3)
                     if [[ $moonrakerManager == "Yes" ]]; then
-                        moonrakerMsg="${CL}${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
+                        moonrakerMsg="${CL}${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}"
                     else
-                        moonrakerMsg="${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
+                        moonrakerMsg="${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}"
                     fi
                 else
-                    moonrakerMsg="${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
+                    moonrakerMsg="${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}"
                 fi
             else
-                moonrakerMsg="${R}●${NC} Moonraker is not installed. Update manager configuration ${R}Skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
+                moonrakerMsg="${R}●${NC} Moonraker is not installed. Update manager configuration ${R}Skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}"
             fi
         fi
         if [ -z $installFilewatch ]; then
@@ -352,7 +352,7 @@ installOptional() {
                 quit) exit 1 ;;
                 esac
             else
-                cronMsg="${CL}${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
+                cronMsg="${CL}${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}"
             fi
         fi
         break
@@ -431,7 +431,7 @@ install_filewatch_service() {
 
                 # Check if the timeout has been reached
                 if [ $elapsed_time -gt $timeout_duration ]; then
-                    echo -e "${CL}${R}●${NC} Installing filewatch service took to long to complete!\n"
+                    echo -e "${CL}${R}●${NC} Installing filewatch service took to long to complete!"
                     kill $!
                     kill $loading_pid
                     exit 1
@@ -440,10 +440,10 @@ install_filewatch_service() {
                 sleep 1
             done
         ); then
-            echo -e "${CL}${G}●${NC} Installing filewatch service ${G}Done!${NC}\n"
+            echo -e "${CL}${G}●${NC} Installing filewatch service ${G}Done!${NC}"
         fi
     else
-        echo -e "${CL}${M}●${NC} Installing filewatch service ${M}Skipped!${NC}\n"
+        echo -e "${CL}${M}●${NC} Installing filewatch service ${M}Skipped!${NC}"
     fi
 }
 
@@ -474,7 +474,7 @@ install_backup_service() {
 
                 # Check if the timeout has been reached
                 if [ $elapsed_time -gt $timeout_duration ]; then
-                    echo -e "${CL}${R}●${NC} Installing on-boot service took to long to complete!\n"
+                    echo -e "${CL}${R}●${NC} Installing on-boot service took to long to complete!"
                     kill $!
                     kill $loading_pid
                     exit 1
@@ -483,10 +483,10 @@ install_backup_service() {
                 sleep 1
             done
         ); then
-            echo -e "${CL}${G}●${NC} Installing on-boot service ${G}Done!${NC}\n"
+            echo -e "${CL}${G}●${NC} Installing on-boot service ${G}Done!${NC}"
         fi
     else
-        echo -e "${CL}${M}●${NC} Installing on-boot service ${M}Skipped!${NC}\n"
+        echo -e "${CL}${M}●${NC} Installing on-boot service ${M}Skipped!${NC}"
     fi
 }
 
@@ -501,9 +501,9 @@ install_cron() {
         ) | crontab -
         sleep .5
         kill $loading_pid
-        cronMsg="${CL}${G}●${NC} Installing cron task ${G}Done!${NC}\n"
+        cronMsg="${CL}${G}●${NC} Installing cron task ${G}Done!${NC}"
     else
-        cronMsg="${CL}${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
+        cronMsg="${CL}${M}●${NC} Installing cron task ${M}Skipped!${NC}"
     fi
     echo -e "$cronMsg"
 }
