@@ -259,7 +259,7 @@ configure() {
             break
         done
     else
-        echo -e "${CL}${M}●${NC} Configuration ${M}Skipped!${NC}\n"
+        echo -e "${CL}${M}●${NC} Configuration ${M}Skipped!${NC}"
     fi
 }
 
@@ -277,9 +277,11 @@ installOptional() {
                     else
                         moonrakerMsg="${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
                     fi
+                else
                     moonrakerMsg="${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
                 fi
-                moonrakerMsg="${R}●${NC} Moonraker is not installed update manager configuration ${R}Skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
+            else
+                moonrakerMsg="${R}●${NC} Moonraker is not installed. Update manager configuration ${R}Skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
             fi
         fi
         if [ -z $installFilewatch ]; then
