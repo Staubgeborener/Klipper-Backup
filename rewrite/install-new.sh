@@ -22,6 +22,7 @@ main() {
     dependencies
     install_update
     configure
+    installOptional
     patch_klipper-backup_update_manager
     install_filewatch_service
     install_backup_service
@@ -261,56 +262,120 @@ configure() {
     fi
 }
 
-patch_klipper-backup_update_manager() {
-    questionline=$(getcursor)
-    if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
-        if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
-            if ask_yn "Would you like to add klipper-backup to moonraker update manager?"; then
-
-                pos1=$(getcursor)
-                loading_wheel "${Y}●${NC} Adding klipper-backup to update manager" &
-                loading_pid=$!
-                ### add new line to conf if it doesn't end with one
-                if [[ $(tail -c1 "$HOME/printer_data/config/moonraker.conf" | wc -l) -eq 0 ]]; then
-                    echo "" >>"$HOME/printer_data/config/moonraker.conf"
+installOptional() {
+    while true; do
+        if [ -z $moonrakerManager ]; then
+            if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
+                if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
+                    moonrakerManager=$(whiptail --title "Klipper Backup Restore" --noitem --default-item "Yes" --menu "Would you like to add klipper-backup to moonraker update manager?" 15 75 3 \
+                        "Yes" "" \
+                        "No" "" \
+                        3>&1 1>&2 2>&3)
+                    if [[ $moonrakerManager == "Yes" ]]; then
+                        moonrakerMsg="${CL}${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
+                    else
+                        moonrakerMsg="${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
+                    fi
+                    moonrakerMsg="${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
                 fi
-
-                if /usr/bin/env bash -c "cat $parent_path/install-files/moonraker.conf >> $HOME/printer_data/config/moonraker.conf"; then
-                    sudo systemctl restart moonraker.service
-                fi
-
-                kill $loading_pid
-                echo -e "${CL}${G}●${NC} Adding klipper-backup to update manager ${G}Done!${NC}\n"
-            else
-
-                echo -e "${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped!${NC}\n"
+                moonrakerMsg="${R}●${NC} Moonraker is not installed update manager configuration ${R}Skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
             fi
-        else
-
-            echo -e "${CL}${M}●${NC} Adding klipper-backup to update manager ${M}Skipped! (Already Added)${NC}\n"
         fi
-    else
+        if [ -z $installFilewatch ]; then
+            if service_exists klipper-backup-filewatch; then
+                filewatchPrompt="Would you like to reinstall the filewatch backup service? (this will trigger a backup after changes are detected)"
+            else
+                filewatchPrompt="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
+            fi
+            installFilewatch=$(whiptail --title "Klipper Backup Restore" --noitem --default-item "Yes" --menu "$filewatchPrompt" 15 75 3 \
+                "Yes" "" \
+                "No" "" \
+                3>&1 1>&2 2>&3)
+            check=$(checkExit $?)
+            case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+            redo)
+                unset installFilewatch
+                continue
+                ;;
+            back)
+                unset installFilewatch
+                unset moonrakerManager
+                continue
+                ;;
+            quit) exit 1 ;;
+            esac
+        fi
+        if [ -z $installService ]; then
+            if service_exists klipper-backup-on-boot; then
+                servicePrompt="Would you like to reinstall the on-boot backup service?"
+            else
+                servicePrompt="Would you like to install the on-boot backup service?"
+            fi
+            installService=$(whiptail --title "Klipper Backup Restore" --noitem --default-item "Yes" --menu "$servicePrompt" 15 75 3 \
+                "Yes" "" \
+                "No" "" \
+                3>&1 1>&2 2>&3)
+            check=$(checkExit $?)
+            case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+            redo)
+                unset installService
+                continue
+                ;;
+            back)
+                unset installService
+                unset installFilewatch
+                continue
+                ;;
+            quit) exit 1 ;;
+            esac
+        fi
+        if [ -z $installCron ]; then
+            if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
+                installCron=$(whiptail --title "Klipper Backup Restore" --noitem --default-item "Yes" --menu "Would you like to install the cron task? (automatic backup every 4 hours)" 15 75 3 \
+                    "Yes" "" \
+                    "No" "" \
+                    3>&1 1>&2 2>&3)
+                check=$(checkExit $?)
+                case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
+                redo)
+                    unset installCron
+                    continue
+                    ;;
+                back)
+                    unset installCron
+                    unset installService
+                    continue
+                    ;;
+                quit) exit 1 ;;
+                esac
+            else
+                cronMsg="${CL}${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
+            fi
+        fi
+    done
+}
 
-        echo -e "${R}●${NC} Moonraker is not installed update manager configuration ${R}Skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
+patch_klipper-backup_update_manager() {
+    if [[ $moonrakerManager == "Yes" ]]; then
+        pos1=$(getcursor)
+        loading_wheel "${Y}●${NC} Adding klipper-backup to update manager" &
+        loading_pid=$!
+        ### add new line to conf if it doesn't end with one
+        if [[ $(tail -c1 "$HOME/printer_data/config/moonraker.conf" | wc -l) -eq 0 ]]; then
+            echo "" >>"$HOME/printer_data/config/moonraker.conf"
+        fi
+
+        if /usr/bin/env bash -c "cat $parent_path/install-files/moonraker.conf >> $HOME/printer_data/config/moonraker.conf"; then
+            sudo systemctl restart moonraker.service
+        fi
+
+        kill $loading_pid
     fi
+    echo -e "$moonrakerMsg"
 }
 
 install_filewatch_service() {
-    questionline=$(getcursor)
-
-    pos1=$(getcursor)
-    loading_wheel "${Y}●${NC} Checking for filewatch service" &
-    loading_pid=$!
-    if service_exists klipper-backup-filewatch; then
-        echo -e "${CL}"
-        kill $loading_pid
-        message="Would you like to reinstall the filewatch backup service? (this will trigger a backup after changes are detected)"
-    else
-        echo -e "${CL}"
-        kill $loading_pid
-        message="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
-    fi
-    if ask_yn "$message"; then
+    if [[ $installFilewatch == "Yes" ]]; then
         if ! checkinotify >/dev/null 2>&1; then # Checks if the version of inotify installed matches the latest release
             removeOldInotify
             echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
@@ -374,30 +439,12 @@ install_filewatch_service() {
             echo -e "${CL}${G}●${NC} Installing filewatch service ${G}Done!${NC}\n"
         fi
     else
-
         echo -e "${CL}${M}●${NC} Installing filewatch service ${M}Skipped!${NC}\n"
-
     fi
 }
 
 install_backup_service() {
-    questionline=$(getcursor)
-
-    pos1=$(getcursor)
-    loading_wheel "${Y}●${NC} Checking for on-boot service" &
-    loading_pid=$!
-    if service_exists klipper-backup-on-boot; then
-        echo -e "${CL}"
-        kill $loading_pid
-        message="Would you like to reinstall the on-boot backup service?"
-    else
-        echo -e "${CL}"
-        kill $loading_pid
-        message="Would you like to install the on-boot backup service?"
-    fi
-    if ask_yn "$message"; then
-
-        pos1=$(getcursor)
+    if [[ $installService == "Yes" ]]; then
         loading_wheel "${Y}●${NC} Installing on-boot service" &
         loading_pid=$!
         if (
@@ -435,34 +482,26 @@ install_backup_service() {
             echo -e "${CL}${G}●${NC} Installing on-boot service ${G}Done!${NC}\n"
         fi
     else
-
         echo -e "${CL}${M}●${NC} Installing on-boot service ${M}Skipped!${NC}\n"
     fi
 }
 
 install_cron() {
-    questionline=$(getcursor)
-    if ! (crontab -l 2>/dev/null | grep -q "$HOME/klipper-backup/script.sh"); then
-        if ask_yn "Would you like to install the cron task? (automatic backup every 4 hours)"; then
-
-            pos1=$(getcursor)
-            loading_wheel "${Y}●${NC} Installing cron task" &
-            loading_pid=$!
-            (
-                crontab -l 2>/dev/null
-                echo "0 */4 * * * $HOME/klipper-backup/script.sh -c \"Cron backup - \$(date +'\\%x - \\%X')\""
-            ) | crontab -
-            sleep .5
-            kill $loading_pid
-            echo -e "${CL}${G}●${NC} Installing cron task ${G}Done!${NC}\n"
-        else
-
-            echo -e "${CL}${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
-        fi
+    if [[ $installCron == "Yes" ]]; then
+        pos1=$(getcursor)
+        loading_wheel "${Y}●${NC} Installing cron task" &
+        loading_pid=$!
+        (
+            crontab -l 2>/dev/null
+            echo "0 */4 * * * $HOME/klipper-backup/script.sh -c \"Cron backup - \$(date +'\\%x - \\%X')\""
+        ) | crontab -
+        sleep .5
+        kill $loading_pid
+        cronMsg="${CL}${G}●${NC} Installing cron task ${G}Done!${NC}\n"
     else
-
-        echo -e "${CL}${M}●${NC} Installing cron task ${M}Skipped! (Already Installed)${NC}\n"
+        cronMsg="${CL}${M}●${NC} Installing cron task ${M}Skipped!${NC}\n"
     fi
+    echo -e "$cronMsg"
 }
 
 if [ "$1" == "check_updates" ]; then
