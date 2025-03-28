@@ -258,7 +258,7 @@ configure() {
                 sed -i "s/^commit_email=.*/commit_email=\"$commitemail\"/" "$HOME/klipper-backup/.env"
             fi
                 echo -e "${UL}${BOLD}${G}Klipper Backup Install${NC}"
-                echo -e "${CL}${M}●${NC} Configuration ${G}Done!${NC}"
+                echo -e "${CL}${G}●${NC} Configuration ${G}Done!${NC}"
             break
         done
     else
