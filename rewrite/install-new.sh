@@ -144,9 +144,9 @@ configure() {
         3>&1 1>&2 2>&3)
 
     if [[ $configResult == "Yes" ]]; then
+        whiptail --title "$title" --msgbox "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" 10 78
         while true; do
             if [ -z $ghtoken ]; then
-                whiptail --title "$title" --msgbox "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" 10 78
                 ghtoken=$(whiptail --title "$title" --passwordbox "Enter your Github token:" 10 76 "" 3>&1 1>&2 2>&3)
                 check=$(checkExit $?)
                 case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
