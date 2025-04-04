@@ -14,7 +14,7 @@ NC=$'\e[0m'    # No Color ${NC}
 CL=$'\r\033[K' # Clear Line
 UL=$'\e[4m'    # Underline
 BOLD=$'\e[1m'  # Bold
-
+TITLE="Klipper Backup"
 # Create unique id for git email
 getUniqueid() {
     echo $(date +%s%N | md5sum | head -c 7)
@@ -87,7 +87,7 @@ getUsername() {
     API_URL="https://api.github.com/user"
 
     # Check if token is provided and has a basic format validation
-    if [[ -z "$GITHUB_TOKEN" || ! "$GITHUB_TOKEN" =~ ^ghp_[A-Za-z0-9]{36}$ || "$GITHUB_TOKEN" =~ ^github_pat_[A-Za-z0-9]{36}$ ]]; then
+    if [[ -z "$GITHUB_TOKEN" || ! "$GITHUB_TOKEN" =~ ^ghp_[A-Za-z0-9]{36}$ || ! "$GITHUB_TOKEN" =~ ^github_pat_[A-Za-z0-9]{36}$ ]]; then
         echo "Error: Invalid or missing GitHub token"
         return 1
     fi
@@ -147,6 +147,11 @@ checkinotify() {
     else
         return 1 #Local does not match latest
     fi
+}
+
+commonDeps() {
+    check_dependencies "jq" "curl" "rsync"
+    sleep 1
 }
 
 check_dependencies() {

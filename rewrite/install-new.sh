@@ -14,12 +14,11 @@ fi
 source $parent_path/utils/utils.func
 
 unique_id=$(getUniqueid)
-title="Klipper Backup Install"
 
 main() {
     clear
     sudo -v
-    dependencies
+    commonDeps
     clear
     install_update
     configure
@@ -46,13 +45,8 @@ EOF
     line
 }
 
-dependencies() {
-    check_dependencies "jq" "curl" "rsync"
-    sleep 1
-}
-
 install_update() {
-    promptInstall=$(whiptail --title "$title" --backtitle "$updateMsg" --noitem --default-item "Yes" --menu "Do you want to proceed with installation/(re)configuration?" 15 75 3 \
+    promptInstall=$(whiptail --title "$TITLE Install" --backtitle "$updateMsg" --noitem --default-item "Yes" --menu "Do you want to proceed with installation/(re)configuration?" 15 75 3 \
         "Yes" "" \
         "No" "" \
         3>&1 1>&2 2>&3)
@@ -79,7 +73,7 @@ install_update() {
                 sleep 0.1
                 echo 100
                 sleep 0.3
-            } | whiptail --title "$title" --backtitle "$updateMsg" --guage "Installing Klipper-Backup" 8 50 0
+            } | whiptail --title "$TITLE Install" --backtitle "$updateMsg" --guage "Installing Klipper-Backup" 8 50 0
         else
             check_updates
         fi
@@ -96,7 +90,7 @@ check_updates() {
         updateMsg="● Klipper-Backup is up to date."
     else
         updateMsg="● Update for klipper-backup Available!"
-        promptUpdate=$(whiptail --title "$title" --backtitle "$updateMsg" --noitem --default-item "Yes" --menu "Proceed with update?" 15 75 3 \
+        promptUpdate=$(whiptail --title "$TITLE Install" --backtitle "$updateMsg" --noitem --default-item "Yes" --menu "Proceed with update?" 15 75 3 \
             "Yes" "" \
             "No" "" \
             3>&1 1>&2 2>&3)
@@ -111,23 +105,23 @@ check_updates() {
                 done
             }
 
-            update_progress | whiptail --title "$title" --backtitle "$updateMsg" --gauge "Updating Klipper-Backup" 8 50 0
+            update_progress | whiptail --title "$TITLE Install" --backtitle "$updateMsg" --gauge "Updating Klipper-Backup" 8 50 0
             progress_pid=$!
 
             if git pull >/dev/null 2>&1; then
                 kill $progress_pid 2>/dev/null
-                echo 100 | whiptail --title "$title" --backtitle "$updateMsg" --gauge "Updating Klipper-Backup Done!\n Restarting script..." 8 50 0
+                echo 100 | whiptail --title "$TITLE Install" --backtitle "$updateMsg" --gauge "Updating Klipper-Backup Done!\n Restarting script..." 8 50 0
                 sleep 1
                 exec $parent_path/install.sh
             else
                 kill $progress_pid 2>/dev/null
-                whiptail --title "$title" --backtitle "$updateMsg" --infobox "Error Updating Klipper-Backup: Repository is dirty running git reset --hard then restarting script"
+                whiptail --title "$TITLE Install" --backtitle "$updateMsg" --infobox "Error Updating Klipper-Backup: Repository is dirty running git reset --hard then restarting script"
                 sleep 1
                 git reset --hard 2>/dev/null
                 exec $parent_path/install.sh
             fi
         else
-            whiptail --title "$title" --msgbox "Klipper-Backup update Skipped!" 10 78
+            whiptail --title "$TITLE Install" --msgbox "Klipper-Backup update Skipped!" 10 78
         fi
     fi
 }
@@ -145,10 +139,10 @@ configure() {
         3>&1 1>&2 2>&3)
 
     if [[ $configResult == "Yes" ]]; then
-        whiptail --title "$title" --msgbox "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" 10 78
+        whiptail --title "$TITLE Install" --msgbox "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" 10 78
         while true; do
             if [ -z $ghtoken ]; then
-                ghtoken=$(whiptail --title "$title" --passwordbox "Enter your Github token:" 10 76 "" 3>&1 1>&2 2>&3)
+                ghtoken=$(whiptail --title "$TITLE Install" --passwordbox "Enter your Github token:" 10 76 "" 3>&1 1>&2 2>&3)
                 check=$(checkExit $?)
                 case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
                 redo)
@@ -174,7 +168,7 @@ configure() {
                 sed -i "s/^github_username=.*/github_username=$ghusername/" "$HOME/klipper-backup/.env"
             fi
             if [ -z $ghrepo ]; then
-                ghrepo=$(whiptail --title "$title" --inputbox "Enter your repository name:" 10 50 "" 3>&1 1>&2 2>&3)
+                ghrepo=$(whiptail --title "$TITLE Install" --inputbox "Enter your repository name:" 10 50 "" 3>&1 1>&2 2>&3)
                 check=$(checkExit $?)
                 case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
                 redo)
@@ -195,7 +189,7 @@ configure() {
                 sed -i "s/^github_repository=.*/github_repository=$ghrepo/" "$HOME/klipper-backup/.env"
             fi
             if [ -z $ghbranch ]; then
-                ghbranch=$(whiptail --title "$title" --inputbox "Enter your desired branch name:" 10 50 "main" 3>&1 1>&2 2>&3)
+                ghbranch=$(whiptail --title "$TITLE Install" --inputbox "Enter your desired branch name:" 10 50 "main" 3>&1 1>&2 2>&3)
                 check=$(checkExit $?)
                 case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
                 redo)
@@ -216,7 +210,7 @@ configure() {
                 sed -i "s/^branch_name=.*/branch_name=\"$repobranch\"/" "$HOME/klipper-backup/.env"
             fi
             if [ -z $commitname ]; then
-                commitname=$(whiptail --title "$title" --inputbox "Enter your desired git commit username:" 10 50 "$(whoami)" 3>&1 1>&2 2>&3)
+                commitname=$(whiptail --title "$TITLE Install" --inputbox "Enter your desired git commit username:" 10 50 "$(whoami)" 3>&1 1>&2 2>&3)
                 check=$(checkExit $?)
                 case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
                 redo)
@@ -237,7 +231,7 @@ configure() {
                 sed -i "s/^commit_username=.*/commit_username=\"$commitname\"/" "$HOME/klipper-backup/.env"
             fi
             if [ -z $commitemail ]; then
-                commitemail=$(whiptail --title "$title" --inputbox "Enter your desired git commit email:" 10 50 "$(whoami)@$(hostname --short)-$unique_id" 3>&1 1>&2 2>&3)
+                commitemail=$(whiptail --title "$TITLE Install" --inputbox "Enter your desired git commit email:" 10 50 "$(whoami)@$(hostname --short)-$unique_id" 3>&1 1>&2 2>&3)
                 check=$(checkExit $?)
                 case "$(echo "$check" | tr '[:upper:]' '[:lower:]')" in
                 redo)
