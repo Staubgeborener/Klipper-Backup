@@ -29,7 +29,7 @@ while IFS= read -r line; do
         fi
     fi
     configOptions+="$line \n"
-done < <(grep -m 1 -n "# Indivdual file syntax:" $envpath | cut -d ":" -f 1 | xargs -I {} expr {} - 1 | xargs -I {} head -n {} $envpath)
+done < <(grep -m 1 -n "# Individual file syntax:" $envpath | cut -d ":" -f 1 | xargs -I {} expr {} - 1 | xargs -I {} head -n {} $envpath)
 
 
 while IFS= read -r path; do
@@ -70,7 +70,7 @@ $(echo -e ${configOptions[@]})
 #  )
 #
 # Using the above example the script will search for /home/{username}/printer_data/config/* and /home/{username}/printer_data/config/printer.cfg
-# When backing up a folder you should always have /* at the end of the path so that files insde the folder are properly searched
+# When backing up a folder you should always have /* at the end of the path so that files inside the folder are properly searched
 
 $(echo -e $newbackupPaths)
 

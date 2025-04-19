@@ -1,0 +1,34 @@
+{
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./install-files",
+        "-p",
+        "*test.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "cSpell.words": [
+        "checkinotify",
+        "commitemail",
+        "ENVFILE",
+        "envpath",
+        "exitstatus",
+        "filewatch",
+        "fsnotifywait",
+        "fsnotifywatch",
+        "getcursor",
+        "ghrepo",
+        "ghtoken",
+        "ghuser",
+        "inotifywait",
+        "newbackup",
+        "newexclude",
+        "oneshot",
+        "questionline",
+        "repobranch",
+        "scriptsh",
+        "textinput",
+        "wantsafter"
+    ]
+}

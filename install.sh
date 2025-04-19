@@ -115,7 +115,7 @@ configure() {
         getToken() {
             echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens (Ensure you set access to the backup repository and have push/pull & commit permissions for the token) \n"    
             ghtoken=$(ask_token "Enter your GitHub token")
-            result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
+            result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be established to github
             if [ "$result" != "" ]; then
                 sed -i "s/^github_token=.*/github_token=$ghtoken/" "$HOME/klipper-backup/.env"
                 ghtoken_username=$result
