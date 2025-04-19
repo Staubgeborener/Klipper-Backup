@@ -201,8 +201,12 @@ for path in "${backupPaths[@]}"; do
             elif [ -n "$(find $file -regex '.*/\.git*')" ]; then
                 echo ".git folder: $file detected, don't add back to backup"
             else
+<<<<<<< HEAD
                 file=$(readlink -e "$file") # Get absolute path before copy (Allows usage of .. in filepath eg. ../../etc/fstab resovles to /etc/fstab )
                 echo "Backing up: $file"
+=======
+                file=$(readlink -e "$file") # Get absolute path before copy (Allows usage of .. in filepath eg. ../../etc/fstab resolves to /etc/fstab )
+>>>>>>> d50a237 (Ran spell Check on Main Branch)
                 rsync -Rr "${file##"$HOME"/}" "$backup_path"
             fi
         done
