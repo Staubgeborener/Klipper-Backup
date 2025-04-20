@@ -1,4 +1,9 @@
 {
+    "cSpell.words": [
+        "Filewatch"
+    ]
+}
+{
     "python.testing.unittestArgs": [
         "-v",
         "-s",
