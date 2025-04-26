@@ -1,0 +1,72 @@
+#!/bin/bash
+
+functions_to_hook=("checkUpdates" "checkEnv" "createBackupFolder")
+
+debug_checkUpdates() {
+    debug_line 1 "Update"
+    echo -e "Running on branch: $(git -C "$parent_path" branch --show-current)"
+    echo -e "Running on commit: $(git -C "$parent_path" rev-parse HEAD | cut -c1-7)"
+    debug_line 2
+}
+
+debug_checkEnv() {
+    debug_line 1 "Last Command"
+    if [[ "$SHELL" == */bash* ]]; then
+        echo -e "Command: $0 $args"
+    fi
+    debug_line 3 "Env"
+    while IFS= read -r line; do
+        if [[ $line == github_token=* ]]; then
+            echo "github_token=****************"
+        else
+            echo "$line"
+        fi
+    done <$HOME/backuptoolbase/.env
+    debug_line 2
+    if [[ $git_host == "github.com" ]]; then
+        debug_line 1 "Repo Check"
+        if curl -fsS "https://api.github.com/repos/${github_username}/${github_repository}" >/dev/null; then
+            echo "The GitHub repo ${github_username}/${github_repository} exists (public)"
+        else
+            echo "Error: no GitHub repo ${github_username}/${github_repository} found (maybe private)"
+        fi
+        debug_line 2
+    fi
+    debug_line 1 "Home DIR"
+    echo -e "\$HOME: $HOME"
+    debug_line 3 "Systemd Services"
+    echo -e "List/Status of backuptoolbase related systemd services:\n\n"
+    echo -e "backuptoolbase-filewatch.service:\n"
+    systemctl status backuptoolbase-filewatch.service | head -n 50
+    echo -e "\nbackuptoolbase-on-boot.service:\n"
+    systemctl status backuptoolbase-on-boot.service | head -n 50
+    echo -e "\nbackuptoolbase.service:\n"
+    systemctl status backuptoolbase.service | head -n 50
+    debug_line 2
+}
+
+debug_createBackupFolder() {
+  echo "This is next"
+}
+
+for fn in "${functions_to_hook[@]}"; do
+    fn_def_file=$(mktemp)
+    fn_wrapper_file=$(mktemp)
+
+    # 1) Dump the original function and rename it to ${fn}_original
+    declare -f "$fn" | sed "1s/^$fn *()/${fn}_original()/" >"$fn_def_file"
+
+    # 2) Build your wrapper that calls the renamed original + debug
+    {
+        echo "${fn}() {"
+        echo "  ${fn}_original \"\$@\""
+        echo "  debug_${fn} &"
+        echo "}"
+    } >"$fn_wrapper_file"
+
+    # 3) Source them so both the _original and wrapper exist in your shell
+    source "$fn_def_file"
+    source "$fn_wrapper_file"
+
+    rm -f "$fn_def_file" "$fn_wrapper_file"
+done
