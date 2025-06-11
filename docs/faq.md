@@ -7,7 +7,7 @@ We have found that most errors can be traced back to incorrect use of git and th
 ~/klipper-backup/script.sh --fix
 ```
 ## Uninstall
-Klipper-Backup is a simple shell script without binaries or similar.
+Klipper-Backup is a simple shell script without any binaries or similar.
 To delete Klipper-Backup it is therefore sufficient to simply delete the necessary folders:
 
 `sudo rm -r ~/klipper-backup ~/config_backup`
@@ -17,6 +17,7 @@ If you have installed systemd services (backup on boot, etc), those files are st
 You may also have generated entries in crontab: check via `sudo crontab -e` and remove the Klipper-Backup lines.
 
 There is also a moonraker.conf entry which you also need to remove (this can also be done with the mainsail/fluidd web ui).
+
 Tip: Next time, install it via [KIAUH](installation/#2-kiauh). In this context, KIAUH also has a nice "remove" option which does all the things described above automatically.
 
 ## Klipper-Backup with multiple instances
