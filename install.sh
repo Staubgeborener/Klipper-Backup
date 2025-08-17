@@ -41,6 +41,10 @@ dependencies() {
 }
 
 install_repo() {
+    if [[ $EUID -eq 0 || $USER == "root" ]]; then
+        echo -e "${R}You are logged in as root. It is recommended that you cancel the installation with CTRL+C and log in as a non-privileged user first.\nInstalling as root can lead to problems and is not intended.${NC}\n"
+    fi
+
     questionline=$(getcursor)
     if ask_yn "Do you want to proceed with installation/(re)configuration?"; then
         tput cup $(($questionline - 1)) 0
