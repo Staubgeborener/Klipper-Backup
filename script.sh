@@ -98,11 +98,13 @@ if [ "$debug_output" = true ]; then
     # Debug output: .env file with hidden token
     begin_debug_line
     while IFS= read -r line; do
-    if [[ $line == github_token=* ]]; then
-        echo "github_token=****************"
-    else
-        echo "$line"
-    fi
+        if [[ $line == github_token=* ]]; then
+            echo "github_token=**********"
+        elif [[ $line == commit_email=* ]]; then
+            echo "commit_email==**********"
+        else
+            echo "$line"
+        fi
     done < $HOME/klipper-backup/.env
     end_debug_line
 
