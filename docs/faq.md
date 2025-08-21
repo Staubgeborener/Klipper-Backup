@@ -40,7 +40,7 @@ Klipper-Backup creates now a separate backup folder for each of these printers i
 
 *Hint:* If you don't quite know what the correct paths are: either look in the home directory with `ls ~`. Also the moonraker.conf has a `klippy_uds_address` section with the paths.
 
-## Symolic links
+## Symbolic links
 It could be that you find a symbolic link in your GitHub repository (like [this](./images/symbolic_link_GitHub.png)). Or you might get the message `Skipping symbolic link: [...]”`.
 
 **Brief explanation of what symbolic links (also known as symlinks) are:** A symbolic link is a link that leads to a file or folder without moving the original file. This is quite neet, as symbolic links save redundancies because they do not duplicate the actual file or folder, but only refer to the original.
