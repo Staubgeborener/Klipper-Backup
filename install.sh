@@ -23,6 +23,7 @@ main() {
     dependencies
     logo
     install_repo
+    configure_printer_paths
     configure
     patch_klipper-backup_update_manager
     install_filewatch_service
@@ -102,6 +103,64 @@ check_updates() {
     fi
 }
 
+configure_printer_paths() {
+    questionline=$(getcursor)
+    printer_dirs=()
+    if [ -d "$HOME/printer_data" ]; then
+        printer_dirs+=("$HOME/printer_data")
+    fi
+
+    for dir in "$HOME"/printer_*_data; do
+        if [ -d "$dir" ]; then
+            printer_dirs+=("$dir")
+        fi
+    done
+
+    if [ ${#printer_dirs[@]} -eq 0 ]; then
+        echo -e "${Y}●${NC} No Klipper instances found, ${Y}skipping path configuration.${NC}\n"
+        return
+    fi
+
+    if ask_yn "Configure Klipper backup? (Found ${#printer_dirs[@]} directories)"; then
+        tput cup $(($questionline - 1)) 0
+        clearUp
+
+        sed -i '/^backupPath=/d' "$HOME/klipper-backup/.env"
+        echo "backupPath=\"\$HOME/klipper_config/\" \\" >> "$HOME/klipper-backup/.env"
+
+        selected_paths=()
+        for dir in "${printer_dirs[@]}"; do
+            dir_name=$(basename "$dir")
+            pos1=$(getcursor)
+
+            if ask_yn "Include ${dir_name} in backup?"; then
+                tput cup $(($pos1 - 1)) 0
+                clearUp
+                echo -e "${G}●${NC} Including ${dir_name} ${G}in backup${NC}"
+                selected_paths+=("$dir")
+
+                echo "\"$dir/config/*\" \\" >> "$HOME/klipper-backup/.env"
+            else
+                tput cup $(($pos1 - 1)) 0
+                clearUp
+                echo -e "${M}●${NC} Excluding ${dir_name} ${M}from backup${NC}"
+            fi
+        done
+
+        if [ ${#selected_paths[@]} -gt 0 ]; then
+            sed -i '$ s/ \\$//' "$HOME/klipper-backup/.env"
+        fi
+
+        echo -e "\n${G}●${NC} Klipper backup configured ${G}Done!${NC} (${#selected_paths[@]} directories selected)\n"
+
+        export SELECTED_PRINTER_PATHS=("${selected_paths[@]}")
+    else
+        tput cup $(($questionline - 1)) 0
+        clearUp
+        echo -e "${M}●${NC} Printer path configuration ${M}skipped!${NC}\n"
+    fi
+}
+
 configure() {
     ghtoken_username=""
     questionline=$(getcursor)
@@ -117,7 +176,7 @@ configure() {
         pos2=$(getcursor)
 
         getToken() {
-            echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens (Ensure you set access to the backup repository and have push/pull & commit permissions for the token) \n"    
+            echo -e "See the following for how to create your token: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens (Ensure you set access to the backup repository and have push/pull & commit permissions for the token) \n"
             ghtoken=$(ask_token "Enter your GitHub token")
             result=$(check_ghToken "$ghtoken") # Check Github Token using github API to ensure token is valid and connection can be estabilished to github
             if [ "$result" != "" ]; then
@@ -137,7 +196,7 @@ configure() {
 
             menu
             exitstatus=$?
-            if [ $exitstatus = 0 ]; then
+          if [ $exitstatus = 0 ]; then
                 sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
                 tput cup $pos2 0
                 tput ed
@@ -236,41 +295,105 @@ configure() {
     fi
 }
 
+get_moonraker_instances() {
+    moonraker_instances=()
+
+    # Check for default moonraker
+    if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
+        moonraker_instances+=("moonraker:$HOME/printer_data/config/moonraker.conf")
+    fi
+
+    # Check for instance-specific moonraker services
+    for service_file in /etc/systemd/system/moonraker-*.service; do
+        if [[ -f "$service_file" ]]; then
+            service_name=$(basename "$service_file" .service)
+            instance_name=${service_name#moonraker-}
+
+            if systemctl is-active "$service_name" >/dev/null 2>&1; then
+                # Try to find the corresponding config file
+                if [[ -f "$HOME/printer_${instance_name}_data/config/moonraker.conf" ]]; then
+                    moonraker_instances+=("$service_name:$HOME/printer_${instance_name}_data/config/moonraker.conf")
+                elif [[ -f "$HOME/printer_data_${instance_name}/config/moonraker.conf" ]]; then
+                    moonraker_instances+=("$service_name:$HOME/printer_data_${instance_name}/config/moonraker.conf")
+                fi
+            fi
+        fi
+    done
+}
+
 patch_klipper-backup_update_manager() {
     questionline=$(getcursor)
-    if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
-        if ! grep -Eq "^\[update_manager klipper-backup\]\s*$" "$HOME/printer_data/config/moonraker.conf"; then
-            if ask_yn "Would you like to add Klipper-Backup to moonraker update manager?"; then
-                tput cup $(($questionline - 2)) 0
-                tput ed
-                pos1=$(getcursor)
-                loading_wheel "${Y}●${NC} Adding Klipper-Backup to update manager" &
-                loading_pid=$!
-                ### add new line to conf if it doesn't end with one
-                if [[ $(tail -c1 "$HOME/printer_data/config/moonraker.conf" | wc -l) -eq 0 ]]; then
-                    echo "" >>"$HOME/printer_data/config/moonraker.conf"
-                fi
 
-                if /usr/bin/env bash -c "cat $parent_path/install-files/moonraker.conf >> $HOME/printer_data/config/moonraker.conf"; then
-                    sudo systemctl restart moonraker.service
-                fi
+    # Get available moonraker instances
+    get_moonraker_instances
 
-                kill $loading_pid
-                echo -e "\r\033[K${G}●${NC} Adding Klipper-Backup to update manager ${G}Done!${NC}\n"
-            else
-                tput cup $(($questionline - 2)) 0
-                tput ed
-                echo -e "\r\033[K${M}●${NC} Adding Klipper-Backup to update manager ${M}skipped!${NC}\n"
-            fi
-        else
-            tput cup $(($questionline - 2)) 0
-            tput ed
-            echo -e "\r\033[K${M}●${NC} Adding Klipper-Backup to update manager ${M}skipped! (already added)${NC}\n"
-        fi
-    else
+    if [ ${#moonraker_instances[@]} -eq 0 ]; then
         tput cup $(($questionline - 2)) 0
         tput ed
-        echo -e "${R}●${NC} Moonraker is not installed update manager configuration ${R}skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
+        echo -e "${R}●${NC} No active moonraker instances found, update manager configuration ${R}skipped!${NC}\n${Y}● Please install moonraker then run the script again to update the moonraker configuration${NC}\n"
+        return
+    fi
+
+    if ask_yn "Configure Klipper-Backup for moonraker update manager? (Found ${#moonraker_instances[@]} instances)"; then
+        tput cup $(($questionline - 1)) 0
+        clearUp
+
+        selected_instances=()
+
+        for instance in "${moonraker_instances[@]}"; do
+            service_name="${instance%%:*}"
+            config_path="${instance##*:}"
+
+            pos1=$(getcursor)
+
+            # Check if already configured
+            if grep -Eq "^\[update_manager klipper-backup\]\s*$" "$config_path" 2>/dev/null; then
+                echo -e "${M}●${NC} ${service_name} ${M}already configured, skipping${NC}"
+                continue
+            fi
+
+            if ask_yn "Add Klipper-Backup to ${service_name} update manager?"; then
+                tput cup $(($pos1 - 1)) 0
+                clearUp
+                echo -e "${G}●${NC} Selected ${service_name} ${G}for update manager${NC}"
+                selected_instances+=("$instance")
+            else
+                tput cup $(($pos1 - 1)) 0
+                clearUp
+                echo -e "${M}●${NC} Skipped ${service_name} ${M}update manager${NC}"
+            fi
+        done
+
+        if [ ${#selected_instances[@]} -gt 0 ]; then
+            pos1=$(getcursor)
+            loading_wheel "${Y}●${NC} Adding Klipper-Backup to update manager" &
+            loading_pid=$!
+
+            for instance in "${selected_instances[@]}"; do
+                service_name="${instance%%:*}"
+                config_path="${instance##*:}"
+
+                # Add new line to conf if it doesn't end with one
+                if [[ $(tail -c1 "$config_path" 2>/dev/null | wc -l) -eq 0 ]]; then
+                    echo "" >> "$config_path"
+                fi
+
+                # Add the update manager configuration
+                cat "$parent_path/install-files/moonraker.conf" >> "$config_path"
+
+                # Restart the specific moonraker service
+                sudo systemctl restart "$service_name.service"
+            done
+
+            kill $loading_pid
+            echo -e "\r\033[K${G}●${NC} Adding Klipper-Backup to update manager ${G}Done!${NC} (${#selected_instances[@]} instances configured)\n"
+        else
+            echo -e "${M}●${NC} No instances selected for update manager configuration\n"
+        fi
+    else
+        tput cup $(($questionline - 1)) 0
+        clearUp
+        echo -e "${M}●${NC} Update manager configuration ${M}skipped!${NC}\n"
     fi
 }
 
