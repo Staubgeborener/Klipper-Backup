@@ -12,9 +12,7 @@ if [[ ! -f .env ]]; then
 fi
 
 source $parent_path/utils/utils.func
-
 unique_id=$(getUniqueid)
-
 set -e
 
 main() {
@@ -23,8 +21,8 @@ main() {
     dependencies
     logo
     install_repo
-    configure_printer_paths
     configure
+    configure_printer_paths
     patch_klipper-backup_update_manager
     install_filewatch_service
     install_backup_service
@@ -103,64 +101,6 @@ check_updates() {
     fi
 }
 
-configure_printer_paths() {
-    questionline=$(getcursor)
-    printer_dirs=()
-    if [ -d "$HOME/printer_data" ]; then
-        printer_dirs+=("$HOME/printer_data")
-    fi
-
-    for dir in "$HOME"/printer_*_data; do
-        if [ -d "$dir" ]; then
-            printer_dirs+=("$dir")
-        fi
-    done
-
-    if [ ${#printer_dirs[@]} -eq 0 ]; then
-        echo -e "${Y}●${NC} No Klipper instances found, ${Y}skipping path configuration.${NC}\n"
-        return
-    fi
-
-    if ask_yn "Configure Klipper backup? (Found ${#printer_dirs[@]} directories)"; then
-        tput cup $(($questionline - 1)) 0
-        clearUp
-
-        sed -i '/^backupPath=/d' "$HOME/klipper-backup/.env"
-        echo "backupPath=\"\$HOME/klipper_config/\" \\" >> "$HOME/klipper-backup/.env"
-
-        selected_paths=()
-        for dir in "${printer_dirs[@]}"; do
-            dir_name=$(basename "$dir")
-            pos1=$(getcursor)
-
-            if ask_yn "Include ${dir_name} in backup?"; then
-                tput cup $(($pos1 - 1)) 0
-                clearUp
-                echo -e "${G}●${NC} Including ${dir_name} ${G}in backup${NC}"
-                selected_paths+=("$dir")
-
-                echo "\"$dir/config/*\" \\" >> "$HOME/klipper-backup/.env"
-            else
-                tput cup $(($pos1 - 1)) 0
-                clearUp
-                echo -e "${M}●${NC} Excluding ${dir_name} ${M}from backup${NC}"
-            fi
-        done
-
-        if [ ${#selected_paths[@]} -gt 0 ]; then
-            sed -i '$ s/ \\$//' "$HOME/klipper-backup/.env"
-        fi
-
-        echo -e "\n${G}●${NC} Klipper backup configured ${G}Done!${NC} (${#selected_paths[@]} directories selected)\n"
-
-        export SELECTED_PRINTER_PATHS=("${selected_paths[@]}")
-    else
-        tput cup $(($questionline - 1)) 0
-        clearUp
-        echo -e "${M}●${NC} Printer path configuration ${M}skipped!${NC}\n"
-    fi
-}
-
 configure() {
     ghtoken_username=""
     questionline=$(getcursor)
@@ -190,13 +130,14 @@ configure() {
                 getToken
             fi
         }
+
         getUser() {
             pos2=$(getcursor)
             ghuser=$(ask_textinput "Enter your github username" "$ghtoken_username")
 
             menu
             exitstatus=$?
-          if [ $exitstatus = 0 ]; then
+            if [ $exitstatus = 0 ]; then
                 sed -i "s/^github_username=.*/github_username=$ghuser/" "$HOME/klipper-backup/.env"
                 tput cup $pos2 0
                 tput ed
@@ -206,6 +147,7 @@ configure() {
                 getUser
             fi
         }
+
         getRepo() {
             pos2=$(getcursor)
             ghrepo=$(ask_textinput "Enter your repository name")
@@ -222,6 +164,7 @@ configure() {
                 getRepo
             fi
         }
+
         getBranch() {
             pos2=$(getcursor)
             repobranch=$(ask_textinput "Enter your desired branch name" "main")
@@ -238,6 +181,7 @@ configure() {
                 getBranch
             fi
         }
+
         getCommitName() {
             pos2=$(getcursor)
             commitname=$(ask_textinput "Enter desired commit username" "$(whoami)")
@@ -254,6 +198,7 @@ configure() {
                 getCommitName
             fi
         }
+
         getCommitEmail() {
             pos2=$(getcursor)
             commitemail=$(ask_textinput "Enter desired commit email" "$(whoami)@$(hostname --short)-$unique_id")
@@ -295,22 +240,84 @@ configure() {
     fi
 }
 
+configure_printer_paths() {
+    questionline=$(getcursor)
+
+    printer_dirs=()
+    if [ -d "$HOME/printer_data" ]; then
+        printer_dirs+=("$HOME/printer_data")
+    fi
+
+    for dir in "$HOME"/printer_*_data; do
+        if [ -d "$dir" ]; then
+            printer_dirs+=("$dir")
+        fi
+    done
+
+    if [ ${#printer_dirs[@]} -eq 0 ]; then
+        echo -e "${Y}●${NC} No Klipper instances found, ${Y}skipping path configuration.${NC}\n"
+        return
+    fi
+
+    if ask_yn "Configure printer data backup? (Found ${#printer_dirs[@]} directories)"; then
+        tput cup $(($questionline - 1)) 0
+        clearUp
+
+        sed -i '/^backupPaths=(/,/^)/d' "$HOME/klipper-backup/.env"
+
+        echo "backupPaths=( \\" >> "$HOME/klipper-backup/.env"
+
+        selected_paths=()
+
+        for dir in "${printer_dirs[@]}"; do
+            dir_name=$(basename "$dir")
+            pos1=$(getcursor)
+
+            if ask_yn "Include ${dir_name} in backup? This will default to backing up $dir/config/, but can be modified in the .env file"; then
+                tput cup $(($pos1 - 1)) 0
+                clearUp
+                echo -e "${G}●${NC} Including ${dir_name} ${G}in backup${NC}"
+                selected_paths+=("$dir")
+
+                # Add the path to .env file
+                echo "\"$dir/config/*\" \\" >> "$HOME/klipper-backup/.env"
+            else
+                tput cup $(($pos1 - 1)) 0
+                clearUp
+                echo -e "${M}●${NC} Excluding ${dir_name} ${M}from backup${NC}"
+            fi
+        done
+
+        # Remove trailing backslash from last entry and close array
+        if [ ${#selected_paths[@]} -gt 0 ]; then
+            sed -i '$ s/ \\$//' "$HOME/klipper-backup/.env"
+        fi
+        echo ")" >> "$HOME/klipper-backup/.env"
+
+        echo -e "\n${G}●${NC} Klipper data backup configuration ${G}Done!${NC} (${#selected_paths[@]} directories selected)\n"
+
+        # Store selected paths for moonraker configuration
+        export SELECTED_PRINTER_PATHS=("${selected_paths[@]}")
+    else
+        tput cup $(($questionline - 1)) 0
+        clearUp
+        echo -e "${M}●${NC} Printer data backup configuration ${M}skipped!${NC}\n"
+    fi
+}
+
 get_moonraker_instances() {
     moonraker_instances=()
 
-    # Check for default moonraker
     if [[ -d $HOME/moonraker ]] && systemctl is-active moonraker >/dev/null 2>&1; then
         moonraker_instances+=("moonraker:$HOME/printer_data/config/moonraker.conf")
     fi
 
-    # Check for instance-specific moonraker services
     for service_file in /etc/systemd/system/moonraker-*.service; do
         if [[ -f "$service_file" ]]; then
             service_name=$(basename "$service_file" .service)
             instance_name=${service_name#moonraker-}
 
             if systemctl is-active "$service_name" >/dev/null 2>&1; then
-                # Try to find the corresponding config file
                 if [[ -f "$HOME/printer_${instance_name}_data/config/moonraker.conf" ]]; then
                     moonraker_instances+=("$service_name:$HOME/printer_${instance_name}_data/config/moonraker.conf")
                 elif [[ -f "$HOME/printer_data_${instance_name}/config/moonraker.conf" ]]; then
@@ -323,8 +330,6 @@ get_moonraker_instances() {
 
 patch_klipper-backup_update_manager() {
     questionline=$(getcursor)
-
-    # Get available moonraker instances
     get_moonraker_instances
 
     if [ ${#moonraker_instances[@]} -eq 0 ]; then
@@ -346,7 +351,6 @@ patch_klipper-backup_update_manager() {
 
             pos1=$(getcursor)
 
-            # Check if already configured
             if grep -Eq "^\[update_manager klipper-backup\]\s*$" "$config_path" 2>/dev/null; then
                 echo -e "${M}●${NC} ${service_name} ${M}already configured, skipping${NC}"
                 continue
@@ -373,15 +377,12 @@ patch_klipper-backup_update_manager() {
                 service_name="${instance%%:*}"
                 config_path="${instance##*:}"
 
-                # Add new line to conf if it doesn't end with one
                 if [[ $(tail -c1 "$config_path" 2>/dev/null | wc -l) -eq 0 ]]; then
                     echo "" >> "$config_path"
                 fi
 
-                # Add the update manager configuration
                 cat "$parent_path/install-files/moonraker.conf" >> "$config_path"
 
-                # Restart the specific moonraker service
                 sudo systemctl restart "$service_name.service"
             done
 
@@ -413,11 +414,13 @@ install_filewatch_service() {
         kill $loading_pid
         message="Would you like to install the filewatch backup service? (this will trigger a backup after changes are detected)"
     fi
+
     if ask_yn "$message"; then
         tput cup $(($questionline - 2)) 0
         tput ed
         pos1=$(getcursor)
         set +e
+
         if ! checkinotify >/dev/null 2>&1; then # Checks if the version of inotify installed matches the latest release
             removeOldInotify
             echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
@@ -433,6 +436,7 @@ install_filewatch_service() {
             cd inotify-tools/
 
             buildCommands=("./autogen.sh" "./configure --prefix=/usr" "make" "make install")
+
             for ((i = 0; i < ${#buildCommands[@]}; i++)); do
                 run_command "${buildCommands[i]}"
             done
@@ -445,8 +449,10 @@ install_filewatch_service() {
             echo -e "\r\033[K${G}●${NC} Installing latest version of inotify-tools ${G}Done!${NC}"
             set -e
         fi
+
         loading_wheel "${Y}●${NC} Installing filewatch service" &
         loading_pid=$!
+
         if (
             !(
             sudo systemctl stop klipper-backup-filewatch.service 2>/dev/null
@@ -497,6 +503,7 @@ install_backup_service() {
     pos1=$(getcursor)
     loading_wheel "${Y}●${NC} Checking for on-boot service" &
     loading_pid=$!
+
     if service_exists klipper-backup-on-boot; then
         echo -e "\r\033[K"
         kill $loading_pid
@@ -506,12 +513,14 @@ install_backup_service() {
         kill $loading_pid
         message="Would you like to install the on-boot backup service?"
     fi
+
     if ask_yn "$message"; then
         tput cup $(($questionline - 2)) 0
         tput ed
         pos1=$(getcursor)
         loading_wheel "${Y}●${NC} Installing on-boot service" &
         loading_pid=$!
+
         if (
             !(
             sudo systemctl stop klipper-backup-on-boot.service 2>/dev/null
