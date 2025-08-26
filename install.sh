@@ -259,7 +259,7 @@ configure_printer_paths() {
         return
     fi
 
-    if ask_yn "Configure printer data backup? (Found ${#printer_dirs[@]} directories)"; then
+    if ask_yn "Configure Klipper data backup? (Found ${#printer_dirs[@]} directories)"; then
         tput cup $(($questionline - 1)) 0
         clearUp
 
@@ -273,7 +273,7 @@ configure_printer_paths() {
             dir_name=$(basename "$dir")
             pos1=$(getcursor)
 
-            if ask_yn "Include ${dir_name} in backup? This will default to backing up $dir/config/, but can be modified in the .env file"; then
+            if ask_yn "Include ${dir_name}/config in backup? This path can be modified by editing $HOME/klipper-backup/.env"; then
                 tput cup $(($pos1 - 1)) 0
                 clearUp
                 echo -e "${G}●${NC} Including ${dir_name} ${G}in backup${NC}"
@@ -301,7 +301,7 @@ configure_printer_paths() {
     else
         tput cup $(($questionline - 1)) 0
         clearUp
-        echo -e "${M}●${NC} Printer data backup configuration ${M}skipped!${NC}\n"
+        echo -e "${M}●${NC} Klipper data backup configuration ${M}skipped!${NC}\n"
     fi
 }
 
