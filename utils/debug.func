@@ -13,6 +13,8 @@ debug_envfile() {
     while IFS= read -r line; do
         if [[ $line == github_token=* ]]; then
             echo "github_token=****************"
+        elif [[ $line == commit_email=* ]]; then
+            echo "commit_email==**********"
         else
             echo "$line"
         fi

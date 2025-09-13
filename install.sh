@@ -46,6 +46,11 @@ EOF
 }
 
 install_update() {
+    # Need to add as Whiptail warning
+    # if [[ $EUID -eq 0 || $USER == "root" ]]; then
+    #     echo -e "${R}You are logged in as root. It is recommended that you cancel the installation with CTRL+C and log in as a non-privileged user first.\nInstalling as root can lead to problems and is not intended.${NC}\n"
+    # fi
+
     promptInstall=$(whiptail --title "$TITLE Install" --backtitle "$updateMsg" --noitem --default-item "Yes" --menu "Do you want to proceed with installation/(re)configuration?" 15 75 3 \
         "Yes" "" \
         "No" "" \
