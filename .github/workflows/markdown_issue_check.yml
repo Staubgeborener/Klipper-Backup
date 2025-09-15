@@ -10,14 +10,13 @@ permissions:
 jobs:
   check_markdown:
     runs-on: ubuntu-latest
-    name: Markdown issue 
+    name: Markdown issue
 
     steps:
     - name: Check if markdown code is used
-      id: check_markdown
+      env:
+        ISSUE_BODY: ${{ github.event.issue.body }}
       run: |
-        ISSUE_BODY="${{ github.event.issue.body }}"
-
         # Check if the issue body contains Markdown inline code or code block (`` ` ``)
         if echo "$ISSUE_BODY" | grep -q "\`"; then
           echo "Markdown code detected."
@@ -29,19 +28,15 @@ jobs:
 
     - name: Comment on the issue if no Markdown code is detected
       if: env.markdown_used == 'false'
+      env:
+        ISSUE_NUMBER: ${{ github.event.issue.number }}
+        REPO: ${{ github.repository }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        ISSUE_NUMBER="${{ github.event.issue.number }}"
-        REPO="${{ github.repository }}"
-        
-        # Define COMMENT_BODY with backticks directly
-        COMMENT_BODY="Please use markdown syntax (&#96;&#96;) for code snippets in your issue. You have confirmed the checkbox that you are using markdown, but none was recognized here. The markdown syntax makes your issue more readable and makes it easier to find a solution to your problem more quickly.\\n\\nExamples:\nThe symbol &#96; turns &#96;code&#96; into \`code\`.\\n\\nFor more code use &#96; three times at the beginning and at the end like this:\\n&#96;&#96;&#96;\\nsome\\ncode\\n&#96;&#96;&#96;\\nturns into:\\n\`\`\`\\nsome\\ncode\\n\`\`\`\\nPlease edit your outgoing post immediately. If you think that this hint is not necessary and you have correctly used markdown, then you can simply ignore this message."
-        
-        # Escape special characters in COMMENT_BODY
-        ESCAPED_COMMENT_BODY=$(echo "$COMMENT_BODY" | sed 's/[&"]/\\&/g')
-        
-        # Post a comment on the issue
+        COMMENT_BODY="Please use markdown syntax (\`\`) for code snippets in your issue. You have confirmed the checkbox that you are using markdown, but none was recognized here. The markdown syntax makes your issue more readable and makes it easier to find a solution to your problem more quickly.\\n\\nExamples:\nThe symbol \` turns \`code\` into \`code\`.\\n\\nFor more code use \` three times at the beginning and at the end like this:\\n\`\`\`\\nsome\\ncode\\n\`\`\`\\nturns into:\\n\`\`\`\\nsome\\ncode\\n\`\`\`\\nPlease edit your outgoing post immediately. If you think that this hint is not necessary and you have correctly used markdown, then you can simply ignore this message."
+
         curl -s -X POST \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Authorization: token $GITHUB_TOKEN" \
           -H "Content-Type: application/json" \
-          -d "{\"body\":\"${ESCAPED_COMMENT_BODY}\"}" \
+          -d "{\"body\":\"${COMMENT_BODY}\"}" \
           "https://api.github.com/repos/${REPO}/issues/${ISSUE_NUMBER}/comments"
