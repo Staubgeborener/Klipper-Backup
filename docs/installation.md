@@ -58,7 +58,7 @@ curl -fsSL get.klipperbackup.xyz | bash
     You can run the `install.sh` script at any time to install any features!
     
 ### 2. KIAUH
-[KIAUH](https://github.com/dw-0/kiauh) supports Klipper-Backup since v6.0.0-alpha. Download KIAUH, execute v6 at the prompt, select `E` for Extension, select `4` for Klipper-Backup:
+[KIAUH](https://github.com/dw-0/kiauh) supports Klipper-Backup since v6.0.0. Download KIAUH, select `E` for Extension and select `4` for Klipper-Backup:
     
 ![kiauh-install](./images/kiauh_install.gif)
 
