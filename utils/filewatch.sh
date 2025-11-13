@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
- 
+
 source "$HOME/klipper-backup/.env"
 watchlist=""
 for path in "${backupPaths[@]}"; do
@@ -14,17 +14,17 @@ for path in "${backupPaths[@]}"; do
         fi
     done
 done
- 
+
 watchlist=$(echo "$watchlist" | tr ' ' '\n' | sort -u | tr '\n' ' ')
- 
+
 exclude_pattern=".swp|.tmp|printer-[0-9]*_[0-9]*.cfg|.bak|.bkp"
- 
+
 inotifywait -mrP -e close_write -e move -e delete --exclude "$exclude_pattern" $watchlist |
 while read -r path event file; do
     if [ -z "$file" ]; then
         file=$(basename "$path")
     fi
- 
+
     status=$(curl -s http://localhost:7125/printer/objects/query?print_stats | jq -r '.result.status.print_stats.state // empty')
     if [ "$status" != "printing" ]; then
         echo "Event Type: $event, Watched Path: $path, File Name: $file"
