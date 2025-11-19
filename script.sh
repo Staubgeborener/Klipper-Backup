@@ -37,7 +37,7 @@ exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "
 
 # Required for checking the use of the commit_message and debug parameter
 commit_message_used=false
-debug_output=false
+debug_output=${debug_output:-false}
 # Collect args before they are consumed by getopts
 args="$@"
 
@@ -193,12 +193,14 @@ if [[ "$full_git_url" != $(git remote get-url origin) ]]; then
     git remote set-url origin "$full_git_url"
 fi
 
+
+
 # Check if branch exists on remote (newly created repos will not yet have a remote) and pull any new changes
 if git ls-remote --exit-code --heads origin $branch_name >/dev/null 2>&1; then
     git pull origin "$branch_name"
     # Delete the pulled files so that the directory is empty again before copying the new backup
     # The pull is only needed so that the repository nows its on latest and does not require rebases or merges
-    find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' ! -name 'README.md' -exec rm -rf {} \;
+    find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' ! -name 'README.md' ! -name '.gitmodules' -exec rm -rf {} \;
 fi
 
 cd "$HOME"
@@ -224,7 +226,7 @@ for path in "${backupPaths[@]}"; do
                 echo "Skipping symbolic link: $file"
             else
                 file=$(readlink -e "$file") # Get absolute path before copy (Allows usage of .. in filepath eg. ../../etc/fstab resovles to /etc/fstab )
-                rsync -Rr "${file##"$HOME"/}" "$backup_path"
+                rsync -Rr  --filter "- /.git/" --filter "- /.github/" "${file##"$HOME"/}" "$backup_path"
             fi
         done
     fi
@@ -270,4 +272,4 @@ fi
 git push -u origin "$branch_name"
 
 # Remove files except .git folder after backup so that any file deletions can be logged on next backup
-find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' ! -name 'README.md' -exec rm -rf {} \;
+find "$backup_path" -maxdepth 1 -mindepth 1 ! -name '.git' ! -name 'README.md' ! -name '.gitmodules' -exec rm -rf {} \;
