@@ -97,6 +97,7 @@ if [ "$debug_output" = true ]; then
 
     # Debug output: .env file with hidden token
     begin_debug_line
+    shopt -s nocaseglob
     while IFS= read -r line; do
         if [[ $line == github_token=* ]]; then
             echo "github_token=**********"
@@ -106,6 +107,7 @@ if [ "$debug_output" = true ]; then
             echo "$line"
         fi
     done < $HOME/klipper-backup/.env
+    shopt -u nocasematch
     end_debug_line
 
     # Debug output: Check git repo
@@ -251,7 +253,7 @@ fi
 cd "$backup_path"
 # Create and add Readme to backup folder if it doesn't already exist
 if ! [ -f "README.md" ]; then
-    echo -e "# Klipper-Backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [Klipper-Backup](https://github.com/Staubgeborener/klipper-backup)." >"$backup_path/README.md"
+    echo -e "# Klipper-Backup 💾 \nKlipper backup script for manual or automated GitHub backups \n\nThis backup is provided by [Klipper-Backup](https://github.com/Staubgeborener/Klipper-Backup)." >"$backup_path/README.md"
 fi
 
 # Show in commit message which files have been changed
