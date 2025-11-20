@@ -36,7 +36,7 @@ fi
 exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "*.csv" "*.zip"}
 
 # Required for checking the use of the commit_message and debug parameter
-commit_message_used=false
+commit_message_used=${commit_message_used:-false}
 debug_output=${debug_output:-false}
 # Collect args before they are consumed by getopts
 args="$@"
