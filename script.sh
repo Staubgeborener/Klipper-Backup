@@ -16,6 +16,10 @@ source "$parent_path"/utils/utils.func
 loading_wheel "${Y}●${NC} Checking for installed dependencies" &
 loading_pid=$!
 check_dependencies "jq" "curl" "rsync"
+describe_commit=${describe_commit:-false}
+if [[ $describe_commit == true ]]; then
+    check_dependencies "describe-commit"
+fi
 kill $loading_pid
 echo -e "\r\033[K${G}●${NC} Checking for installed dependencies ${G}Done!${NC}\n"
 
@@ -27,6 +31,7 @@ use_filenames_as_commit_msg=${use_filenames_as_commit_msg:-false}
 git_protocol=${git_protocol:-"https"}
 git_host=${git_host:-"github.com"}
 ssh_user=${ssh_user:-"git"}
+describe_commit_args=${describe_commit_args:-""}
 
 if [[ $git_protocol == "ssh" ]]; then
     full_git_url=$git_protocol"://"$ssh_user"@"$git_host"/"$github_username"/"$github_repository".git"
@@ -264,6 +269,14 @@ fi
 # Untrack all files so that any new excluded files are correctly ignored and deleted from remote
 git rm -r --cached . >/dev/null 2>&1
 git add .
+
+if [[ $describe_commit == true ]]; then
+    described_commit=$(describe-commit $describe_commit_args || '')
+    if [[ -n "$described_commit" ]]; then
+        commit_message="$described_commit"
+    fi
+fi
+
 git commit -m "$commit_message"
 # Check if HEAD still matches remote (Means there are no updates to push) and create a empty commit just informing that there are no new updates to push
 if $allow_empty_commits && [[ $(git rev-parse HEAD) == $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
