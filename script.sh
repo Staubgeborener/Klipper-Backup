@@ -264,6 +264,17 @@ fi
 # Untrack all files so that any new excluded files are correctly ignored and deleted from remote
 git rm -r --cached . >/dev/null 2>&1
 git add .
+
+if [[ -n "$ai_describe_commit_command" ]]; then
+    described_commit=$(${ai_describe_commit_command})
+    ret=$?
+    if [[ $ret -ne 0 ]]; then
+        printf "\r\033[K${R}Error: describe-commit command failed with exit code %d. Falling back to default commit message.${NC}\n" $ret
+    elif [[ -n "$described_commit" ]]; then
+        commit_message="$described_commit"
+    fi
+fi
+
 git commit -m "$commit_message"
 # Check if HEAD still matches remote (Means there are no updates to push) and create a empty commit just informing that there are no new updates to push
 if $allow_empty_commits && [[ $(git rev-parse HEAD) == $(git ls-remote $(git rev-parse --abbrev-ref @{u} 2>/dev/null | sed 's/\// /g') | cut -f1) ]]; then
