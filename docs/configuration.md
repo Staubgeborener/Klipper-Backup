@@ -66,6 +66,25 @@ By default, Klipper-Backup shows the timestamp or other information in the commi
 | ---------------------------- | --------------- |---------------|------------------------------------- |
 | `use_filenames_as_commit_msg`| `true`, `false` | `false`       | `use_filenames_as_commit_msg="true"` |
 
+### 8. ai_describe_commit_command
+
+Command to invoke to get a commit message from an external (typically AI) source. You will need to manually install whatever tool you choose to use for this. The CLI tool [describe-commit](https://github.com/tarampampam/describe-commit) has been tested and can be used directly. There may be other tools out there that work too, but they have not been tested.
+
+The command can assume following:
+
+* The working directory will be the git workspace root directory.
+* Any changed files will have been staged for commit.
+* There _may_ be zero changed files.
+
+The command should do the following:
+
+* Use exit code 0 to indicate success. Anything else and we will ignore the output and use the default message.
+* Write the commit message to stdout. Anything else should go to stderr.
+
+| Parameter                    | Possible values | Default value | Example                                                              |
+| ---------------------------- | --------------- |-------------- |--------------------------------------------------------------------- |
+| `ai_describe_commit_command` | *anything*      | *empty*       | `describe-commit --ai-provider=gemini --gemini-api-key=YOUR_API_KEY` |
+
 ## Paths
 Adjust the remaining paths in the `.env` file where your files are located, or add even more file. All files defined here are considered in the backup. **Note the pattern!** which is explained inside the `.env` file.
 
