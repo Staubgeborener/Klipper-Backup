@@ -32,6 +32,8 @@ Before you open an issue on GitHub or ask somewhere: Please take a quick look at
 
 ![type:video](https://www.youtube.com/embed/J4_dlCtZY48)
 
+![type:video](https://www.youtube.com/embed/s4ICSJQda-I)
+
 ## Contributors
 <p>Thank you to everyone who has contributed to the project!</p>
 <a href="https://github.com/staubgeborener/klipper-backup/graphs/contributors">
