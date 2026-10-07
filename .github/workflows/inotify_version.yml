@@ -1,0 +1,45 @@
+name: Update Inotify Version
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: docs
+
+      - name: Get latest Inotify version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          latest_version=$(curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest \
+            | jq -r '.tag_name')
+
+          if [ -z "$latest_version" ] || [ "$latest_version" = "null" ]; then
+            exit 1
+          fi
+
+          echo "$latest_version" > docs/inotify_version
+          echo "Current version: $latest_version"
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- docs/inotify_version && git ls-files --error-unmatch docs/inotify_version >/dev/null 2>&1; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/inotify_version
+          git commit -m "Update Inotify version to $(cat docs/inotify_version)"
+          git push
