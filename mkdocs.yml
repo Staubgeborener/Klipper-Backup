@@ -52,11 +52,14 @@ extra_css:
   - style.css
 
 plugins:
+  - search
   - mkdocs-video:
       css_style:
         width: "50%"
         height: 18.172vw;
   - include-markdown
+  - macros:
+      render_by_default: false
 
 markdown_extensions:
   - abbr
