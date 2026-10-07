@@ -1,50 +1,45 @@
 name: Update Inotify Version
 
 on:
-  push:
-    branches:
-      - docs
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   update_version:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Ensure inotify_version file exists
-        run: |
-          if [ ! -f "docs/inotify_version" ]; then
-            touch docs/inotify_version
-          fi
+        uses: actions/checkout@v4
+        with:
+          ref: docs
 
       - name: Get latest Inotify version
-        id: get_latest_version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          latest_version=$(curl -s https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
-          echo "::set-output name=latest_version::$latest_version"
+          latest_version=$(curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest \
+            | jq -r '.tag_name')
 
-      - name: Read inotify_version content
-        id: read_inotify_version
-        run: |
-          current_version=$(cat docs/inotify_version)
-          echo "::set-output name=current_version::$current_version"
-
-      - name: Compare versions
-        id: compare_versions
-        run: |
-          if [ "${{ steps.read_inotify_version.outputs.current_version }}" = "${{ steps.get_latest_version.outputs.latest_version }}" ]; then
-            echo "::set-output name=push_required::false"
-          else
-            echo "::set-output name=push_required::true"
+          if [ -z "$latest_version" ] || [ "$latest_version" = "null" ]; then
+            exit 1
           fi
 
-      - name: Commit and push changes
-        if: steps.compare_versions.outputs.push_required == 'true'
+          echo "$latest_version" > docs/inotify_version
+          echo "Current version: $latest_version"
+
+      - name: Commit and push if changed
         run: |
-          echo "${{ steps.get_latest_version.outputs.latest_version }}" > docs/inotify_version
-          git config --global user.email "github-actions@example.com"
-          git config --global user.name "GitHub Actions"
+          if git diff --quiet -- docs/inotify_version && git ls-files --error-unmatch docs/inotify_version >/dev/null 2>&1; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/inotify_version
-          git commit -m "Update Inotify version"
+          git commit -m "Update Inotify version to $(cat docs/inotify_version)"
           git push
