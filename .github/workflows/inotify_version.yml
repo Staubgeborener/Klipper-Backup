@@ -34,8 +34,10 @@ jobs:
           echo "Current version: $latest_version"
 
       - name: Commit and push if changed
+        id: commit
         run: |
           if git diff --quiet -- docs/inotify_version && git ls-files --error-unmatch docs/inotify_version >/dev/null 2>&1; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -43,3 +45,15 @@ jobs:
           git add docs/inotify_version
           git commit -m "Update Inotify version to $(cat docs/inotify_version)"
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        if: steps.commit.outputs.changed == 'true'
+        with:
+          python-version: 3.x
+
+      - name: Deploy docs
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          pip install mkdocs-material mkdocs-video mkdocs-include-markdown-plugin mkdocs-macros-plugin
+          mkdocs gh-deploy --force
