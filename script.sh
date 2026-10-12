@@ -31,8 +31,9 @@ ssh_user=${ssh_user:-"git"}
 if [[ $git_protocol == "ssh" ]]; then
     full_git_url=$git_protocol"://"$ssh_user"@"$git_host"/"$github_username"/"$github_repository".git"
 else
-    full_git_url=$git_protocol"://"$github_token"@"$git_host"/"$github_username"/"$github_repository".git"
+    full_git_url=$git_protocol"://"$git_host"/"$github_username"/"$github_repository".git"
 fi
+export KB_GITHUB_TOKEN="$github_token"
 exclude=${exclude:-"*.swp" "*.tmp" "printer-[0-9]*_[0-9]*.cfg" "*.bak" "*.bkp" "*.csv" "*.zip"}
 
 # Required for checking the use of the commit_message and debug parameter
@@ -194,6 +195,7 @@ fi
 if [[ "$full_git_url" != $(git remote get-url origin) ]]; then
     git remote set-url origin "$full_git_url"
 fi
+git config credential.helper '!f() { echo username=x-access-token; echo "password=$KB_GITHUB_TOKEN"; }; f'
 
 # Check if branch exists on remote (newly created repos will not yet have a remote) and pull any new changes
 if git ls-remote --exit-code --heads origin $branch_name >/dev/null 2>&1; then
