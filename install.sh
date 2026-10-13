@@ -7,7 +7,7 @@ parent_path=$(
     pwd -P
 )
 
-if [[ ! -f .env ]]; then
+if [[ ! -f $parent_path/.env ]]; then
     cp $parent_path/.env.example $parent_path/.env
 fi
 
