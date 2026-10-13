@@ -9,6 +9,10 @@ scriptsh_parent_path=$(
 
 envpath="$scriptsh_parent_path/.env"
 
+if [[ ! -f "$envpath" ]]; then
+    echo "Error: $envpath not found, nothing to convert."
+    exit 1
+fi
 source "$envpath"
 cp "$envpath" "$envpath.bkp"
 
