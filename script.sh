@@ -10,6 +10,10 @@ parent_path=$(
 )
 
 # Initialize variables from .env file
+if [[ ! -f "$parent_path"/.env ]]; then
+    echo "Error: $parent_path/.env not found. Run $parent_path/install.sh to configure Klipper-Backup."
+    exit 1
+fi
 source "$parent_path"/.env
 source "$parent_path"/utils/utils.func
 
