@@ -38,11 +38,16 @@ getcursor() {
 
 run_command() {
     command=$1
-    loading_wheel "   ${Y}●${NC} Running $command" &
+    loading_wheel "${Y}●${NC} Running $command" &
     loading_pid=$!
     sudo $command >/dev/null 2>&1
+    ret=$?
     kill $loading_pid
-    echo -e "\r\033[K   ${G}●${NC} Running $command ${G}Done!${NC}"
+    if [ $ret -eq 0 ]; then
+        echo -e "\r\033[K${G}●${NC} Running $command ${G}Done!${NC}"
+    else
+        echo -e "\r\033[K${R}●${NC} Running $command ${R}Failed!${NC}"
+    fi
 }
 
 # Move cursor up one line and clear the line
@@ -187,10 +192,8 @@ service_exists() {
 
 checkinotify() {
     local_version=$(inotifywait -h | grep -oP '\d+\.\d+\.\d+\.\d+')
-    # Get the latest release information from the GitHub repository
-    latest_release=$(curl -s "https://api.github.com/repos/inotify-tools/inotify-tools/releases/latest")
-    # Extract the latest release version number
-    latest_version=$(echo "$latest_release" | jq -r '.tag_name')
+    # Pinned to last C/autotools release, newer releases are a Rust rewrite without autogen.sh
+    latest_version="4.25.9.0"
 
     # Compare the installed version with the latest version
     if [[ $local_version == $latest_version ]]; then
@@ -266,7 +269,7 @@ show_help(){
 }
 
 fix(){
-    loading_wheel "${Y}●{NC} Delete config_backup folder" &
+    loading_wheel "${Y}●${NC} Delete config_backup folder" &
     loading_pid=$!
     if [ ! -d "$HOME/$backup_folder" ]; then
         echo -e "\r\033[K${R}config_backup folder does exist${NC}\n"
