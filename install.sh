@@ -302,7 +302,7 @@ install_filewatch_service() {
             sudo rm -f /usr/bin/fsnotifywait /usr/bin/fsnotifywatch # remove symbolic links to keep error about file exists from occurring
             loading_wheel "   ${Y}●${NC} Clone inotify-tools repo" &
             loading_pid=$!
-            git clone https://github.com/inotify-tools/inotify-tools.git 2>/dev/null
+            git clone --branch 4.25.9.0 --depth 1 https://github.com/inotify-tools/inotify-tools.git 2>/dev/null
             kill $loading_pid
             echo -e "\r\033[K   ${G}●${NC} Clone inotify-tools repo ${G}Done!${NC}"
             sudo apt-get install autoconf autotools-dev automake libtool -y >/dev/null 2>&1
