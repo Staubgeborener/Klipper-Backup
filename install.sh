@@ -295,16 +295,16 @@ install_filewatch_service() {
         tput ed
         pos1=$(getcursor)
         set +e
-        if ! checkinotify >/dev/null 2>&1; then # Checks if the version of inotify installed matches the latest release
+        if ! checkinotify >/dev/null 2>&1; then # Checks if the installed inotify version matches the pinned version
             removeOldInotify
-            echo -e "${Y}●${NC} Installing latest version of inotify-tools (This may take a few minutes)"
+            echo -e "${Y}●${NC} Installing inotify-tools 4.25.9.0 (This may take a few minutes)"
             sudo rm -rf inotify-tools/ # remove folder incase it for some reason still exists
             sudo rm -f /usr/bin/fsnotifywait /usr/bin/fsnotifywatch # remove symbolic links to keep error about file exists from occurring
-            loading_wheel "   ${Y}●${NC} Clone inotify-tools repo" &
+            loading_wheel "${Y}●${NC} Clone inotify-tools repo" &
             loading_pid=$!
             git clone --branch 4.25.9.0 --depth 1 https://github.com/inotify-tools/inotify-tools.git 2>/dev/null
             kill $loading_pid
-            echo -e "\r\033[K   ${G}●${NC} Clone inotify-tools repo ${G}Done!${NC}"
+            echo -e "\r\033[K${G}●${NC} Clone inotify-tools repo ${G}Done!${NC}"
             sudo apt-get install autoconf autotools-dev automake libtool -y >/dev/null 2>&1
 
             cd inotify-tools/
