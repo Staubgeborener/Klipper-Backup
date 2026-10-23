@@ -60,11 +60,11 @@ This tells cron to run the backup script every 4 hours. You can find other cron 
 ## Backup on file changes
 The following service relies on the inotify-tools package. To install the package run ```sudo apt-get install inotify-tools``` in your terminal. 
 
-Please check with `inotifywait -h` if you are using the latest release [{{ inotify_version }}](https://github.com/inotify-tools/inotify-tools/releases/latest){:target="_blank"}. If this is not the case or if you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow these instructions:
+Please check with `inotifywait -h` if you are using a version of inotify no higher than `4.25.9.0`. Any version higher than that is not supported (reason: starting with version `4.26`, inotify-tools are a Rust rewrite, which is simply not supported on most devices or is not installed due to memory requirements). If this is not the case or if you encounter any problems (error messages, service not running correctly) or an update with `apt` does not work, follow these instructions:
 
 ??? example "Expand to show alternate inotify installation"
     ```shell
-    git clone https://github.com/inotify-tools/inotify-tools.git
+    git clone --branch 4.25.9.0 --depth 1 https://github.com/inotify-tools/inotify-tools.git
     
     sudo apt-get install autoconf autotools-dev automake libtool
     
